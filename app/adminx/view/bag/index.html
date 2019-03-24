@@ -1,0 +1,179 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form class="layui-form" style="margin-bottom:10px">
+			<div class="layui-input-inline">
+				<input type="text" name="order_no" placeholder="订单号/快递单号" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-input-inline">
+				<input type="text" name="keyword" placeholder="会员账号/收件人/手机" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-input-inline">
+				<select name="type" id="type">
+					<option value="">包裹类型</option>
+					{volist name="type" id="vo"}
+					<option value="{$vo.id}">{$vo.name}</option>
+					{/volist}
+				</select>
+			</div>
+			<div class="layui-input-inline">
+				<select name="flag" id="flag">
+					<option value="">状态</option>
+					<option value="1">已导出</option>
+					<option value="0">未导出</option>
+				</select>
+			</div>
+			<div class="layui-input-inline">
+				<select name="print" class="fsSelect" dict="print" addNull="1"></select>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-mid">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
+				</div>
+			</div>
+		</form>
+
+		<div class="layui-col-md12">
+			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+			
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+
+			<button class="layui-btn layui-btn-warm layui-btn-sm" function="toPrint">批量打印</button>
+
+			<button id="expBtn" type="button" class="layui-btn layui-btn-sm">导出
+			</button>
+
+			<button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('bag/import')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="批量导入">批量导入</button>
+
+			<button type="button" class="layui-btn layui-btn-sm" id="imageBtn">
+			<i class="layui-icon">&#xe67c;</i> 批量上传图片
+			</button>
+		</div>
+		<script>
+		layui.fsButton.toPrint = function(elem,data,datagrid){
+			var postData='';
+			$.each(data,function(x,y){
+				if (x==0){
+					postData+=y.id;
+				}else{
+					postData+=','+y.id;
+				}				
+			})
+		    if(postData){
+		    	window.open('{:url('order/mprint')}?ids='+postData,'_blank');
+		    }else{
+		    	alert("请选择数据");
+		    }
+		}
+	    </script>
+
+		<script>
+	    $("#expBtn").click(function(){
+	    	type = $("#type").val();
+	    	flag = $("#flag").val();
+	    	createDate = $("#createDate").val();
+			window.location.href = '{:url('bag/export')}?date='+createDate+'&flag='+flag+'&type='+type;
+		});
+	    </script>
+
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('bag/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-60"></table>
+
+	        <div class="fsDatagridCols">	
+	        	<p checkbox="true"/>		
+				<p field="memberID" title="会员账号" width="100"/>
+				<p field="order_no" title="订单号" width="150"/>			
+				<p field="kdNo" title="快递单号" width="150"/>
+				<p field="payment" title="运费" width="100"/>
+				<p field="weight" title="重量" width="100" />		
+				<p field="kuaidi" title="快递" width="100" />		
+				<p field="eimg" title="面单" width="60" templet="#jietu"/>
+				<p title="发货图" width="80" templet="#image"/>
+				<p field="print" title="打印" width="100" dict="print"/>
+				<p field="name" title="收件人" width="160" templet="#shoujianren"/>
+				<p field="sender" title="发件人" width="160"  templet="#fajianren"/>
+				<p field="sign" title="签名" width="100"/>	
+				<p title="状态" width="100" templet="#status"/>
+				<p field="snStatus" title="身份证" width="100" dict="snStatus"/>
+				<p field="createTime" title="提交日期" width="180"/>
+				<p fixed="right" align="center" toolbar="#barDemo" title="操作" width="80"/>
+			</div>
+			<script type="text/html" id="shoujianren">
+				{{d.name}}/{{d.mobile}}				
+			</script>
+			<script type="text/html" id="fajianren">
+				{{d.sender}}/{{d.senderMobile}}					
+			</script>
+
+			<script type="text/html" id="status">
+				{{# if(d.flag == 0){ }}
+				未导出
+				{{# }else{ }}
+				<span style="color:blue">已导出</span>
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="flag">
+				{{# if(d.flag == 0){ }}
+				<span style="color: #f00">未发货</span>
+				{{# }else{ }}
+				已发货
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="image">
+				{{# if(d.image == ''){ }}
+				-
+				{{# }else{ }}
+				<a href="{:url('bag/image')}?id={{d.id}}" target="_blank"><i class="layui-icon">&#xe64a;</i></a>
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="jietu">
+				{{# if(d.eimg == ''){ }}
+				-
+				{{# }else{ }}
+				<a href="{{d.eimg}}" target="_blank"><i class="layui-icon">&#xe64a;</i></a>
+				{{# } }}				
+			</script>			
+			<script type="text/html" id="barDemo">
+ 				<a class="layui-btn layui-btn-xs" href="{:url("Order/baoguo")}?id={{d.orderID}}">详情</a>
+			</script>
+	    </div>
+	</div>
+</div>
+<script>
+layui.use(['table','upload'], function(){
+	form = layui.form; 
+	var upload = layui.upload;
+	//监听性别操作
+	form.on('switch(payStatus)', function(obj){
+		url = '{:url('Order/status')}';
+		var id = this.value;
+		var v = 0
+		if (obj.elem.checked){
+			v = 1;
+		} 
+		$.post(url, {id: this.value,field:"payStatus",val:v}, function (data) {console.log(data);}, "json");
+	});
+
+	//执行实例
+	var uploadInst = upload.render({
+		elem: '#imageBtn',
+		url: '{:url('bag/upload')}',
+		multiple:true,
+		accept:"images",
+		fileExts:"jpg|png|gif|jpeg",
+		acceptMime: 'image/jpg, image/png, image/gif, image/jpeg',
+		done: function(res){
+			layer.alert("上传成功");
+		},
+		error: function(){
+
+		}
+	});
+});
+</script>

@@ -1,0 +1,36 @@
+<layout name='layout' />
+
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+	    <div class="layui-col-md12">
+	    	<button class="layui-btn layui-btn-sm" function="submit" url="{:url('Db/backup')}">
+			  <i class="layui-icon">&#xe654;</i>备份
+			</button>
+
+			<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Db/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="name:">
+			  <i class="layui-icon">&#xe640;</i>批量删除
+			</button>
+
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+	    </div>
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Db/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-108"></table>	
+
+	        <div class="fsDatagridCols">
+				<p checkbox="true"/>	
+				<p field="name" title="文件名" width="40%"/>		
+				<p field="createTime" title="备份日期" width="200"/>	
+				<p field="size" title="文件大小" width="150"/>	
+				<p fixed="right" align="left" toolbar="#barDemo" title="操作" width="120"/>
+			</div>
+
+			<script type="text/html" id="barDemo">
+				<a href="{:url('Db/down')}?File={{d.name}}" class="layui-btn layui-btn-xs" target="_blank">下载</a>
+				<button class="layui-btn layui-btn-xs" lay-event="submit" method="post" url="{:url("Db/restore")}" isConfirm="1" confirmMsg="是否确定还原选中的数据？" inputs="name:">还原</button> 				
+			</script>
+	    </div>
+	</div>
+</div>

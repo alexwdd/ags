@@ -1,0 +1,43 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">提现</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <form id="myForm" class="mui-input-group">
+        <div class="price">
+            <li>
+                <h2>{$fina.money}</h2>
+                <span>佣金</span>
+            </li>
+        </div>
+
+        <div class="mui-input-row" id="cardBox">
+            <select name="bankID" id="bankID" style="font-size:14px; padding-left:15px">
+                <option value="">选择收款账户</option>
+                {volist name="bank" id="vo"}
+                <option value="{$vo.id}">{$vo.bankInfo}</option>
+                {/volist}
+            </select>
+        </div>
+
+        <div class="mui-input-row">
+            <input type="text" name="money" class="mui-input-clear" placeholder="请输入提现数量，最少{$config.txMin}(必填)"  checkType="required" checkMsg="请输入提现数量">
+        </div>
+    </form>
+
+    <div class="main" style="padding-bottom:0">
+        <button id="submitBtn" action="{:url('Tixian/publish')}" type="button" class="mui-btn mui-btn-blue mui-btn-block my-btn">提现</button>
+    </div>
+
+    <div class="remark">
+        <p>提现必须为{$config.txBeishu}的倍数</p>    
+        <p>每次提现最少金额为{$config.txMin}元</p>        
+    </div> 
+
+</div>
+
+
+<input type="hidden" id="activeIndex" value="member" />

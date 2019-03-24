@@ -1,0 +1,31 @@
+.scan{text-align: center; margin:50px 35%; cursor: pointer;}
+/* 支付成功 */
+.payOk{clear: both; overflow: hidden;}
+.payOk .hd{height: 60px; line-height: 60px; padding-left: 10px; font-size: 1.6rem; color: #5eb95e}
+.payOk .hd i{background-color:#5eb95e;color: #fff; border-radius: 50%; padding: 5px }
+.payOk .bd{text-align: center; background: #fff; border-bottom: 1px #dbdbdb solid; padding: 20px 0}
+.payOk .bd span{font-size: 3rem}
+.payOk .fd{text-align: left; background: #fff;}
+.payOk .fd p{border-bottom: 1px #dbdbdb solid; padding: 10px; margin: 0}
+.payOk .fd p span{float: right;}
+#uploadfile{display: none;}
+
+.insert-img{clear: both; overflow: hidden; background: #fff; padding: 10px;}
+.insert-img li{float: left; height: 100px; margin-right: 10px; list-style: none; position: relative;}
+.insert-img li img{height:100px;}
+.insert-img li i{position: absolute; right: 0; top:0;background: #111; color: #fff; display: block; width: 20px; height: 20px; text-align: center;line-height: 20px; font-size: 18px;}
+.insert-img li a{color: #666; position: absolute; left: 0; bottom: 0; width: 100%; text-align: center; font-size: 12px; height: 20px; line-height: 20px}
+.insert-img li a.active{background: #05c1af; color: #fff}
+.insert-img .insert-btn{display:block; float:left;height: 100px;margin: 0; padding: 0;}
+.insert-img .insert-btn img{display: block; height: 100px; border: 1px #dbdbdb solid; box-sizing: border-box;}
+
+.qr{width: 50%; text-align: center; margin: auto; margin-top:10vh;box-shadow: 0 0 10px #666; border-radius: 10px; overflow: hidden;}
+.qr img{display: block;}
+.intr{text-align: center; clear: both; margin-top: 20px; color:#000}
+.intr p{color: #000}
+.intr .btn{background: rgba(0,0,0,0.5); margin: 0 20px; padding: 15px 0; border-radius: 5px; color: #fff}
+
+.card{text-align: center; margin:15px; margin-top:5vh;box-shadow: 0 0 10px #666; border-radius: 10px; overflow: hidden;}
+.card img{display: block;}
+.card .userInfo{background: #fff;clear: both; overflow: hidden;}
+.card .userInfo li{float: left; width: 50%; text-align: center; line-height: 40px; color: #c00}

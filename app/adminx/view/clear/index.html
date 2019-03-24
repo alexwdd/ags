@@ -1,0 +1,28 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form id="ajaxForm" class="layui-form" method="post" action="{:url('Clear/index')}">
+		
+	</form>
+	    <div class="layui-col-md12">
+			<button class="layui-btn layui-btn-sm layui-btn-danger" id="clearBtn">
+			  <i class="layui-icon">&#xe640;</i>清除数据
+			</button>
+	    </div>
+		
+	</div>
+</div>
+
+<script>
+$(function(){
+	$("#clearBtn").click(function(){
+		layer.msg('清空后不可恢复，确定要这样做吗！', {
+			time:0,
+			btn: ['确定', '取消'],
+			yes: function(index){
+		    	layer.close(index);
+		    	$("#ajaxForm").submit();
+			}
+		});
+	});
+})
+</script>

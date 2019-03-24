@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物车-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+h1{font-size: 40px;}
+.goodsInfo{margin-bottom:0px;margin-left:0px;}
+.layui-table-cell{cursor: pointer;}
+</style>
+</head>
+<body>
+<div style="padding: 10px; background: #fff">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md12">
+            <div class="layui-inline" style="width: 200px">
+                <input type="text" class="layui-input" id="orderKey" placeholder="姓名/电话">
+            </div>
+            <div class="layui-inline">
+                <button type="button" id="searchBtn" class="layui-btn">查询</button>
+            </div>
+        </div>
+    </div>    
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+$(function(){ 
+    $(function(){
+        getData();
+    })
+
+    $("#searchBtn").click(function(){
+        getData();
+    })
+
+    function getData(){
+        layui.use('table', function(){
+            var table = layui.table;  
+            table.render({
+                elem: '#test',
+                url:'{:url('mult/selectSender')}',
+                method:'post',
+                where: {keyword:$("#orderKey").val()},
+                cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                cols: [[
+                  {field:'name', width:100, title: '姓名'},
+                  {field:'mobile', width:150, title: '电话'}
+                ]],
+                page: {
+                    limit:20
+                }
+            });
+
+            //监听行单击事件（单击事件为：rowDouble）
+            table.on('row(test)', function(obj){
+                parent.layer.closeAll();
+                var data = obj.data;
+                parent.$('#senderStr').html(data.name+" "+data.mobile);
+                parent.$('#sender').val(data.name+','+data.mobile);
+            });
+        });
+    } 
+})
+</script>
+</body>
+</html>

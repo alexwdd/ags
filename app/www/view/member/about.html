@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+	<div class="guide">
+	    <a href="/">首页</a> / 关于我们
+	</div>
+	
+	<div style="padding: 10px; padding-top: 0">
+    <div class="aboutContent">{$list.content|htmlspecialchars_decode=###}</div>
+	</div>
+</div>
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{volist name="list" id="vo" empty="$empty"}
+<div class="orderList">
+    <div class="hd">{$vo.order_no}<?php
+    if($vo['payType']!=1 && $vo['upload']==0){
+        echo '<font style="color:#f00">(未传身份证)</font>';
+    }else{
+        echo '<font style="color:green">(已传身份证)</font>';
+    }
+    ?><span>${$vo.money}</span></div>
+    <div class="bd">
+        <div class="orderDetail">
+            <li>
+                {volist name="vo.goods" id="f"}
+                <p>{$f.name} x {$f.num}</p>
+                {/volist}
+            </li>
+        </div>
+    </div>
+    <div class="fd">                    
+        <div style="float:left">
+        {switch name="vo.payStatus" }
+            {case value="0"}
+            <span class="my-badge mui-badge mui-badge-danger">待付款</span>
+            <a href="{:url('order/pay','order_no='.$vo['order_no'])}" class="mui-btn my-btn">去支付</a>
+            {/case}
+            {case value="1"}<span class="my-badge mui-badge mui-badge-warning">待审核</span>{/case}
+            {case value="2"}<span class="my-badge mui-badge mui-badge-purple">待配货</span>{/case}
+            {case value="3"}<span class="my-badge mui-badge mui-badge-primary">配货中</span>{/case}
+            {case value="4"}<span class="my-badge mui-badge mui-badge-success">已发货</span>{/case}
+            {case value="99"}<span class="my-badge mui-badge mui-badge-danger">问题单</span>{/case}
+        {/switch}    
+        </div> 
+        
+        {eq name="vo.payStatus" value="0"}
+        <a url="{:url('www/order/del',array('id'=>$vo['id']))}"  class="mui-btn mui-btn-danger delBtn">取消订单</a>   
+        {/eq}
+
+        <a href="{:url('order/detail',array('id'=>$vo['id']))}"  class="mui-btn mui-btn-default">订单详情</a> 
+    </div>
+</div>
+{/volist}

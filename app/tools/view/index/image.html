@@ -1,0 +1,26 @@
+<div class="mui-content">
+	<div class="payOk">
+		<div class="fd">
+			<p>单号<span>{$list.kdNo}</span></p>
+			<p>收件人<span>{$list.name}，{$list.mobile}</span></p>
+            <p>地址：{$list.province} {$list.city} {$list.area} {$list.address}</p>   
+		</div>
+	</div>
+
+    <form id="myForm" class="mui-input-group" style="margin-top:10px">
+		<div class="insert-img" id="insert-img">
+			{volist name="list.image" id="vo"}
+			<li><img src="{$vo}" /><i class="mui-icon mui-icon-closeempty" onclick="removeLi(this)"></i><input name="image[]" type="hidden" value="{$vo}"/></li>
+			{/volist}
+	        <a href="javascript:;" onclick="uploadImage('insert-btn','{:url('upload/image')}');" class="insert-btn" id="insert-btn"><img src="{:RES}/image/image.jpg"></a>	
+	    </div>             
+        <input type="hidden" name="id" value="{$list.id}">       
+        <input type="hidden" name="orderID" value="{$list.orderID}">       
+    </form>
+
+    <div class="mui-content-padded">
+        <button type="button" id="submitBtn" action="{:url('index/image')}" class="mui-btn mui-btn-primary mui-btn-block">保存</button>
+    </div> 
+
+</div>
+<input type="file" id="uploadfile" accept="image/*" capture="camera"/> 

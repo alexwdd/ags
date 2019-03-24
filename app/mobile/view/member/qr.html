@@ -1,0 +1,21 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">我的二维码</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <div class="qrbox"><img src="{:RES}/image/share.jpg"></div>
+    <div class="qrcode"><img src="{$filePath}">
+    	<div class="url">{$url}</div>
+		<p>邀请码{$user.sncode}</p>
+    </div>
+</div>
+
+<script>
+$(function(){
+	$("body").css("background","#ec433c");
+})
+</script>
+<input type="hidden" id="activeIndex" value="member" />

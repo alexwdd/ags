@@ -1,0 +1,44 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">收货地址</h1>
+    <a href="{:url('address/add',array('kid'=>$kid))}" class="mui-icon mui-icon-plusempty mui-pull-right"></a>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <div class="myaddress">
+        {volist name="list" id="vo"}
+            <p {eq name="vo.def" value="1"}class="item_defalut"{/eq}>{$vo.province} {$vo.city} {$vo.area} {$vo.address}<br>{$vo.name}, {$vo.mobile} <span>{gt name="kid" value="0"}<a href="{:url('cart/order',array('kid'=>$kid,'sid'=>$sid,'aid'=>$vo['id']))}">选择</a>&nbsp;&nbsp;&nbsp;&nbsp;{/gt}<a href="{:url('Address/edit',array('kid'=>$kid,'sid'=>$sid,'id'=>$vo['id']))}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-url="{:url('Address/del',array('id'=>$vo['id']))}" class="delBtn">删除</a></span>
+            </p>
+        {/volist}
+    </div>
+</div>
+<div style="height: 50px; clear: both;"></div>
+<input type="file" id="uploadfile"/> 
+
+<script type="text/javascript">
+$(function(){
+    $(".delBtn").click(function(){
+        var btnArray = ['确认', '取消'];
+        var url = $(this).attr("data-url");
+        mui.confirm('确定吗？',function(e){
+            if (e.index == 1) {
+                window.location.href = url;
+            }
+        })
+    });
+    
+    $("#add_btn").bind('click',function(){
+        if ($("#add_address").is(":hidden")) {
+            $("#add_address").slideDown(100);
+        }else{
+            $("#add_address").slideUp(100);
+        }           
+    })
+
+    $("#cancel_btn").bind('click',function(){
+        $("#add_address").slideUp(100);         
+    })
+})
+</script> 

@@ -1,0 +1,115 @@
+<div class="header animated">
+    <div class="logo"><a href="/"><img src="{:RES}/image/logo.png"></a></div>
+
+    <div class="topSearch">
+        <div class="box">    
+            <form action="{:url('store/search')}" id="searchForm" method="post">        
+            <input type="text" name="keyword" id="keyword" placeholder="商品名称">
+            <button type="button" id="searchBtn"><i class="layui-icon layui-icon-search"></i></button>
+            </form>
+            <div id="qsearch"></div>
+        </div>
+    </div>
+
+    <div class="huilv">
+        <span>当前汇率</span>
+        <p>{$topRate}</p>
+    </div>   
+
+    <div class="topMenu">
+        <li><a href="/"><i class="layui-icon layui-icon-home"></i> 首页</a></li>
+        <li><a href="{:url('brand/index')}"><i class="layui-icon layui-icon-template-1"></i> 品牌</a></li>
+        {eq name="user.id" value="0"}
+        <li id="topCart"><a href="javascript:void(0)" class="loginBtn"><i class="layui-icon layui-icon-cart-simple"></i> 购物车 <span id="cartNumber"></span></a></li>
+        {else/}
+        <li id="topCart"><a href="{:url('cart/index')}"><i class="layui-icon layui-icon-cart-simple"></i> 购物车 <span id="cartNumber"></span></a></li>
+        <script type="text/javascript">
+        $.get("/www/cart/ajaxCartNumber?temp="+new Date().getTime(),function(res){
+            if (res.number >0){
+                $("#cartNumber").show().html(res.number);
+            };            
+        },'json');
+        </script>
+        {/eq}
+
+        <li class="kefu">
+            <a href="javascript:void(0)"><i class="layui-icon layui-icon-dialogue"></i> 客服</a>
+            <div class="kefu-qr" style="width: <?php echo count($kefu)*180;?>px">
+                {volist name="kefu" id="vo"}
+                <p><img src="{$vo.logo}"><span>{$vo.name}</span></p>
+                {/volist}
+            </div>
+        </li>
+
+        <li><a href="{:url('about/index')}"><i class="layui-icon layui-icon-about"></i> 用户须知</a></li>
+        
+        {eq name="user.id" value="0"}
+        <li><a href="javascript:void(0)" class="loginBtn"><i class="layui-icon layui-icon-user"></i> 登录/注册</a></li>
+        {else/}
+        <li><a href="{:url('member/index')}"><i class="layui-icon layui-icon-username"></i> 用户中心</a></li>
+        <li><a href="{:url('member/pay')}"><i class="layui-icon layui-icon-dollar"></i> 会员充值</a></li>
+        {/eq}       
+    </div>     
+</div>
+<script>
+$(function(){
+    $(".kefu").hover(function(){
+        $(this).find(".kefu-qr").stop().fadeIn(500);
+    },function(){
+        $(this).find(".kefu-qr").stop().fadeOut(500);
+    });
+    
+    $("#searchBtn").click(function(){
+        if ($("#keyword").val()!=''){
+            $("#searchForm").submit();
+        }
+    })
+    //保存定时器ID
+    var tid=null;
+
+    //延迟执行函数
+    function debounce(fn,wait){
+        //设定默认的延迟时间
+        wait=wait||500;
+        //清除定时器
+        tid && clearTimeout(tid);
+        //定时器执行
+        tid=setTimeout(fn,wait);
+    }
+
+    $('#keyword').bind('input propertychange',function(){
+        //AJAX请求
+        debounce(function(){
+            val = $("#keyword").val();
+            if (val!='') {
+                data = {'k':val};
+                $.post("{:url('store/ajaxsearch')}",data,function(res){
+                    if (res.code==1){
+                        $("#qsearch").show(200);
+                        _html = '';
+                        $.each(res.data,function(){
+                            _html += '<div class="item"><a href="javascript:void(0)" onclick="openModel(\''+this.url+'\',\'商品详情\',\'1100px\',\'80%\')"><img src="'+this.picname+'" alt=""><div class="info"><div class="title">'+this.name+'</div>';
+                            {gt name="user.id" value="0"} 
+                            _html += '<div class="price">价格：￥'+this.price+'</div><div class="price">会员价：￥'+this.price1+'</div>';             
+                            {/gt}
+                            _html += '</div></a></div>';
+                        })
+                        $("#qsearch").html(_html);                              
+                    }else{
+                        $("#qsearch").hide();
+                    }
+                },'json');
+            }
+        },500);
+    });
+
+    $(document).click(function (e) {
+        var drag = $("#qsearch"),
+        dragel = $("#qsearch")[0],
+        target = e.target;
+        if (dragel !== target && !$.contains(dragel, target)) {
+            drag.hide();
+        }
+    });
+})
+</script>

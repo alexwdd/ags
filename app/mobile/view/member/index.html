@@ -1,0 +1,114 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">设置</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+	<div class="userInfo">
+		<div class="face">
+		{empty name="user.face"}
+		<img src="{:RES}/image/face.png"/>
+		{else/}
+		<img src="{$user.face}"/>
+		{/empty}
+		</div>
+		<div class="info">
+			<p>账号：{$user.id}</p>
+			<p>{$user.group|getUserGroup}</p>
+			<p>账户余额：{$user.money}</p>
+			<p>注册日期：{$user.createTime|date="Y-m-d H:i:s",###}</p>
+		</div>
+		<div class="setting"><a href="{:url('Member/setting')}"><i class="mui-icon mui-icon-gear"></i></a></div>
+	</div>	
+
+	<ul class="mui-table-view" style="margin-top: 10px;">
+		<li class="mui-table-view-cell">
+			<a href="{:url('order/index')}" class="mui-navigate-right">全部订单</a>
+		</li>
+	</ul>
+
+	<div class="myOrder">
+		<li>
+			<a href="{:url('Order/index',array('payStatus'=>'0'))}">
+				<i class="icon icon-bankcard"></i>
+				<p>待付款</p>
+				{gt name="num.num1" value="0"}<span>{$num.num1}</span>{/gt}
+			</a>
+		</li>
+		<li>
+			<a href="{:url('Order/index',array('payStatus'=>'1'))}">
+				<i class="icon icon-id-card"></i>
+				<p>待审核</p>
+				{gt name="num.num2" value="0"}<span>{$num.num2}</span>{/gt}
+			</a>
+		</li>
+		<li>
+			<a href="{:url('Order/index',array('payStatus'=>'2'))}">
+				<i class="mui-icon mui-icon-compose"></i>
+				<p>待配货</p>
+				{gt name="num.num3" value="0"}<span>{$num.num3}</span>{/gt}
+			</a>
+		</li>
+		<li>
+			<a href="{:url('Order/index',array('payStatus'=>'3'))}">
+				<i class="icon icon-gift"></i>
+				<p>配货中</p>
+				{gt name="num.num4" value="0"}<span>{$num.num4}</span>{/gt}
+			</a>
+		</li>
+		<li>
+			<a href="{:url('Order/index',array('payStatus'=>'4'))}">
+				<i class="mui-icon mui-icon-paperplane"></i>
+				<p>已发货</p>
+				{gt name="num.num5" value="0"}<span>{$num.num5}</span>{/gt}
+			</a>
+		</li>
+		<li>
+			<a href="{:url('Order/index',array('payStatus'=>'99'))}">
+				<i class="mui-icon mui-icon-help"></i>
+				<p>问题单</p>
+				{gt name="num.num6" value="0"}<span>{$num.num6}</span>{/gt}
+			</a>
+		</li>
+	</div>
+
+	<ul class="mui-table-view" style="margin-top: 10px;">
+		<li class="mui-table-view-cell">
+			<a href="{:url('member/finance',"type=1")}" class="mui-navigate-right">充值记录</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('member/finance',"type=2")}" class="mui-navigate-right">消费记录</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('member/pay')}" class="mui-navigate-right">在线充值</a>
+		</li>
+	</ul>
+	
+	<ul class="mui-table-view" style="margin-top: 10px;">
+		<li class="mui-table-view-cell">
+			<a href="{:url('address/index')}" class="mui-navigate-right">收件人</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('address/sender')}" class="mui-navigate-right">发件人</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('About/index')}" class="mui-navigate-right">关于我们</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('Member/feedback')}" class="mui-navigate-right">投诉建议</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('Member/help')}" class="mui-navigate-right">帮助</a>
+		</li>
+	</ul>
+	
+	<ul class="mui-table-view" style="margin-top: 10px;">
+		<li class="mui-table-view-cell" style="text-align: center;">
+			<a href="javascript:void(0)" id='exit'>退出</a>
+		</li>
+	</ul>
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />

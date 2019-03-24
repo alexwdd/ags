@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / <a href="{:url('order/index')}">我的订单</a> / 订单详情
+    </div>
+
+    <div style="padding: 10px; padding-top: 0">
+        <div class="layui-row layui-col-space15">
+        	<div class="layui-col-md12">
+        		<div class="layui-card my-card">
+			        <div class="layui-card-header">商品明细</div>
+			        <div class="layui-card-body">
+			        	<div class="cartList">
+				            <div class="hd">
+				                <li style="width: 80px"></li>
+				                <li class="auto">商品</li>
+				                <li style="width: 80px">单价</li>
+				                <li style="width: 90px">单品重量</li>
+				                <li style="width: 120px">数量</li>
+				                <li style="width: 80px">小计</li>
+				            </div>
+				            {volist name="goods" id="vo"}
+				            <div class="bd">
+				                <div class="img"><img src="{$vo.goods.picname|getThumb=280,280}" style="height: 60px"></div>
+				                <div class="info">
+				                    <div class="base">
+				                        <li class="auto"><h1 style="font-size: 16px; color: #000">{notempty name="vo.goods.wuliu"}【{$vo.goods.wuliu}】{/notempty}{$vo.goods.name}{$vo.extends}</h1></li>
+				                        <li style="width: 80px; padding-top: 10px">${$vo.price}</li>
+				                        <li style="width: 90px; padding-top: 10px">{$vo.goods.weight}kg</li>
+				                        <li style="width: 120px; padding-top: 10px">{$vo.goodsNumber}</li>
+				                        <li style="width: 80px; padding-top: 10px"><b>$<span>{$vo.money}</span></b></li>			
+				                    </div>
+				                    {volist name="vo.server" id="s"}
+				                    <div class="base base1">
+				                        <li class="auto">{$s.name}</li>
+				                        <li style="width: 80px">${$s.price}</li>
+				                        <li style="width: 90px">0</li>
+				                        <li style="width: 120px">{$vo.num}</li>
+				                        <!-- <li style="width: 120px">{$vo.trueNumber*$vo.num}</li> -->
+				                        <!-- <li style="width: 70px" style="text-align: center;">${$s.price *  $vo.trueNumber*$vo.num}</li> -->
+				                        <li style="width: 70px" style="text-align: center;">${$s.price*$vo.num}</li>
+				                    </div>
+				                    {/volist}
+				                 </div>
+				            </div>
+				            {/volist}
+				        </div>
+			        </div>	
+			    </div>
+
+        		<div class="layui-card my-card">
+			        <div class="layui-card-body">
+			            <div class="list">
+			            	<li>
+			                    <label>订单号</label>
+			                    <p>{$list.order_no}</p>
+			                </li>
+			                <li>
+			                    <label>下单时间</label>
+			                    <p>{$list.createTime|date="Y-m-d H:i:s",###}</p>
+			                </li>
+			                <li>
+			                    <label>商品合计</label>
+			                    <p>${$list.goodsMoney}</p>
+			                </li>
+			                <li>
+			                    <label>运费</label>
+			                    <p>(含打包材料，约{$weight}kg) ${$list.payment}</p>
+			                </li>
+			                <li>
+			                    <label>总金额</label>
+			                    <p>${$list.money}</p>
+			                </li>
+			                <li>
+			                    <label>支付方式</label>
+			                    <p>{$list.payType|getPayType}</p>
+			                </li>
+			                <li>
+			                    <label>支付截图</label>
+			                    <p><a href="{$list.image}" target="_blank"><img src="{$list.image}" style="height: 100px"/></a></p>
+			                </li>
+			                <!-- <li>
+			                    <label>状态</label>
+			                    <p>
+			                    	<?php
+			                		                            if($list['cardID']>0 && $vo['payStatus']==0){
+			                		                            	echo '<span class="red">待审核</span>';
+			                		                            }else{
+			                										echo getPayStatus($list['payStatus']);
+			                		                        	}
+			                		                            ?>
+			                                        		</p>
+			                </li>
+			                <li>
+			                    <label>备注</label>
+			                    <p>{$list.intr}</p>
+			                </li> -->
+			            </div>
+			        </div>
+			        {eq name="list.payType" value="3"}
+                    {eq name="list.payStatus" value="0"}<p class="text-center" style="padding: 15px 0"><a href="{:url('order/pay','order_no='.$list['order_no'])}" class="layui-btn layui-btn-danger">去支付</a></p>{/eq}  
+                    {/eq}   	
+			    </div>
+        	</div>
+
+        	<div class="layui-col-md12">
+				{volist name="person" id="vo" key="j"}
+				<div class="layui-card my-card">
+			        <div class="layui-card-header">{$vo.name}，{$vo.mobile}，{$vo.province} {$vo.city} {$vo.area} {$vo.address}</div>
+			        <div class="layui-card-body">
+			        	<div class="list">
+		                    <li>
+		                        <label>身份证号码</label>
+		                        <p>{$vo.sn}</p>
+		                    </li>
+		                    <li>
+		                        <label>身份证照片</label>
+		                        <p class="personImg">
+		                            {empty name="vo.front"}
+		                            <a href="javascript:void(0)" onclick="openModel ('{:url('order/person',array('id'=>$vo['id']))}','上传身份证','1000px','80%')" class="layui-btn layui-btn-danger layui-btn-xs layui-btn-fluid">上传身份证</a>
+		                            {else/}
+		                            <a href="{$vo.front}" target="_blank"><img src="{$vo.front}"></a>
+		                            <a href="{$vo.back}" target="_blank"><img src="{$vo.back}"></a>
+		                            {/empty}
+		                        </p>
+		                    </li>
+		                    <li>
+		                        <label>发件人</label>
+		                        <p>{$vo.sender}，{$vo.senderMobile}</p>
+		                    </li>             
+		                </div>
+
+		                {volist name="vo.baoguo" id="f"}
+		                <table class="layui-table">
+		                    <thead>
+		                    <tr>
+		                        <th colspan="3" style="color:#000;">{$f.kuaidi}，物流单号：{$f.kdNo|default="未生成"}
+		                        
+		                        <span style="float: right; font-size: 12px">
+		                        {notempty name="f.image"}
+								<span class="layui-badge layui-bg-blue">配货图片已上传</span>
+								{/notempty}
+		      
+					            {switch name="list.payStatus" }
+					                {case value="0"}<span class="layui-badge layui-bg-red">待付款</span>{/case}
+					                {case value="1"}<span class="layui-badge layui-bg-orange">待审核</span>{/case}
+					                {case value="2"}<span class="layui-badge layui-bg-blue">待配货</span>{/case}
+					                {case value="3"}<span class="layui-badge">配货中</span>{/case}
+					                {case value="4"}<span class="layui-badge layui-bg-green">已发货</span>{/case}
+					                {case value="99"}<span class="layui-badge layui-bg-red">问题单</span>{/case}
+					            {/switch}
+					   			
+					   			{notempty name="$f.kdNo"}
+					   			
+								<?php if(in_array($f['type'],[12,13,14])){ ?>
+								<a href="{:config('site.url'.$f['type'])}" target="_blank" class="layui-badge layui-bg-green">物流查询</a>
+								<?php }else{ ?>
+		                        <a href="javascript:void(0)" onclick="openModel ('{:url('order/wuliu','kd='.$f['kdNo'])}','物流查询','1000px','80%')" class="layui-badge layui-bg-green">物流查询</a>
+		                        </span>
+		                        <?php } ?>
+
+		                        {/notempty}
+		                        </th>
+		                    </tr> 
+		                    </thead>
+		                    <tbody>                    
+		                        <tr>
+		                            <td style="width: 50%">{volist name="f.goods" id="g"}<p>{$g.short} * {$g.trueNumber}</p>{/volist}</td>
+		                            <td>
+		                                {volist name="f.eimg" id="img"}
+		                                <a href="{$img}" target="_blank"><img src="{$img}"></a>
+		                                {/volist}
+		                                {volist name="f.image" id="img"}
+		                                <a href="{$img}" target="_blank"><img src="{$img}"></a>
+		                                {/volist}
+		                            </td>
+		                         </tr>                                
+		                    </tbody>
+		                </table>
+		                {/volist}
+			        </div>
+			    </div>
+				{/volist}
+        	</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

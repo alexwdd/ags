@@ -1,0 +1,38 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">设置</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+	<div class="userInfo">
+		<div class="face">
+		{empty name="user.face"}
+		<img src="{:RES}/image/face.png"/>
+		{else/}
+		<img src="{$user.face}"/>
+		{/empty}
+		</div>
+		<div class="info">
+			<p>账号：{$user.id}</p>
+			<p>{$user.group|getUserGroup}</p>
+			<p>注册日期：{$user.createTime|date="Y-m-d H:i:s",###}</p>
+		</div>
+	</div>	
+	
+	<ul class="mui-table-view" style="margin-top: 10px;">
+		<li class="mui-table-view-cell">
+			<a href="{:url('Member/info')}" class="mui-navigate-right">个人资料</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('Member/password')}" class="mui-navigate-right">修改密码</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a href="{:url('address/index')}" class="mui-navigate-right">收货地址</a>
+		</li>
+	</ul>
+
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />

@@ -1,0 +1,32 @@
+{__NOLAYOUT__}
+
+{volist name="list" id="cate" empty="$empty"}
+<div class="cateName">{$cate.cate.name}</div>
+{volist name="cate.goods" id="vo" empty="$empty"}
+<div class="product {eq name="vo.empty" value="1"}shouqing{/eq}">
+	<a href="{$vo.url}">
+	<div class="img"><img src="{$vo.picname}" />{eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}</div>
+	</a>
+
+	<div class="pInfo">
+		<h1>{$vo.name}</h1>
+		{eq name="user.id" value="0"}
+		<div class="price" style="width: 100%">
+			<p>登录后查看价格</p>
+			<p style="text-align: right; padding-right: 10px"><a href="{:url('member/index')}" class="mui-btn mui-btn-sm">登录</a></p>
+		</div>		
+		{else/}
+		<div class="price">
+			<p>价格：${$vo.price}</p>
+			<p>会员：${$vo.price1}</p>
+		</div>
+		<div class="action {eq name="vo.empty" value="0"}canBuy{/eq}" data-id="{$vo.goodsID}" data-type="{$vo.typeID}" spec-id="{$vo.id}">	
+			<span class="set" data-action="dec">-</span>
+			<i id="number{$vo.id}">0</i>
+			<span class="set" data-action="inc">+</span>
+		</div>
+		{/eq}
+	</div>
+</div>
+{/volist}
+{/volist}

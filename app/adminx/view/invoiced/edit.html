@@ -1,0 +1,60 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-form-item">
+	    <label class="layui-form-label">姓名</label>
+	    <div class="layui-input-inline">
+	    	<input type="text" name="name" value="{$list.name}" lay-verType="tips" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">电话</label>
+	    <div class="layui-input-inline">
+	    	<input type="text" name="tel" value="{$list.tel}" lay-verType="tips" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">公司名</label>
+	    <div class="layui-input-inline">
+	    	<input type="text" name="company" value="{$list.company}" lay-verType="tips" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">ABN</label>
+	    <div class="layui-input-inline">
+	    	<input type="text" name="abn" value="{$list.abn}" lay-verType="tips" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">地址</label>
+	    <div class="layui-input-inline">
+	    	<input type="text" name="address" value="{$list.address}" lay-verType="tips" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<hr/>
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button class="layui-btn" lay-submit="" lay-filter="save" url="{:url('Invoiced/edit')}">编辑</button>
+	    <button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+	</div>
+	<input type="hidden" name="id" value="{$list['id']}" />
+</form>
+<script>
+$(function(){
+	$(".showImage").click(function(){
+		var o = $(this).attr("tag");
+		if ($("#"+o).val()!=''){
+			layui.use('layer', function(){
+				layer.open({
+					content: '<img src="'+$("#"+o).val()+'" />'
+				});
+			})
+		};
+	});
+})
+</script>

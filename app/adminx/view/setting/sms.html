@@ -1,0 +1,72 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-tab">
+		<ul class="layui-tab-title">
+			{foreach name="group_list" item="vo" key="k"}
+         		<a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'sms'"}class="layui-this"{/if}>{$vo}</li></a>
+         	{/foreach}
+		</ul>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">短信</label>
+		<div class="layui-input-block">
+				<input type="radio" name="isSms" value="1" title="开启" {php}if($config['isSms']==='1')echo 'checked';{/php}>
+			<input type="radio" name="isSms" value="0" title="关闭" {php}if($config['isSms']==='0')echo 'checked';{/php}>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">短信宝账号</label>
+		<div class="layui-input-inline">
+			<input type="text" name="sms_name" value="{$config.sms_name}" class="layui-input">
+		</div>
+		<div class="layui-form-mid"><a href="http://www.smsbao.com/" target="_blank">短信宝短信申请</a></div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">短信宝密码</label>
+		<div class="layui-input-block">
+			<input type="text" name="sms_pwd" value="{$config.sms_pwd}" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">短信签名</label>
+		<div class="layui-input-inline">
+			<input type="text" name="sms_sign" value="{$config.sms_sign}" class="layui-input">
+		</div>
+	</div>	
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">注册超时</label>
+		<div class="layui-input-inline">
+			<input type="text" name="out_time" value="{$config.out_time}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">分钟</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">发送间隔</label>
+		<div class="layui-input-inline">
+			<input type="text" name="diffTime" value="{$config.diffTime}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">分钟</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">每日次数</label>
+		<div class="layui-input-inline">
+			<input type="text" name="dayNumber" value="{$config.dayNumber}" class="layui-input">
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Setting/insert')}"><i class="layui-icon">&#xe642;</i>保存</button>
+    </div>
+	<input type="hidden" name="inc_type" value="{$inc_type}">
+</form>

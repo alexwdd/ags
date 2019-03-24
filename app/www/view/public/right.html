@@ -1,0 +1,49 @@
+<div class="rightBar">
+	<div class="right-cart">
+		<div id="cartNumber">1</div>
+		<img src="{:RES}/image/cart.png">
+		<p>购物车</p>
+	</div>
+
+	<div class="right-fav" id="my-fav">
+		<img src="{:RES}/image/fav.png">
+		<span>我的收藏</span>
+	</div>
+
+	<div class="right-kefu" id="my-kefu">
+		<img src="{:RES}/image/kefu.png">
+		<span><img src="{:RES}/image/qrcode.jpg"></span>
+	</div>
+
+	<div class="right-top" id="toTop">
+		<img src="{:RES}/image/top.png" alt="返回顶部">
+	</div>
+</div>
+<script type="text/javascript">
+$(function () {
+    $(window).scroll(function(){
+        if ($(window).scrollTop()>100){
+            $("#toTop").fadeIn(500);
+        }else{
+            $("#toTop").fadeOut(500);
+        }
+    });
+    //当点击跳转链接后，回到页面顶部位置
+    $("#toTop").click(function(){
+        $('body,html').animate({scrollTop:0},500);
+        return false;
+    });
+
+    $("#my-fav").hover(function(){
+    	$(this).find("span").stop().fadeIn(10).animate({right:50},200);
+    },function(){
+    	$(this).find("span").stop().animate({right:60},200).fadeOut(10);
+    });
+
+    $("#my-kefu").hover(function(){
+    	$(this).find("span").stop().fadeIn(10).animate({top:0},200);
+    },function(){
+    	$(this).find("span").stop().animate({top:20},200).fadeOut(10);
+    });
+});
+</script>

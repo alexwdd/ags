@@ -1,0 +1,51 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">订单详情</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">     
+    <div class="payOk">
+        <div class="fd">
+            <p>单号<span>{$list.order_no}</span></p>
+            <p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
+            <p>商品金额<span>￥{$list.goodsMoney}</span></p>
+            <p>运费<span>￥{$list['payment']}</span></p>
+            <p>总金额<span>￥{$list.money}</span></p>
+            <p>支付方式<span>{$list.payType|getPayType}</span></p>
+            <p>状态<span><?php
+                        if($list['cardID']>0 && $vo['payStatus']==0){
+                            echo '<span class="red">待审核</span>';
+                        }else{
+                            echo getPayStatus($list['payStatus']);
+                        }
+                        ?></span></p>
+            <p>备注：{$list.intr}</p>  
+        </div>
+    </div>    
+    
+    <div class="mui-card my-card">
+        <div class="mui-card-header">商品信息</div>
+        <div class="mui-card-content" style="padding:10px">
+            {volist name="goods" id="vo"}                  
+            <p>{$vo.name} x {$vo.number}</p> 
+            {/volist}                             
+        </tbody>
+        </div>
+    </div>
+    
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />
+
+<script src="{:RES}/js/clipboard.min.js"></script>
+<script>
+var clipboard = new ClipboardJS('.copyBtn');
+clipboard.on('success', function(e) {
+    mui.toast("已复制到粘贴板");
+});
+clipboard.on('error', function(e) {
+    mui.toast("系统不支持");
+});
+</script>

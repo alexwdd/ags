@@ -1,0 +1,52 @@
+<layout name='layout' />
+
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form class="layui-form1" action="{:url('finance/detail')}" method="post" style="margin-bottom:10px">
+			<div class="layui-inline">
+				<label class="layui-form-mid">月份</label>
+				<div class="layui-input-inline">
+					<input type="text" name="date" autocomplete="off" class="layui-input fsDate" dateType="month" readonly="readonly" lay-verify="required"/>
+				</div>
+			</div>
+			<button class="layui-btn" type="submit"><i class="layui-icon">&#xe615;</i>查询</button>
+		</form>
+
+
+	    <div class="layui-col-md12">
+	        <table class="layui-table">
+				<colgroup>
+				  <col width="150">
+				  <col width="150">
+				  <col width="150">
+				  <col width="200">
+				  <col width="200">
+				  <col>
+				  <col>
+				</colgroup>
+				<thead>
+				  <tr>
+				    <th>月份</th>
+				    <th>收入</th>
+				    <th>成本</th>
+				    <th>佣金</th>
+				    <th>盈利</th>
+				    <th>明细</th>
+				  </tr> 
+				</thead>
+				<tbody>
+					{volist name="list" id="vo"}
+					<tr>
+					<td>{$vo.date}</td>
+					<td>{$vo.money}</td>
+					<td>{$vo.chengben}</td>
+					<td>{$vo.yongjin}</td>
+					<td>{$vo.yingli}</td>	
+					<td><a href="{:url('finance/detail','date='.$vo['date'])}" class="layui-btn layui-btn-xs">查看明细</a></td>
+					</tr>
+					{/volist}	 
+				</tbody>
+			</table>
+	    </div>
+	</div>
+</div>

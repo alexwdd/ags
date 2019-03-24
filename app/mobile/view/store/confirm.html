@@ -1,0 +1,88 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">确认订单</h1>
+</header>
+
+<div class="mui-content" style="margin-bottom:44px">    
+    <form id="myForm" class="mui-input-group" style="background:none">
+    <div class="infobox" style="margin-bottom:10px">
+        <div class="hd">收货信息</div>
+        {notempty name="address"}
+            <p class="address_item">{$address['province']} {$address['city']} {$address['area']} {$address['address']} <br>
+                {$address['name']}, {$address['mobile']}</p>
+            <input type="hidden" id="address" name="address" value="{$address['province']} {$address['city']} {$address['area']}, {$address['address']}">
+            <input type="hidden" name="name" id="name" value="{$address['name']}">
+            <input type="hidden" name="mobile" id="mobile" value="{$address['mobile']}">
+        {else/}
+            <input type="hidden" id="address" name="address" value="" checkType="required" checkMsg="请选择收货地址">
+        {/notempty}
+        <p><a href="{:url('address/index',array('url'=>$url))}" class="mui-btn my-btn">管理收货地址</a></p>
+    </div>
+
+    {volist name="list" id="vo"}
+    <div class="mui-row cartList">
+        <div class="mui-col-xs-3">
+            <img src="{$vo.picname}">
+        </div>
+
+        <div class="mui-col-xs-9" style="padding-left:10px">
+            <p>{$vo.pname}</p>
+            {notempty name="vo.pram"}
+            <p>{$vo.pram}</p>
+            {/notempty}
+            <p>重量{$vo.weight}kg&nbsp;&nbsp;{eq name="vo.isBaoyou" value="0"}运费￥{$vo.yunfei}/kg{else/}包邮{/eq}</p>
+            <p class="m">{$vo.price} x {$vo.number}</p>            
+        </div>
+    </div>
+    {/volist}
+
+    <div class="infobox" style="margin-bottom:10px">
+        <div class="hd">备注</div>
+        <textarea name="content" id="content" style="height:100px;margin:0;border:0"></textarea>
+    </div>
+
+    <div class="selectFooter">
+        <div class="cartInfo" style="font-size: 12px">
+            商品<span id="totalMoney" style="color:#f00">{$totalPrice}</span>
+            运费<span id="totalMoney" style="color:#f00">{$baoguo.totalYunfei}</span>
+            合计<span id="totalMoney" style="color:#f00">{$totalPrice+$baoguo.totalYunfei}</span>
+        </div> 
+        <div id="submitBtn" action="{:url('Store/order')}" class="btn">提交订单</div>
+    </div>
+    </form>
+</div>
+<script>
+mui.init();
+mui.ready(function(){ 
+    $(function(){
+        $.get("/mobile/store/ajaxCartNumber?temp="+new Date().getTime(),function(res){
+            if (res >0){
+                $("#barNumber").show().html(res);
+            };            
+        });
+    })
+})
+
+/* 购物车数量 */
+function changeNum(type,cartID){
+    danjia = parseFloat($("#goodsPrice"+cartID).val());
+    total = parseFloat($("#totalMoney").html());
+    oldNum = parseInt($("#buyNum"+cartID).html());
+
+    if (type=='add') {
+        v = oldNum+1;
+    }else if(type="del"){
+        v = oldNum-1;
+        if (v<1) {
+          v=1;
+        }    
+    }
+    
+    if (v != oldNum){
+        $.get("/mobile/store/setCartNum?number="+v+"&cartID="+cartID+"&temp="+new Date().getTime(),function(response){}); 
+    }
+    $("#buyNum"+cartID).html(v);    
+    total = (total-danjia*oldNum)+v*danjia;    
+    $("#totalMoney").html(total.toFixed(2));
+}
+</script>

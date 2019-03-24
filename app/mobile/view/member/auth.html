@@ -1,0 +1,60 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">实名认证</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+	{empty name="auth"}
+	<form id="myForm" class="mui-input-group">
+	    <div class="mui-input-row">
+	        <label>真实姓名</label>
+	        <input type="text" name="name" class="mui-input-clear" placeholder="身份证姓名" checkType="chinese" checkMsg="姓名请输入中文">
+	    </div>
+
+	    <div class="mui-input-row">
+	        <label>身份证号</label>
+	        <input type="text" name="sn" class="mui-input-clear" placeholder="身份证号码" checkType="sn" checkMsg="请输入正确的身份证号码">
+	    </div>
+
+	    <input type="file" id="uploadfile"/> 
+	    
+	    <div class="upload">
+		    <p style="margin: 10px;">身份证照片</p>	    
+		    <div class="sn" onclick="uploadImage('front','{:url('upload/image','isThumb=1000x1000')}');"><img id="front_src" src="{:RES}/image/sn1.png" /></div>
+		    <div class="sn" onclick="uploadImage('back','{:url('upload/image','isThumb=1000x1000')}');"><img id="back_src" src="{:RES}/image/sn2.png" /></div>
+	    </div>
+	    <input type="hidden" name="front" id="front" checkType="required" checkMsg="请上传身份证正面">
+	    <input type="hidden" name="back" id="back" checkType="required" checkMsg="请上传身份证反面">
+	</form>
+	<div class="main">
+		<button id="submitBtn" action="{:url('Member/auth')}" type="button" class="mui-btn mui-btn-blue mui-btn-block my-btn">实名认证</button>
+	</div>
+	{else/}
+
+	<div class="list">
+		<li>
+			<p>姓名</p>
+			<span>{$auth.name}</span>
+		</li>
+		<li>
+			<p>身份证号</p>
+			<span>{$auth.sn}</span>
+		</li>
+		<li>
+			<p>状态</p>
+			{eq name="user.auth" value="0"}<span style="color:#f00">审核中</span>{else/}<span class="green">已通过</span>{/eq}
+		</li>
+	</div>
+
+	<div class="upload">
+	    <p style="margin: 10px;">身份证照片</p>	    
+	    <div class="sn"><a href="{$auth.front}"><img src="{$auth.front}" /></a></div>
+	    <div class="sn"><a href="{$auth.back}"><img src="{$auth.back}" /></a></div>
+    </div>
+
+	{/empty}
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />

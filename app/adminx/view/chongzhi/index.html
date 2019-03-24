@@ -1,0 +1,86 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form class="layui-form" style="margin-bottom:10px">
+			<div class="layui-input-inline">
+				<select name="status" class="fsSelect" dict="pipei" addNull="1"></select>
+			</div>
+			<div class="layui-input-inline">
+				<input type="text" name="keyword" placeholder="用户名/手机号码" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-input-inline">
+				<input type="text" name="order_no" placeholder="订单号" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-mid">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
+				</div>
+			</div>
+		</form>
+
+	    <div class="layui-col-md12">
+			<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Chongzhi/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="id:">
+			  <i class="layui-icon">&#xe640;</i>批量删除
+			</button>
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+
+			<div class="tj">
+				充值总数量<span>{$total}</span>
+			</div>
+	    </div>
+
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Chongzhi/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-60"></table>
+	        <div class="fsDatagridCols">
+				<p checkbox="true"/>	
+				<p field="id" title="ID" width="80"/>
+				<p field="order_no" title="订单号" width="150"/>
+				<p field="memberID" title="会员账号" width="100"/>
+				<p field="mobile" title="手机" width="120"/>
+				<p field="payType" title="充值方式" width="100" templet="#pay"/>
+				<p field="money" title="充值金额" width="100"/>
+				<p title="截图" width="100" templet="#imageTpl"/>
+				<p field="status" title="状态" width="100" sort="true" templet="#status"/>
+				<p field="back" title="备注" width="200"/>
+				<p field="createTime" title="提交日期" width="180"/>
+				<p fixed="right" align="center" toolbar="#barDemo" title="操作" width="100"/>
+			</div>
+
+			<script type="text/html" id="pay">
+				{{# if(d.payType == 1){ }}
+				银行卡
+				{{# }else if(d.payType==2){ }}
+				在线支付
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="status">
+				{{# if(d.status == 0){ }}
+				未处理
+				{{# }else if(d.status==1){ }}
+				<span style="color:blue">已付款</span>
+				{{# }else if(d.status==99){ }}
+				<span style="color: #f00">驳回</span>
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="imageTpl">
+				{{# if(d.image == ''){ }}
+				-
+				{{# }else{ }}
+				<a href="{{d.image}}" target="_blank"><i class="layui-icon">&#xe64a;</i></a>
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="barDemo">
+				{{#  if(d.status==0){ }}
+ 				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Chongzhi/select")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="确认打款">审核</a>
+				{{# } }}
+			</script>
+	    </div>
+	</div>
+</div>

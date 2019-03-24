@@ -1,0 +1,226 @@
+<style type="text/css">
+.hAddress{padding: 10px 0; background:#fcf8e3; color:#8a6d3b; margin-top: 15px;}
+.hAddress p{font-size: 16px; padding: 5px 10px}
+</style>
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">购物车</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content" id="cartContent">
+  
+    {empty name="list"}
+
+    <div class="emptyCart">
+        <p>您没有选择任何商品！</p>
+        <a href="{:url('store/category')}" class="mui-btn my-btn">去购买</a>
+    </div>
+
+    {else/}
+    
+    <div id="emptyDiv" style="display: none;">
+        <div class="emptyCart">
+            <p>您没有选择任何商品！</p>
+            <a href="{:url('store/category')}" class="mui-btn my-btn">去购买</a>
+        </div>
+    </div>
+
+    {volist name="list" id="vo"}
+    <div class="mui-row cartList">
+        <div class="mui-col-xs-3">
+            <img src="{$vo.goods.picname|getThumb=280,280}">
+        </div>
+
+        <div class="mui-col-xs-8" style="padding-left:10px" id="cart{$vo.id}">
+            <p>{notempty name="vo.goods.wuliu"}【{$vo.goods.wuliu}】{/notempty}{$vo.goods.name}{$vo.extends}</p>
+ 			{volist name="vo.server" id="s"}
+            <div class="serverLi" data-name="{$s.name}" data-price="{$s.price}" data-number="{$vo.goodsNumber}">
+                {$s.name}${$s.price}/件，数量{$vo.goodsNumber * $vo.number}，合计${$s.price * $vo.goodsNumber * $vo.number}
+            </div>
+            {/volist}
+            <p>{$vo.goods.weight}kg</p>
+            <p class="m">{$vo.goods.price}</p>      
+            <div class="numberAction" data-id="{$vo.id}" data-price="{$vo.goods.price}" data-weight="{$vo.goods.weight}">
+                <div class="set" data-action="dec">-</div>
+                <div class="buyNumber" id="buyNum{$vo.id}">{$vo.number}</div>
+                <div class="set" data-action="inc">+</div>
+            </div>
+        </div>
+
+        <div class="mui-col-xs-1" style="text-align:center">
+            <a href="javascript:void(0)" class="delBtn" data-id="{$vo.id}" style="color:#999;"><i class="mui-icon mui-icon-trash" style="font-size:18px"></i></a>
+        </div>
+    </div>
+    {/volist}
+	
+	<div class="infobox" style="margin-bottom:10px">
+        <div class="hd">快递选择</div>
+        <div class="kuaidi">
+	        {volist name="wuliu" id="vo"}
+	        <li data-id="{$vo.id}">{$vo.name}</li>
+	        {/volist}
+	        <li data-id="0">店铺自提</li>
+	    </div>
+	    <div class="kdResult"></div>
+    </div>
+    
+    
+    <div style="height:70px; clear:both"></div>
+
+    <div class="selectFooter" style="bottom: 51px">
+        <div class="cartInfo" style="font-size: 12px">
+            商品：<span id="goodsMoney">{$heji.total}</span> &nbsp;&nbsp;邮费：<span id="youfei">0</span> &nbsp;&nbsp;合计：<span class="money" id="total">${$heji.total}</span>
+        </div> 
+        <div id="doJiesuan" action="{:url('Store/order')}" class="btn">去结算</div>
+    </div>
+    {/empty}
+</div>
+<input type="hidden" id="kuaidi" value="">
+<input type="hidden" id="activeIndex" value="cart" />
+<script>
+mui.init();
+mui.ready(function(){
+	//删除商品
+    $(".delBtn").click(function(){    
+        var id = $(this).attr('data-id');
+        var o = $(this);
+        mui.confirm('确认要从购物车删除吗？',function(e){
+        	if (e.index==1){
+        		$.get('{:url("www/cart/delcart")}?id='+id,function(res){
+                    $(o).parent().parent().remove();
+                    $("#goodsMoney").html(res.total);
+                    youfei = parseFloat($("#youfei").html());
+                    $("#total").html("$"+(parseFloat(res.total)+youfei).toFixed(2)); 
+
+                    goodsMoney = parseFloat($("#goodsMoney").html());
+                    $("#youfei").html('0');
+                    $("#total").html(goodsMoney);
+                    $(".kdResult").html('');
+                },'json')
+        	}                
+        });
+    });
+
+    //更改数量
+    $('.numberAction .set').on('click', function () {
+        $(".kuaidi li").removeClass("active");
+        $(".kdResult").html('');
+        $("#kuaidi").val('');
+        var action = $(this).attr("data-action");
+        var cartID = $(this).parent().attr("data-id");
+        var danjia = parseFloat($(this).parent().attr("data-price"));
+        var number = $("#buyNum"+cartID);
+        oldNum = parseInt(number.html());
+        if (action=='inc'){
+            v = oldNum+1;
+        }else{
+            if (oldNum>1){
+                v = oldNum-1;
+            }
+        }
+        number.html(v);
+        setServer("cart"+cartID,v);        
+
+        if (v != oldNum){
+            $.get("{:url('www/cart/setCartNum')}?number="+v+"&cartID="+cartID+"&temp="+new Date().getTime(),function(res){
+                $("#goodsMoney").html(res.total); 
+                youfei = parseFloat($("#youfei").html());
+                $("#total").html("$"+(parseFloat(res.total)+youfei).toFixed(2)); 
+            },'json'); 
+        }
+
+        goodsMoney = parseFloat($("#goodsMoney").html());
+        $("#youfei").html('0');
+        $("#total").html("$"+goodsMoney);
+        $(".kdResult").html('');
+    });
+
+    //计算物流
+    $(".kuaidi li").click(function(){
+        $(".kuaidi li").removeClass("active");
+        $(this).addClass('active');
+        var id = $(this).attr("data-id");
+        if (id==0){
+            kuaidi = $("#kuaidi").val('0');
+            $(".kdResult").html("<div class=\"hAddress\"><p>提示：请到AGS店铺付款，付款时请告知店员您的电话。</p><p>地址：7/60 King Wiliam Steet Adelaide SA 5000</p></div>");
+            $("#doJiesuan").html("提交订单");
+
+            goodsMoney = parseFloat($("#goodsMoney").html());
+            $("#youfei").html('0');
+            $("#total").html(goodsMoney);
+
+            return;
+        }
+
+        $("#doJiesuan").html("去结算");
+
+        $.get("{:url('www/cart/getYunfei')}?kid="+id+"&temp="+new Date().getTime(),function(res){
+            if (res.code==1) {
+                data = res.data;
+                _html = '<div class="kdTotle">共 '+data.baoguo.length+' 箱 - $'+data.totalPrice+'</div>';
+                _html += '<div class="kdBaoguo">';                
+                for (var i = 0; i < data.baoguo.length; i++) {
+                    _html += '<li>';
+                    _html += '<div class="goods">';
+                    for (var j = 0; j < data.baoguo[i].goods.length; j++) {
+                    _html += '<p>'+data.baoguo[i].goods[j]['goodsNumber']+' * '+data.baoguo[i].goods[j]['name']+'</p>';
+                    }
+                    _html += '</div>';
+                    _html += '<div class="yunfei">'+data.baoguo[i].kuaidi+' - 约'+data.baoguo[i].totalWuliuWeight+'kg - $'+data.baoguo[i].yunfei+'</div>';
+                    _html += '</li>';
+                }                
+                _html += '</div>';
+                $(".kdResult").html(_html);
+                $(window).scrollTop($(window).height());
+                kuaidi = $("#kuaidi").val(id);
+
+                goodsMoney = parseFloat($("#goodsMoney").html());
+                $("#youfei").html(data.totalPrice);
+                $("#total").html("$"+(goodsMoney+parseFloat(data.totalPrice)).toFixed(2));
+            }else{
+                mui.alert(res.msg);
+            }
+        },'json'); 
+    })
+
+    $("#doJiesuan").click(function(){
+        kuaidi = $("#kuaidi").val();
+        if (kuaidi==''){
+            mui.alert("请选择快递公司");
+            return false;
+        }else{
+            if (kuaidi==0){                
+                mui.showLoading();
+                $.post("{:url('www/cart/toStoreBuy')}",function(res){
+                    mui.hideLoading();
+                    if (res.code==1){
+                        mui.alert('操作成功',function(){
+                            window.location.href = "{:url('order/index')}";
+                        })
+                    }else{
+                        mui.alert(res.msg);
+                    }
+                },"json")
+            }else{
+                window.location.href='{:url('cart/order')}?kid='+kuaidi;
+            }            
+        }
+    })
+});
+
+function setServer(cart,number){
+    server = $("#"+cart).find('.serverLi');
+    server.each(function(){
+        name = $(this).attr("data-name");
+        price = parseFloat($(this).attr("data-price"));
+        goodsNumber = parseInt($(this).attr("data-number"));
+        total = number * goodsNumber;
+        totalMoney = (total * price).toFixed(2);
+        _html = name+`$`+price+`/件，数量`+total+`个，合计$`+totalMoney;
+        $(this).html(_html)
+    })
+}
+</script>

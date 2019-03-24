@@ -1,0 +1,31 @@
+{include file="public/nav" /}
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">提现记录</h1>
+    <a href="{:url('tixian/publish')}" class="mui-pull-right header-nav">提现</a>
+</header>
+
+<div class="mui-content">
+    {volist name="list" id="vo" empty="$empty"}
+    <div class="pinyou">
+        <a href="{:url('Tixian/detail','id='.$vo['id'])}">
+        <div class="hd">
+            <div class="code">{$vo.order_no}</div>
+            <div class="status">{$vo.status|getStatus=###}</div>
+        </div>
+        <div class="bd">
+            <div class="maxWeight">提现金额：<span>￥{$vo.money}</span></div>   
+            <div class="date">{$vo.bankInfo}</div>
+            <div class="date">提交时间：{$vo.createTime|date="Y-m-d H:i:s",###}</div>
+            {notempty name="vo.back"}
+            <div style="color:#f00">{$vo.back}</div>
+            {/notempty}
+        </div>
+        </a>
+    </div>
+    {/volist}
+
+    {$list->render()}
+</div>
+<input type="hidden" id="activeIndex" value="member" />

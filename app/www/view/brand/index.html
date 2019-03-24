@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>品牌-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+<body>
+{include file="public:header" /}
+
+
+<div class="main">
+<div class="pinyin">常用保健品</div>
+<div class="layui-row">
+    {volist name="comm" id="f"}
+    <div class="layui-col-md1 layui-col-sm2 layui-col-xs3">
+        <div class="product">
+        <a href="{:url('brand/lists','bid='.$f['id'])}"><img src="{$f.logo|getThumb=200,125}" alt="{$f.name}" style="border:2px #ccc solid"><p class="layui-elip">{$f.name}</p></a>
+        </div>
+    </div>
+    {/volist}
+</div>
+
+{volist name="list" id="vo"}
+<div class="pinyin">{$vo.py}</div>
+<div class="layui-row">
+    {volist name="vo.small" id="f"}
+    <div class="layui-col-md1 layui-col-sm2 layui-col-xs3">
+        <div class="product">
+        <a href="{:url('brand/lists','bid='.$f['id'])}"><img src="{$f.logo|getThumb=200,125}" alt="{$f.name}" style="border:2px #ccc solid"><p class="layui-elip">{$f.name}</p></a>
+        </div>
+    </div>
+    {/volist}
+</div>
+{/volist}
+</div>
+    
+{include file="public:footer" /}
+</body>
+</html>

@@ -1,0 +1,82 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">身份</label>
+		<div class="layui-input-inline">
+			<select name="group" id="group" default="{$list['group']}" lay-verify="required">
+	    	<option value="">==请选择==</option>
+	    	{volist name="group" id="vo"}
+	        <option value="{$vo.id}">{$vo.name}</option>
+	        {/volist}
+	        </select>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">手机</label>
+		<div class="layui-input-inline">
+			<input type="text" name="mobile" placeholder="必填" value="{$list.mobile}" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">登录密码</label>
+		<div class="layui-input-inline">
+			<input type="password" id="password" name="password" lay-verify="_password" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">重复密码</label>
+		<div class="layui-input-inline">
+			<input type="password" name="repassword" lay-verify="__repassword" class="layui-input">
+		</div>
+	</div>	
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">姓名</label>
+		<div class="layui-input-inline">
+			<input type="text" name="name" placeholder="选填" value="{$list.name}" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">微信</label>
+		<div class="layui-input-inline">
+			<input type="text" name="weixin" placeholder="选填" value="{$list.weixin}" class="layui-input">
+		</div>
+	</div>	
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">QQ</label>
+		<div class="layui-input-inline">
+			<input type="number" name="qq" placeholder="选填" value="{$list.qq}" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">老客户</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="vip" value="0" title="否" {php}if($list['vip']==0) echo 'checked';{/php}>
+			<input type="radio" name="vip" value="1" title="是" {php}if($list['vip']==1) echo 'checked';{/php}>
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="disable" value="0" title="正常" {php}if($list['disable']==0) echo 'checked';{/php}>
+			<input type="radio" name="disable" value="1" title="禁用" {php}if($list['disable']==1) echo 'checked';{/php}>
+		</div>
+	</div>
+	
+	<hr/>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Member/edit')}"><i class="layui-icon">&#xe642;</i>编辑</button>
+     	<button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+    </div>
+	<input type="hidden" name="id" value="{$list.id}"  />
+</form>

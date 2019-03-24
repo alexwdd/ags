@@ -1,0 +1,92 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form class="layui-form" style="margin-bottom:10px">
+			<div class="layui-input-inline">
+				<select name="status" class="fsSelect" dict="pipei" addNull="1"></select>
+			</div>
+			<div class="layui-input-inline">
+				<input type="text" name="account" placeholder="用户名/手机号码" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-input-inline">
+				<input type="text" name="order_no" placeholder="订单号" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-mid">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
+				</div>
+			</div>	
+		</form>
+
+	    <div class="layui-col-md12">
+			<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Yufu/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="id:">
+			  <i class="layui-icon">&#xe640;</i>批量删除
+			</button>
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+
+			<div class="tj">
+				排单总额<span>{$total}</span>
+				/
+				预付款总额<span>{$weikuan}</span>
+				/
+				待匹配预付款<span>{$localMoney}</span>
+				/
+				已匹配预付款<span>{$pipei}</span>
+			</div>
+	    </div>
+
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Yufu/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-60"></table>
+
+	        <div class="fsDatagridCols">
+				<p checkbox="true"/>				
+				<p field="id" title="ID" width="80"/>
+				<p field="username" title="会员" width="100"/>
+				<p field="mobile" title="手机" width="120"/>
+				<p field="order_no" title="单号" width="200"/>
+				<p field="inDay" title="入场天数" width="100"/>
+				<p field="frozenDay" title="冻结天数" width="100"/>
+				<p field="startTime" title="入场时间" width="180" sort="true"/>
+				<p field="money" title="总金额" width="100"/>
+				<p field="paiMoney" title="预付金额" width="100"/>
+				<p field="pipeiMoney" title="已匹配" width="100"/>
+				<p field="localPaiMoney" title="待匹配" width="100" sort="true"/>
+				<p field="status" title="状态" width="100" sort="true" dict="pipei"/>
+				<p field="createTime" title="提交日期" width="180"/>
+				<p field="closeTime" title="完成日期" width="180"/>
+				<p field="unlockTime" title="解冻日期" width="180"/>
+				<p fixed="right" align="center" toolbar="#barDemo" title="操作" width="180"/>
+			</div>
+
+			<script type="text/html" id="barDemo">		
+				{{#  if(d.status <3 && d.localPaiMoney>0){ }}
+ 				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Yufu/select")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="预付款手动匹配">手动匹配</a>
+				{{# } }}
+				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Yufu/detail")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="匹配明细">明细</a>
+				{{#  if(d.isDo==0 && d.status==3){ }}
+				<a class="layui-btn layui-btn-xs j-btn" data-id="{{d.id}}">解冻</a>	
+				{{# } }}	
+			</script>
+	    </div>
+	</div>
+</div>
+<script>
+$(function(){
+	$("body").on("click",".j-btn",function(){
+		id = $(this).attr('data-id');
+		_that = $(this);
+		url = "{:url('pai/jiedong')}"
+		$.post(url, {id: id}, function (data) {
+	    	if (data.code==1) {
+	    		_that.remove();
+	    	}else{
+	        	layer.alert(data.msg, {icon: 5});
+	      	}
+	    }, "json");
+	})
+})
+</script>

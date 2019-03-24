@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{$brand.name}-{:config('site.name')}</title>
+    <meta name="keywords" content="{:config('site.keyword')}">
+    <meta name="description" content="{:config('site.content')}">
+    {include file="public:cssjs" /}
+</head>
+
+<body>
+    {include file="public:header" /}
+    
+    <div class="leftBox">
+        <div class="leftLogo"></div>
+        <div class="leftCate">
+            <div class="bd">
+                {volist name="brandList" id="vo"}
+                <li {eq name="vo.id" value="$bid"}class="active"{/eq} style="padding-left: 10px"><a href="{:url('brand/lists','bid='.$vo['id'])}">{$vo.name}</a></li>
+                {/volist}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="rightBox">
+        <div class="guide">
+            <a href="/">首页</a> / <a href="{:url('brand/index')}">品牌</a> / {$brand.name}
+        </div>
+
+        <div class="rightCate">
+            <li {empty name="cid"}class="active"{/empty}><a href="{:url('brand/lists','bid='.$bid)}">全部</a></li>
+            {volist name="cate" id="vo"}
+            <li {eq name="vo.id" value="$cid"}class="active"{/eq}><a href="{:url('brand/lists',['bid'=>$bid,'cid'=>$vo['id']])}">{$vo.name}</a></li>
+            {/volist}
+        </div>
+
+        <div class="productList">
+            {volist name="list" id="vo" empty="$empty"} 
+            <li>
+                <div class="product">
+                    <a href="javascript:void(0)" onclick="openModel('{$vo.url}','商品详情','1100px','80%')">
+                    <img src="{$vo.picname|getThumb=280,280}" alt="">
+                    </a>
+                    <div class="bd">
+                        <a href="javascript:void(0)" onclick="openModel('{$vo.url}','商品详情','1100px','80%')">
+                        <h1>{$vo.name}</h1>
+                        <p class="layui-elip">{$vo.say}</p>
+                        {gt name="user.id" value="0"}
+                        <div class="price">
+                            <p><span>${$vo.price}</span>/会员<span>${$vo.price1}</span></p>                       
+                        </div>
+                        </a>
+                        
+                        <div class="setNumber {eq name="vo.empty" value="0"}canBuy{/eq}" data-id="{$vo.goodsID}" data-type="{$vo.typeID}" spec-id="{$vo.id}">
+                            <span class="set" data-action="dec">-</span>                        
+                            <div class="cartIcon">                          
+                                <i class="layui-icon layui-icon-cart"></i>
+                                <p id="number{$vo.id}">0</p>
+                            </div>
+                            <span class="set" data-action="inc">+</span>
+                        </div>
+                        {/gt}
+                    </div>
+                    <a href="javascript:void(0)" onclick="openModel('{$vo.url}','商品详情','1100px','80%')">
+                    {eq name="vo.empty" value="1"}<div class="sold_out"><img src="{:RES}/image/sold-out.png"></div>{/eq}
+                    {gt name="vo.tag" value="0"}
+                    <div class="baoyou_tag b_tag{$user.id}"><img src="{:RES}/image/tag{$vo.tag}.png"></div>
+                    {/gt} 
+                    </a>
+                </div>
+            </li>
+            {/volist}
+        </div>        
+        
+        {$page}
+    </div>
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+<script type="text/javascript" src="{:RES}/js/cart.js"></script>
+</body>
+</html>

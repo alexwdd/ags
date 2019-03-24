@@ -1,0 +1,24 @@
+{__NOLAYOUT__}
+<table class="layui-table">
+    <colgroup>
+        <col width="100">           
+        <col>
+    </colgroup>         
+    <tbody id="specBox">
+       {volist name="specList" id="vo"}
+        <tr class="spec_item" spec_id="{vo.id}" spec_name="{$vo.name}">
+            <td>{$vo.name}</td>
+            <td>
+                {volist name="vo.spec_item" id="f" key="k2"}
+                <button type="button" class="layui-btn <?php 
+                             if(!in_array($f['id'],$items_ids)){
+                                    echo 'layui-btn-primary'; 
+                             }
+                             ?>" data-spec_id="{$vo.id}" data-item_id="{$f.id}">{$f.item}</button>
+                {/volist}
+            </td>
+        </tr>
+        {/volist}
+    </tbody>
+</table>    
+<div id="goods_spec_table2"></div>

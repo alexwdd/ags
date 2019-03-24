@@ -1,0 +1,56 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">收款账户</h1>
+	<a href="{:url('member/addBank')}" class="mui-pull-right header-nav">添加</a>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+	<ul class="bank">
+        {volist name="list" id="vo"}
+        <li>
+            <img src="{:RES}/image/type{$vo.type}.jpg" />
+            <div class="bankname">
+                <eq name="vo.type" value="1">
+                <p class="name">{$vo.bank}</p>                          
+                <p class="text">{$vo.account}</p>
+                <p class="text">{$vo.cardNo}</p>
+                </eq> 
+                <eq name="vo.type" value="2">          
+                <p class="name">{$vo.weixin}</p>
+                </eq>   
+                <eq name="vo.type" value="3">           
+                <p class="name">{$vo.alipay}</p>
+                </eq>  
+                <p class="text">{$vo.name}，{$vo.mobile}</p>
+            </div>
+            <a href="javascript:;" onclick="delCard({$vo.id})"><i class="mui-icon mui-icon-trash"></i></a>
+        </li>
+        {/volist}
+    </ul>
+</div>
+<script>
+function delCard(cardID){
+    var id = cardID
+    mui.confirm('确认删除该条记录？', function(e) {
+        if (e.index == 1) {
+            mui.showLoading();
+            request = {
+                id:id
+            };          
+            mui.post('{:url('member/delbank')}',request,function(r){
+                mui.hideLoading();
+                if (r.code=='1'){
+                    mui.alert(r.msg, '系统消息', function(){
+                        window.location.href = '{:url('member/bank')}';                      
+                    })          
+                }else{
+                    mui.toast(r.msg);
+                }
+            },'json');            
+        } 
+    });
+}
+</script>
+<input type="hidden" id="activeIndex" value="member" />

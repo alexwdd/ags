@@ -1,0 +1,172 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-tab">
+		<ul class="layui-tab-title">
+			{foreach name="group_list" item="vo" key="k"}
+         		<a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'member'"}class="layui-this"{/if}>{$vo}</li></a>
+         	{/foreach}
+		</ul>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">会员注册</label>
+		<div class="layui-input-block">				
+			<input type="radio" name="isReg" value="1" title="开启" <?php if($config['isReg']==='1')echo 'checked'; ?>>	
+			<input type="radio" name="isReg" value="0" title="关闭" <?php if($config['isReg']==='0')echo 'checked'; ?>>			
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">充值金额</label>
+		<div class="layui-input-block">
+			<textarea name="money" class="layui-textarea">{$config.money}</textarea>
+			<p>每个一行</p>
+		</div>
+	</div>
+
+	<!-- <div class="layui-form-item">
+		<label class="layui-form-label">提现</label>
+		<div class="layui-input-block">				
+			<input type="radio" name="isTrade" value="1" title="开启" <?php if($config['isTrade']==='1')echo 'checked'; ?>>	
+			<input type="radio" name="isTrade" value="0" title="关闭" <?php if($config['isTrade']==='0')echo 'checked'; ?>>			
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">充值接口</label>
+		<div class="layui-input-block">				
+			<input type="radio" name="isApi" value="1" title="开启" <?php if($config['isApi']==='1')echo 'checked'; ?>>	
+			<input type="radio" name="isApi" value="0" title="关闭" <?php if($config['isApi']==='0')echo 'checked'; ?>>			
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">激活费</label>
+		<div class="layui-input-inline">
+  			<input type="text" name="active" value="{$config.active}" lay-verify="required" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">最小提现</label>
+		<div class="layui-input-inline">
+  			<input type="text" name="txMin" value="{$config.txMin}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">元</div>
+
+		<label class="layui-form-label">必须为</label>
+		<div class="layui-input-inline">
+  			<input type="number" name="txBeishu" value="{$config.txBeishu}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">的倍数</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">打款时间</label>
+		<div class="layui-input-inline">
+	  			<input type="text" name="payTime" value="{$config.payTime}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">小时</div>
+	
+		<label class="layui-form-label">排单预付</label>
+		<div class="layui-input-inline">
+	  			<input type="number" name="paidan" value="{$config.paidan}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">%</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">最小排单</label>
+		<div class="layui-input-inline">
+	  			<input type="number" name="minMoney" value="{$config.minMoney}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">个</div>
+	
+		<label class="layui-form-label">最大排单</label>
+		<div class="layui-input-inline">
+	  			<input type="number" name="maxMoney" value="{$config.maxMoney}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">个</div>
+	
+		<label class="layui-form-label">数量为</label>
+		<div class="layui-input-inline">
+	  			<input type="number" name="beishu" value="{$config.beishu}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">的倍数</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">排单间隔</label>
+		<div class="layui-input-inline">
+	  			<input type="number" name="diffDay" value="{$config.diffDay}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">天</div>
+	
+		<label class="layui-form-label">资金冻结</label>
+		<div class="layui-input-inline">
+	  			<input type="number" name="dongjie" value="{$config.dongjie}" lay-verify="required" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">天</div>
+	</div>
+	
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>200-900排单收益</legend>
+	</fieldset>
+	<div class="layui-form-item">
+		<label class="layui-form-label">排队期</label>
+		<div class="layui-input-inline">
+			<input type="text" name="fh1" value="{$config.fh1}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">%天</div>
+	
+		<label class="layui-form-label">冻结期</label>
+		<div class="layui-input-inline">
+			<input type="text" name="dj1" value="{$config.dj1}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">%天</div>
+	</div>	
+	
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>1000-4900排单收益</legend>
+	</fieldset>
+	<div class="layui-form-item">
+		<label class="layui-form-label">排队期</label>
+		<div class="layui-input-inline">
+			<input type="text" name="fh2" value="{$config.fh2}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">%天</div>
+	
+		<label class="layui-form-label">冻结期</label>
+		<div class="layui-input-inline">
+			<input type="text" name="dj2" value="{$config.dj2}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">%天</div>
+	</div>
+	
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>5000-10000排单收益</legend>
+	</fieldset>
+	<div class="layui-form-item">
+		<label class="layui-form-label">排队期</label>
+		<div class="layui-input-inline">
+			<input type="text" name="fh3" value="{$config.fh3}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">%天</div>
+	
+		<label class="layui-form-label">冻结期</label>
+		<div class="layui-input-inline">
+			<input type="text" name="dj3" value="{$config.dj3}" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">%天</div>
+	</div> -->
+
+	<hr/>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Setting/insert')}"><i class="layui-icon">&#xe642;</i>保存</button>
+    </div>
+	<input type="hidden" name="inc_type" value="{$inc_type}">
+</form>
+<script src="{:RES}/js/upload.js"></script>

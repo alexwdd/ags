@@ -1,0 +1,95 @@
+<style>
+.tongjiDiv{clear: both; overflow: hidden; margin-bottom: 10px; line-height: 30px; font-size: 16px; padding-left: 15px}
+</style>
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<fieldset class="layui-elem-field">
+			<legend>预付款金额￥{$pai.paiMoney}，待匹配金额￥{$pai.localPaiMoney}</legend>
+			<div class="layui-field-box">
+
+				<form class="layui-form">
+					<div class="tongjiDiv">
+					已匹配金额<span id="money" style="color:#f00; padding:0 5px">0</span>
+
+					<button id="subBtn" class="layui-btn" lay-submit="" isConfirm=1 lay-filter="edit" url="{:url('Yufu/doMatch')}" style="float: right;">确认匹配</button>			
+					</div>		
+
+					<table class="layui-table">
+						<colgroup>
+						    <col width="150">
+						    <col width="200">
+						    <col width="200">
+						    <col>
+						    <col>
+						    <col>
+						</colgroup>
+						<thead>
+					    <tr>
+						    <th>会员</th>
+						    <th>手机</th>
+							<th>单号</th>
+							<th>待匹配金额</th>
+							<th>提交日期</th>
+							<th>选择</th>
+					    </tr> 
+						</thead>
+					  	<tbody>
+							{volist name="list" id="vo"}
+							<tr>
+								<td>{$vo.username}</td>
+								<td>{$vo.mobile}</td>
+								<td>{$vo.order_no}</td>
+								<td>{$vo.localMoney}</td>
+								<td>{$vo.createTime|date='Y-m-d H:i:s',###}</td>
+								<td><input type="checkbox" name="txID[]" value="{$vo.id}" class="chk" data-money="{$vo.localMoney}" lay-filter="sel" lay-skin="primary"/></td>
+							</tr>		
+							{/volist}
+						</tbody>
+					</table>	
+					<input type="hidden" name="paiID" value="{$pai['id']}">
+				</form>
+			</div>
+		</fieldset>
+	</div>
+</div>
+<script>
+$(function(){
+	var max = {$pai.localPaiMoney};
+	var money = 0;
+	layui.use('form', function(){
+		var form = layui.form;
+		form.on('checkbox(sel)', function(data){
+			/*console.log(data.elem); //得到checkbox原始DOM对象
+			console.log(data.elem.checked); //是否被选中，true或者false
+			console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+			console.log(data.othis); //得到美化后的DOM对象*/
+			if (data.elem.checked) {
+				
+				if (money >= max){					
+					$(data.elem).removeAttr("checked");
+					form.render();
+					return false;
+				}
+				money += parseInt($(data.elem).attr("data-money"));
+			}else{
+				money -= parseInt($(data.elem).attr("data-money"));
+			}
+			$("#money").html(money);
+		});
+	});
+	
+	    
+	/*$(".chk").click(function(){
+		if ($(this).is(':checked')){
+			if (money > max){
+				$(this).removeAttr("checked");
+				return false;
+			}
+			money += parseInt($(this).attr("data-money"));
+		}else{
+			money -= parseInt($(this).attr("data-money"));
+		}
+		$("#money").html(money);
+	});*/
+})
+</script>

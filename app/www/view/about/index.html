@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{$list['title']}-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+body,html{height: auto; overflow: auto;}
+.main{max-width: 1200px; clear: both; margin:20px auto; margin-top: 100px}
+.aboutMenu{box-shadow: 0 0 10px 0 #909090; background: #fff; clear: both; overflow: hidden; padding: 20px;}
+.aboutMenu h4{ font-weight: bold; border-bottom: 1px #ccc solid; padding-bottom: 10px;}
+.aboutMenu li{height: 40px; line-height: 40px; font-size: 14px; border-bottom: 1px #ccc solid;}
+.aboutContent{min-height: 610px;}
+.aboutContent h3{padding-bottom: 10px; color: #39c4da; margin-top:20px; text-align: center; font-size: 24px;}
+.aboutContent{box-shadow: 0 0 10px 0 #909090; background: #fff; clear: both; overflow: hidden; padding:0 20px;}
+</style>
+</head>
+<body>
+{include file="public:header" /}
+<div class="main">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs3">
+            <div class="aboutMenu">
+                <h4>关于{:config('site.name')}</h4>
+                <li><i class="layui-icon layui-icon-right"></i> <a href="{:url('About/index',array('id'=>1))}">关于我们</a></li>
+                <li><i class="layui-icon layui-icon-right"></i> <a href="{:url('About/index',array('id'=>2))}">消费指南</a></li>
+                <li><i class="layui-icon layui-icon-right"></i> <a href="{:url('About/index',array('id'=>4))}">用户协议</a></li> 
+                <li><i class="layui-icon layui-icon-right"></i> <a href="{:url('About/index',array('id'=>3))}">支付方式</a></li>                               
+                <li><i class="layui-icon layui-icon-right"></i> <a href="{:url('About/index',array('id'=>5))}">联系我们</a></li>                         
+            </div>
+        </div>
+
+        <div class="layui-col-xs9">
+            <div class="aboutContent">
+                <h3><i class="icon-tag"></i> {$list['title']}</h3>
+                <div class="content">{$list.content|htmlspecialchars_decode=###}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{:RES}/js/cart.js"></script>
+{include file="public:footer" /}
+</body>
+</html>

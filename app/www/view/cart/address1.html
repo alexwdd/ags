@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物车-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+h1{font-size: 40px;}
+.goodsInfo{margin-bottom:0px;margin-left:0px;}
+</style>
+</head>
+<body>
+<div style="padding: 10px; background: #fff">
+    <a href="javascript:void(0)" class="layui-btn layui-btn-sm" id="manage">管理收件人</a>
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <TH>姓名</TH>                   
+                <TH>电话</TH>
+                <TH>地区</TH>
+                <TH>地址</TH>
+                <TH>身份证号</TH>
+                <TH>身份证(正)</TH>
+                <TH>身份证(反)</TH>
+                <TH>操作</TH>
+            </tr> 
+        </thead>
+        <tbody>
+            {volist name="list" id="vo"}
+            <tr>
+                <td>{$vo.name}</td>
+                <td>{$vo.mobile}</td>
+                <td>{$vo.province} {$vo.city} {$vo.area}</td>
+                <td>{$vo.address}</td>
+                <td>{$vo.sn}</td>
+                <td>
+                {notempty name="vo.front"}<a href="{$vo.front}" target="_blank"><i class="layui-icon layui-icon-picture"></i></a>{/notempty}
+                </td>
+                <td>    
+                {notempty name="vo.back"}<a href="{$vo.back}" target="_blank"><i class="layui-icon layui-icon-picture"></i></a>{/notempty}
+                </td>     
+                <td><a data-name="{$vo.name}" data-mobile="{$vo.mobile}" data-province="{$vo.province}" data-city="{$vo.city}" data-address="{$vo.address}" data-area="{$vo.area}" data-id="{$vo.id}" data-front="{$vo.front}" data-back="{$vo.back}" data-front-src="{$vo.front_src}" data-back-src="{$vo.back_src}" data-sn="{$vo.sn}" class="layui-btn layui-btn-xs closeIframe" href="javascript:void(0)">选择</a></td>
+            </tr>
+            {/volist}
+        </tbody>
+    </table>
+</div>
+<input type="hidden" id="server">
+<input type="hidden" id="picname" value="{$goods.picname}">
+<input type="hidden" id="price" value="{$goods.price}">
+<script type="text/javascript" charset="utf-8">
+$(function(){ 
+    $("#manage").click(function(){
+        parent.layer.closeAll();
+        parent.location.href = '{:url("address/index")}';
+    });
+
+    $('.closeIframe').click(function(){
+        name = $(this).attr("data-name");
+        mobile = $(this).attr("data-mobile");
+        province = $(this).attr("data-province");
+        city = $(this).attr("data-city");
+        area = $(this).attr("data-area");
+        address = $(this).attr("data-address");
+        sn = $(this).attr("data-sn");
+        front = $(this).attr("data-front");
+        back = $(this).attr("data-back");
+        front_src = $(this).attr("data-front-src");
+        back_src = $(this).attr("data-back-src");
+        id = $(this).attr("data-id");
+        /*_html = '<i class="layui-icon layui-icon-username"></i>'+name+', <i class="layui-icon layui-icon-cellphone"></i>'+mobile+', <i class="layui-icon layui-icon-location"></i>'+province+' '+city+' '+area+' '+address;  
+        _html += '<div style="margin-top: 15px;"><input type="text" name="sn" value="'+sn+'" lay-verify="_cardNo" placeholder="身份证号码，非必填，下单后可继续完善信息" autocomplete="off" class="layui-input"></div>';
+
+        _html += '<div style="clear: both; padding: 15px 0"><div class="sn" onclick="uploadImage(\'front\',\'{:url('upload/image','water=1')}\');"><img id="front_src" src="'+front_src+'" /></div><div class="sn" onclick="uploadImage(\'back\',\'{:url('upload/image','water=1')}\');"><img id="back_src" src="'+back_src+'" /></div></div>';
+
+        _html += '<input type="hidden" id="address" name="address" value="'+province+' '+city+' '+area+', '+address+'"><input type="hidden" name="name" id="name" value="'+name+'"><input type="hidden" name="mobile" id="mobile" value="'+mobile+'"><input type="hidden" name="front" id="front" value="'+front+'"><input type="hidden" name="back" id="back" value="'+back+'"><input type="hidden" name="addressID" value="'+id+'">';       
+        parent.$('.address').html(_html);*/
+        parent.layer.closeAll();
+        parent.location.href = '{:url("cart/order")}?kid={$kid}&aid='+id;
+    });
+})
+</script>
+</body>
+</html>

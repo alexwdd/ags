@@ -1,0 +1,36 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">上传身份证</h1>
+</header>
+
+<div class="mui-content">
+    <div class="list noborder">
+        <li style="border:0">
+            <p>收件人</p>
+            <span>{$list.name} {$list.mobile}</span>
+        </li>      
+    </div>
+    <form id="myForm" class="mui-input-group" style="background:none">
+    <div class="infobox" style="margin-bottom:10px">
+        <div class="hd">身份证(应海关清关需求，需上传身份证信息)</div>
+        <div class="bd">
+            <div class="sn" onclick="uploadImage('front','{:url('upload/image','water=1')}');"><img id="front_src" src="{empty name="list.front"}{:RES}/image/sn1.png{else/}{$list.front}{/empty}" /></div>
+            <div class="sn" onclick="uploadImage('back','{:url('upload/image','water=1')}');"><img id="back_src" src="{empty name="list.back"}{:RES}/image/sn2.png{else/}{$list.back}{/empty}" /></div>
+        </div>
+        <div style="margin:10px; margin-top:0">
+            <input type="text" name="sn" value="{$list.sn}" placeholder="输入身份证号" style="border:1px #dbdbdb solid;" checkType="sn" checkMsg="身份证格式错误">
+        </div>
+        
+        <input type="hidden" name="front" id="front" value="{$list.front}" checkType="required" checkMsg="请上传身份证正面">
+        <input type="hidden" name="back" id="back" value="{$list.back}" checkType="required" checkMsg="请上传身份证反面">
+        <input type="hidden" name="mobile" value="{$list.mobile}" >
+        <input type="hidden" name="id" id="id" value="{$list.id}" >
+        <input type="hidden" name="addressID" id="addressID" value="{$list.addressID}" >
+        <input type="hidden" name="orderID" value="{$list.orderID}">
+        <div style="border:0; padding:0 10px">
+        <button type="button" id="submitBtn" action="{:url('Order/person')}" class="mui-btn mui-btn-block my-btn">保存</button>
+        </div>        
+        <input type="file" id="uploadfile"/> 
+    </div>
+    </form>
+</div>

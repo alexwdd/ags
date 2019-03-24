@@ -1,0 +1,27 @@
+<form class="layui-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="name" lay-verify="required" value="{$list.name}" placeholder="请输入模型名称" class="layui-input">
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button id="subBtn" class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('GoodsType/edit')}"><i class="layui-icon">&#xe642;</i>编辑</button>
+
+     	<button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+    </div>	
+	<input type="hidden" name="id" value="{$list['id']}" />
+
+	<fieldset class="layui-elem-field">
+		<legend>说明</legend>
+		<div class="layui-field-box">
+    		<p>商品模型是对不同商品的分组</p>
+			<p>商品模型关联商品规格,商品属性</p>
+			<p>一个商品归属到这个商品模型就知道他有哪里规格属性</p>
+		</div>
+	</fieldset>	
+</form>

@@ -1,0 +1,23 @@
+<form class="layui-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">账户</label>
+		<div class="layui-input-inline">
+			<input type="text" name="account" class="layui-input" lay-verify="required" placeholder="用户名或手机">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">金额</label>
+		<div class="layui-input-inline">
+			<input type="number" id="money" name="money" lay-verify="required" class="layui-input">
+		</div>
+	</div>
+	
+	<hr/>
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button class="layui-btn" lay-submit="" isConfirm=1 lay-filter="save" url="{:url('Pay/add')}">充值</button>
+
+	    <button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+	</div>
+</form>

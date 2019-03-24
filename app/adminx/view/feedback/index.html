@@ -1,0 +1,69 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+	
+	    <div class="layui-col-md12">
+
+			<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Feedback/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="id:">
+			  <i class="layui-icon">&#xe640;</i>批量删除
+			</button>
+
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+
+
+			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+	    </div>
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Feedback/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-108"></table>	
+	        <div class="fsDatagridCols">
+				<p checkbox="true"/>	
+				<p field="title" title="标题" width="300"/>	
+				<p title="截图" width="100" templet="#imageTpl"/>
+				<p field="nickname" title="昵称" width="150"/>	
+				<p field="mobile" title="联系电话" width="150"/>	
+				<p field="contact" title="联系方式" width="150"/>	
+				<p title="是否回复" width="100" templet="#reply"/>	
+				<p field="createTime" title="发布日期" sort="true" width="200"/>
+				<p field="updateTime" title="回复日期" sort="true" width="200"/>
+				<p fixed="right" align="left" toolbar="#barDemo" title="操作" width="80"/>
+			</div>
+
+			<script type="text/html" id="imageTpl">
+				{{# if(d.picname == ''){ }}
+				-
+				{{# }else{ }}
+				<a href="{{d.picname}}" target="_blank"><i class="layui-icon">&#xe64a;</i></a>
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="reply">
+				{{# if(d.reply == ''){ }}
+				<span style="color:#f00">未回复</span>
+				{{# }else{ }}
+				已回复
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="barDemo">			
+ 				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Feedback/view")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="回复">回复</a>
+			</script>
+	    </div>
+	</div>
+</div>
+<script>
+layui.use('table', function(){
+	form = layui.form; 
+	//监听性别操作
+	form.on('switch(status)', function(obj){
+		url = '{:url('Feedback/status')}';
+		var id = this.value;
+		var v = 0
+		if (obj.elem.checked){
+			v = 1;
+		} 
+		$.post(url, {id: this.value,field:"status",val:v}, function (data) {console.log(data);}, "json");
+	});
+});
+</script>

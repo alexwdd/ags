@@ -1,0 +1,23 @@
+{__NOLAYOUT__}
+<p>商品属性</p>
+<table class="layui-table">
+    <colgroup>
+        <col width="100">           
+        <col>
+    </colgroup>
+    <tbody>
+        {volist name="attr" id="vo"}
+        <tr v-for="vo in attr">
+            <td>{$vo.name}</td>
+            <td>
+                <select name="attr_{$vo.id}[]">
+                    <option value="0">无</option>
+                    {volist name="vo.item" id="f"}
+                    <option value="{$f}" {eq name="vo.select" value="$f"}selected{/eq}>{$f}</option>
+                    {/volist}
+                </select>
+            </td>
+        </tr>
+        {/volist}
+    </tbody>
+</table>

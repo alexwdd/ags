@@ -1,0 +1,82 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">身份</label>
+		<div class="layui-input-inline">
+			<select name="group" id="group" lay-verify="required">
+	    	<option value="">==请选择==</option>
+	    	{volist name="group" id="vo"}
+	        <option value="{$vo.id}">{$vo.name}</option>
+	        {/volist}
+	        </select>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">手机号</label>
+		<div class="layui-input-inline">
+			<input type="text" name="mobile" lay-verify="__mobile" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">登录的手机号码，不可更改！</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">登录密码</label>
+		<div class="layui-input-inline">
+			<input type="password" id="password" name="password" lay-verify="__password" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">重复密码</label>
+		<div class="layui-input-inline">
+			<input type="password" name="repassword" lay-verify="__repassword" class="layui-input">
+		</div>
+	</div>	
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">微信</label>
+		<div class="layui-input-inline">
+			<input type="text" name="weixin" placeholder="必填" lay-verify="required" class="layui-input">
+		</div>
+	</div>	
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">姓名</label>
+		<div class="layui-input-inline">
+			<input type="text" name="name" class="layui-input" placeholder="选填">
+		</div>
+	</div>
+	
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">QQ</label>
+		<div class="layui-input-inline">
+			<input type="number" name="qq" placeholder="选填" class="layui-input">
+		</div>
+	</div>	
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">老客户</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="vip" value="0" title="否" checked>
+			<input type="radio" name="vip" value="1" title="是">
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="disable" value="0" title="正常" checked>
+			<input type="radio" name="disable" value="1" title="禁用">
+		</div>
+	</div>
+
+	<hr/>
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button class="layui-btn" lay-submit="" lay-filter="save" url="{:url('Member/add')}">新增</button>
+	    <button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+	</div>
+</form>

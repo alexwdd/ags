@@ -1,0 +1,17 @@
+<div class="wuliu">
+    <li>
+        <p>阿德莱德处理中心-Australia {eq name="list.status" value="0"}待审核付款{else/}准备配货{/eq}</p>
+    </li>
+    {notempty name="list.image"}
+    <li>
+        <p>阿德莱德处理中心-Australia 货物打板装车，正运往悉尼</p>
+    </li>
+    {/notempty}
+    {volist name="result.TrackList" id="vo"}
+    <li>
+        <p>{$vo.StatusTime}</p>
+        <p>{$vo.Location}</p>
+        <p>{$vo.StatusDetail}</p>
+    </li>
+    {/volist}        
+</div>

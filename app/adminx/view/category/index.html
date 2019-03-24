@@ -1,0 +1,57 @@
+<div class="layui-col-md12">
+	<fieldset class="layui-elem-field">
+		<legend>分类管理</legend>
+		<div class="layui-field-box">
+			<div class="layui-col-md12">
+		    	<?php $model=config("TABLE_MODEL"); ?>
+				{volist name="model" id="vo"}
+				{eq name="vo.show" value="1"}
+				<a href="{:url('Category/index',array('mid'=>$vo['id']))}" class="layui-btn layui-btn-sm <?php if($mid!=$vo['id']){echo 'layui-btn-primary';} ?>">{$vo['name']}</a>
+				{/eq}
+				{/volist}
+
+				<button class="layui-btn layui-btn-sm layui-btn-normal" function="top" topUrl="{:url('Category/add',array('mid'=>$mid))}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="添加根栏目">
+				  <i class="layui-icon">&#xe654;</i>添加根栏目
+				</button>
+		    </div>
+			
+			<div class="layui-col-md12">
+		        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Category/index',array('mid'=>$mid))}" isPage="0" defaultForm="query_form" height="full-108"></table>
+
+		        <div class="fsDatagridCols">
+					<p checkbox="true"/>	
+					<p field="id" title="ID" width="50"/>
+					<p field="name" title="名称" width="150" templet="#nameTpl"/>
+					<p field="comm" title="首页展示" width="90" dict="goodsComm"/>
+					<p field="picname" title="LOGO" width="150" templet="#picname"/>
+					<p field="path" title="path" width="200"/>
+					<p field="url" title="链接" width="200"/>
+					<p field="sort" title="排序" width="150"/>
+					<p fixed="right" align="center" toolbar="#barDemo" title="操作" width="150"/>
+				</div>
+				
+
+				<script type="text/html" id="picname">
+				{{# if(d.picname!=""){ }}
+				<img src="{{d.picname}}" style="height:30px;"/>
+				{{# } }}
+				</script>
+
+				<script type="text/html" id="nameTpl">
+				{{# if(d.fid==0){ }}
+				<strong style="color:#000">{{d.name}}</strong>
+				{{# }else{ }}
+				<span {{d.style}}>{{d.name}}</span>
+				{{# } }}
+				</script>
+
+				<script type="text/html" id="barDemo">
+					<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url('Category/add' , array('mid'=>$mid))}" topWidth="80%" topHeight="80%" inputs="id:,path:">添加</a>
+
+	 				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Category/edit")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑">编辑</a>
+	 				<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="submit" url="{:url('Category/del')}" isConfirm="1" method="get" confirmMsg="是否确定删除当前记录？" inputs="id:">删除</a>
+				</script>
+		    </div>
+		</div>
+	</fieldset>
+</div>

@@ -1,0 +1,27 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">本月明细</h1>
+</header>
+
+<div class="mui-content">
+	<table class="myTable">
+		<thead>
+			<tr>
+			<th>订单</th>
+			<th style="width: 80px">盈利</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name="order" id="vo"}
+			<tr>
+				<td style="text-align: left;">{$vo.order_no}</td>
+				<td>￥{$vo.jiangjin}</td>
+			</tr>
+			{/volist}
+			<tr>
+				<td style="text-align: right;">合计</td>
+				<td>￥{$total}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

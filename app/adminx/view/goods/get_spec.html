@@ -1,0 +1,47 @@
+{__NOLAYOUT__}
+<tr>
+    <td><select name="spec_cid[]" lay-verify="required">
+        <option value="">==请选择==</option>
+        {volist name="cate" id="vo"}
+        <option value="{$vo['id']},{$vo['path']}">{php}
+            for($i=0; $i<$vo['count']*2; $i++){
+               echo '&nbsp;&nbsp;';            
+            }
+        {/php}{$vo['name']}</option>
+        {/volist}
+        </select></td>
+    <td><select name="spec_cid1[]">
+        <option value="">==请选择==</option>
+        {volist name="cate" id="vo"}
+        <option value="{$vo['id']},{$vo['path']}">{php}
+            for($i=0; $i<$vo['count']*2; $i++){
+               echo '&nbsp;&nbsp;';            
+            }
+        {/php}{$vo['name']}</option>
+        {/volist}
+        </select></td>
+    <td><select name="spec_show[]">
+        <option value="1">显示</option>
+        <option value="0">隐藏</option>
+    </select></td>
+    <td><input type="text" name="spec_name[]" lay-verify="required" class="layui-input"></td>
+    <td><input type="text" name="spec_short[]" lay-verify="required" class="layui-input"></td>
+    <td><input type="text" name="spec_price[]" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
+    <td><input type="text" name="spec_price1[]" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
+    <td><input type="text" name="spec_number[]" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
+    <td><select name="spec_wuliu[]">
+        <option value="">无</option>
+        {volist name="wuliu" id="vo"}
+        <option value="{$vo.name}">{$vo.name}</option>
+        {/volist}
+    </select></td>
+    <td><select name="spec_tag[]">
+        <option value="">无</option>
+        <option value="1">包邮</option>
+        <option value="2">三罐包邮</option>
+        <option value="3">三袋包邮</option>
+        <option value="4">六袋包邮</option>
+    </select>
+    </td>
+    <td><a href="javascript:void(0)" onclick="delSpec(this)" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-delete"></i> 删除</a></td>
+</tr>

@@ -1,0 +1,17 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>批量打印</title>
+</head>
+<style type="text/css">
+*{padding: 0; margin: 0; text-align: center;}
+img{display: block; margin: auto; width: 500px; border: 1px #000 solid}
+</style>
+<body>
+{volist name="list" id="vo"}
+<img src="{$vo.eimg}">
+{/volist}
+</body>
+</html>

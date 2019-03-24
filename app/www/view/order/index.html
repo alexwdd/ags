@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+<style type="text/css">
+.wuliu{clear: both; background: #fff; overflow: hidden;}
+.wuliu li{border-bottom: 1px #ddd solid; padding: 10px;}
+.wuliu li p{margin: 0}
+.my-tools .layui-btn {margin-left:0px; padding:0 8px;}
+</style>
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / 在线订单
+    </div>
+
+    <div class="layui-row layui-col-space10 my-tools" style="padding: 10px; padding-top: 0">
+        <div class="layui-col-md9">  
+            <div class="layui-btn-group">          
+            <button type="button" data-type="all" class="sBtn layui-btn <?php if($type=='all'){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>">全部({$num.total})</button>
+            <button type="button" data-type="0" class="sBtn layui-btn <?php if($type==0 && $type!='all'){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">待付款({$num.num1})</button>
+            <button type="button" data-type="1" class="sBtn layui-btn <?php if($type==1){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">待审核({$num.num2})</button>
+            <button type="button" data-type="2" class="sBtn layui-btn <?php if($type==2){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">待配货({$num.num3})</button>
+            <button type="button" data-type="3" class="sBtn layui-btn <?php if($type==3){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">配货中({$num.num4})</button>
+            <button type="button" data-type="4" class="sBtn layui-btn <?php if($type==4){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">已发货({$num.num5})</button>
+            <button type="button" data-type="99" class="sBtn layui-btn <?php if($type==99){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">问题单({$num.num6})</button>
+            </div>
+            <input type="hidden" id="type" value="{$type}">
+
+            <div class="layui-inline">
+                <input type="text" class="layui-input" id="day" value="{$day}" placeholder="下单时间">
+            </div>
+            <div class="layui-inline">
+                <input type="text" class="layui-input" id="orderKey" placeholder="收件人/电话/订单号/快递单号">
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="sBtn layui-btn">订单查询</button>
+            </div>              
+            <script>
+            layui.use('laydate', function(){
+                var laydate = layui.laydate;
+                //日期范围
+                laydate.render({
+                elem: '#day'
+                ,range: true
+                });
+
+                $(".sBtn").click(function(){     
+                    console.log($(this).attr("data-type"));
+                    if ($(this).attr("data-type")!=undefined){
+                        var type = $(this).attr("data-type");
+                        $("#type").val(type);
+                    }
+                    var day = $("#day").val();
+                    var type = $("#type").val();
+                    var keyword = $("#orderKey").val();
+                    window.location.href = "{:url('order/index')}?day="+day+"&type="+type+"&keyword="+keyword;                   
+                })
+            })
+            </script>
+        </div>        
+        <div class="layui-col-md3" style="text-align: right;">
+            <div class="layui-inline" style="width: 200px">
+                <input type="text" class="layui-input" id="kdNo" placeholder="物流单号">
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="kdBtn layui-btn">物流查询</button>
+            </div>              
+            <script>
+            $(".kdBtn").click(function(){
+                var kdNo = $("#kdNo").val();
+                if (kdNo!=''){
+                    openModel ('{:url('order/wuliu')}?kd='+kdNo,'物流查询','1000px','80%')
+                }               
+            })     
+            </script>
+        </div>
+    </div>
+
+        <table class="layui-table">
+            <colgroup>
+                <col>
+                <col width="100">                       
+                <col width="120">             
+            </colgroup>
+            <thead>
+            <tr style="background: #fff">
+              <th>收件人</th>
+              <th>金额</th>
+              <th>订单操作</th>
+            </tr> 
+            </thead>            
+        </table>
+
+        {volist name="list" id="vo" empty="$empty"}
+        <div class="layui-card">
+            <div class="layui-card-header" style="color: #999; font-size: 12px;">
+            订单号：<a href="{:url('order/detail',array('id'=>$vo['id']))}"><span class="money">{$vo.order_no}</span></a>
+            <?php
+            if($vo['payType']!=1 && $vo['upload']==0){
+                if(count($vo['person'])==1){
+                    echo '<a href="javascript:void(0)" onclick="openModel (\''.url('order/person',array('id'=>$vo['person'][0]['id'])).'\',\'上传身份证\',\'1000px\',\'80%\')"><span class="layui-badge">未上传身份证，请点击上传</span></a>&nbsp;';
+                }else{
+                    echo '<span class="layui-badge">未上传身份证，请点击订单详情上传</span>&nbsp;';
+                }
+            }else{
+            ?>
+            <span class="layui-badge layui-bg-green">已上传身份证</span>
+            <?php
+            }
+            ?>
+            
+            <?php
+            if($vo['cardID']>0 && $vo['payStatus']==0){
+                echo '<span class="layui-badge layui-bg-red">待审核</span>';
+            }else{
+            ?>
+            {switch name="vo.payStatus" }
+                {case value="0"}<span class="layui-badge layui-bg-red">待付款</span>{/case}
+                {case value="1"}<span class="layui-badge layui-bg-orange">待审核</span>{/case}
+                {case value="2"}<span class="layui-badge layui-bg-blue">待配货</span>{/case}
+                {case value="3"}<span class="layui-badge">配货中</span>{/case}
+                {case value="4"}<span class="layui-badge layui-bg-green">已发货</span>{/case}
+                {case value="99"}<span class="layui-badge layui-bg-red">问题单</span>{/case}
+            {/switch}
+            <?php } ?>
+
+            {eq name="vo.image" value="1"}
+            <span class="layui-badge layui-bg-blue">配货图片已上传</span>
+            {/eq}
+            <span style="float: right;font-size: 12px">{$vo.createTime|date="Y-m-d H:i:s",###}</span>
+            </div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <colgroup>
+                        <col>   
+                        <col width="100">                       
+                        <col width="100">                       
+                    </colgroup>
+                    <tr>
+                        <td style="cursor: pointer;" onclick="window.location.href='{:url('order/detail',array('id'=>$vo['id']))}'">
+                            {eq name="vo.payType" value="1"}
+                            店铺自提
+                            {else/}
+                            {volist name="vo.person" id="f"}
+                            <p>
+                            <i class="layui-icon layui-icon-username"></i> {$f.name}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <i class="layui-icon layui-icon-cellphone"></i> {$f.mobile}
+                            </p>
+                            {/volist}
+                            {/eq}
+                        </td>
+                        <td>
+                            <p class="money text-center">${$vo.money}</p>
+                            {eq name="vo.payType" value="3"}
+                            {eq name="vo.payStatus" value="0"}<p class="text-center"><a href="{:url('order/pay','order_no='.$vo['order_no'])}" class="layui-btn layui-btn-danger layui-btn-xs">去支付</a></p>{/eq}
+                            {/eq} 
+                        </td>
+                        <td class="actd">        
+                            <p class="text-center"><a href="{:url('order/detail',array('id'=>$vo['id']))}" class="layui-btn layui-btn-primary layui-btn-xs layui-btn-fluid">订单详情</a></p>
+                            <?php if($vo['payStatus']==0 && $vo['image']==''){?>
+                            <p class="text-center"><a class="layui-btn layui-btn-danger layui-btn-xs" href="{:url('Order/del',array('id'=>$vo['id']))}" onClick="return confirm('确实删除选定的信息？')">删除</a></p>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                </table>
+                
+            </div>
+        </div>            
+        {/volist}
+        {$page}      
+    </div>
+</div>
+
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

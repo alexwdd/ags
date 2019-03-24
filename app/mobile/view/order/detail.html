@@ -1,0 +1,137 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">订单详情</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">   
+    {volist name="goods" id="vo"}
+    <div class="mui-row cartList">
+        <div class="mui-col-xs-3">
+            <img src="{$vo.goods.picname|getThumb=280,280}">
+        </div>
+        <div class="mui-col-xs-9" style="padding-left:10px" id="cart{$vo.id}">
+            <p>{notempty name="vo.goods.wuliu"}【{$vo.goods.wuliu}】{/notempty}{$vo.goods.name}{$vo.extends}</p>            
+            <p>{$vo.goods.weight}kg</p>
+            <p class="m">${$vo.price} X {$vo.num}</p> 
+            <p>${$vo.money}</p>
+            {volist name="vo.server" id="s"}
+            <div class="serverLi">
+                {$s.name}${$s.price}/件，数量{$vo.trueNumber*$vo.num}，合计${$s.price *  $vo.trueNumber*$vo.num}
+            </div>
+            {/volist}            
+            
+        </div>
+    </div>
+    {/volist}
+
+    <div class="payOk">
+        <div class="fd">
+            <p>单号<span>{$list.order_no}</span></p>
+            <p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
+            <p>商品金额<span>￥{$list.goodsMoney}</span></p>
+            <p>运费<span>￥{$list['payment']}</span></p>
+            <p>总金额<span>￥{$list.money}</span></p>
+            <p>支付方式<span>{$list.payType|getPayType}</span></p>
+            <p>状态
+            <span>
+            {switch name="list.payStatus" }
+                {case value="0"}<span class="my-badge mui-badge mui-badge-warning">待付款</span>{/case}
+                {case value="1"}<span class="my-badge mui-badge mui-badge-warning">待审核</span>{/case}
+                {case value="2"}<span class="my-badge mui-badge mui-badge-purple">待配货</span>{/case}
+                {case value="3"}<span class="my-badge mui-badge mui-badge-primary">配货中</span>{/case}
+                {case value="4"}<span class="my-badge mui-badge mui-badge-success">已发货</span>{/case}
+                {case value="99"}<span class="my-badge mui-badge mui-badge-danger">问题单</span>{/case}
+            {/switch}
+            </span></p>
+            <!-- <p>备注：{$list.intr}</p>   -->
+        </div>
+    </div>    
+
+    {volist name="person" id="vo" key="j"}
+    <div class="mui-card my-card">
+        <div class="mui-card-header">收件人：{$vo.name}，{$vo.mobile}</div>
+        <div class="mui-card-content">
+            <div class="list noborder">
+                <li>
+                    <p>地址</p>
+                    <span>{$vo.province} {$vo.city} {$vo.area} {$vo.address}</span>
+                </li>
+                <li>
+                    <p>身份证号码</p>
+                    <span>{$vo.sn}</span>
+                </li>
+                <li>
+                    <p>身份证照片</p>
+                    <span class="personImg">
+                        {empty name="vo.front"}
+                        <a href="{:url('order/person',array('id'=>$vo['id']))}">上传身份证</a>
+                        {else/}
+                        <a href="{$vo.front}" target="_blank"><img src="{$vo.front}"></a>
+                        <a href="{$vo.back}" target="_blank"><img src="{$vo.back}"></a>
+                        {/empty}
+                    </span>
+                </li>
+                <li style="border: 0">
+                    <p>发件人</p>
+                    <span>{$vo.sender}，{$vo.senderMobile}</span>
+                </li>             
+            </div>
+        </div>        
+        {volist name="vo.baoguo" id="f"}
+        <div class="baoguo">
+            <div class="hd">
+                <p style="float: left;margin: 0">{$f.kuaidi}</p>
+                <p style="float: right;;margin: 0">
+                {notempty name="$f.kdNo"}
+                <?php if(in_array($f['type'],[12,13,14])){ ?>
+                <a href="{:config('site.url'.$f['type'])}" target="_blank">物流查询</a>
+                <?php }else{ ?>
+                <a href="{:url('order/wuliu','kd='.$f['kdNo'])}">物流查询</a>
+                <?php } ?>
+                {/notempty}
+                </p>
+            </div>
+            <div class="list noborder">
+                {empty name="f.kdNo"}
+                <li>
+                    <p>快递单号</p>
+                    <span>未生成</span>
+                </li>
+                {else/}
+                {volist name="f.kdNo" id="kd"}
+                <li>
+                    <p>快递单号</p>
+                    <span class="copyBtn" data-clipboard-text="{$kd}">{$kd} 复制</span>
+                </li>
+                {/volist}
+                {/empty}
+            </div>     
+            <div class="bd">{volist name="f.goods" id="g"}<p>{$g.short} * {$g.trueNumber}</p>{/volist}</div>
+            <div class="wimg">     
+                {volist name="f.eimg" id="img"}
+                <a href="{$img}" target="_blank"><img src="{$img}"></a>
+                {/volist}
+                {volist name="f.image" id="img"}
+                <a href="{$img}" target="_blank"><img src="{$img}"></a>
+                {/volist}
+            </div>
+        </div>            
+        {/volist}  
+    </div>
+    {/volist}
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />
+
+<script src="{:RES}/js/clipboard.min.js"></script>
+<script>
+var clipboard = new ClipboardJS('.copyBtn');
+clipboard.on('success', function(e) {
+    mui.toast("已复制到粘贴板");
+});
+clipboard.on('error', function(e) {
+    mui.toast("系统不支持");
+});
+</script>

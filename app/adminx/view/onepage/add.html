@@ -1,0 +1,43 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-form-item">
+	    <label class="layui-form-label">标题</label>
+	    <div class="layui-input-block">
+	    	<input type="text" name="title" required="" lay-verType="tips" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">关键词</label>
+	    <div class="layui-input-block">
+	    	<input type="text" name="keyword" required="" lay-verType="tips" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">描述</label>
+	    <div class="layui-input-block">
+	    	<input type="text" name="description" lay-verType="tips" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">正文</label>
+		<div class="layui-input-block">
+			<textarea name="content" id="container" lay-verify="required"></textarea>
+			<script type="text/javascript" src="{:config('UE_CONFIG.uedir')}/my.config.js"></script>
+			<script type="text/javascript" src="{:config('UE_CONFIG.uedir')}/ueditor.all.min.js"></script>
+			<script type="text/javascript" src="{:config('UE_CONFIG.uedir')}/lang/zh-cn/zh-cn.js"></script>
+			<script type="text/javascript">
+			var editor = UE.getEditor('container');
+			</script>
+		</div>
+	</div>
+	<hr/>
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button class="layui-btn" lay-submit="" lay-filter="save" url="{:url('Onepage/add')}">新增</button>
+	    <button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+	</div>
+</form>

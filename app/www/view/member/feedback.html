@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / 投诉建议
+    </div>
+
+    <div style="padding: 10px; padding-top: 0">
+    <p style="margin-bottom: 15px"><a href="{:url("member/write")}" class="layui-btn layui-btn-sm">提交</a></p>
+    {volist name="list" id="vo" empty="$empty"}
+    <div class="layui-card">
+        <div class="layui-card-header"><b>{$vo.title}</b> <span style="float: right;">{$vo.createTime|date="Y-m-d H:i:s",###}</span></div>
+            <div class="layui-card-body">
+                {$vo.content}
+                {notempty name="vo.reply"}
+                <p style="color:blue;margin-bottom:0">回复：{$vo.reply}</p>
+                {/notempty}
+            </div>
+    </div>
+    {/volist}
+    </div>
+</div>
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

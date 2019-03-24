@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / <a href="{:url('shop/index')}">店面订单</a> / 订单详情
+    </div>
+
+    <div style="padding: 10px; padding-top: 0">
+        <div class="layui-row layui-col-space15">
+        	<div class="layui-col-md12">
+        		<div class="layui-card my-card">
+			        <div class="layui-card-header">商品明细</div>
+			        <div class="layui-card-body">
+			        	<table class="layui-table">
+				            <colgroup>
+				                <col>
+				                <col width="100">                       
+				                <col width="100">                       
+				                <col width="180">                       
+				                <col width="120">             
+				            </colgroup>
+				            <thead>
+				            <tr style="background: #fff">
+				              <th>商品</th>
+				              <th>单价</th>
+				              <th>数量</th>
+				              <th>总金额</th>
+				            </tr> 
+				            </thead>
+				            <tbody>
+				                {volist name="list.goods" id="vo"}
+				                <tr>
+				                    <td>{$vo.name}</td>
+				                    <td>${$vo.price}</td>
+				                    <td>{$vo.number}</td>
+				                    <td>{$vo.money}</td>
+				                </tr>
+				                {/volist}
+				            </tbody>
+				        </table>
+			        </div>
+			    </div>
+				
+				{eq name="list.temp" value="0"}
+        		<div class="layui-card my-card">
+			        <div class="layui-card-body">
+			            <div class="list">
+			            	<li>
+			                    <label>订单号</label>
+			                    <p>{$list.order_no}</p>
+			                </li>
+			                <li>
+			                    <label>小票号</label>
+			                    <p>{$list.No}</p>
+			                </li>
+			                <li>
+			                    <label>下单时间</label>
+			                    <p>{$list.createTime|date="Y-m-d H:i:s",###}</p>
+			                </li>
+			                <li>
+			                    <label>商品合计</label>
+			                    <p>${$list.goodsMoney}</p>
+			                </li>
+			                <li>
+			                    <label>运费</label>
+			                    <p>${$list.yunfei}</p>
+			                </li>
+			                <li>
+			                    <label>总金额</label>
+			                    <p>${$list.total}</p>
+			                </li>
+			                <li>
+			                    <label>支付方式</label>
+			                    <p>{$list.payType}</p>
+			                </li>			                
+			            </div>
+			        </div>		
+			    </div>
+			    {/eq}
+        	</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

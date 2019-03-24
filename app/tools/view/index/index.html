@@ -1,0 +1,48 @@
+<script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+wx.config({
+    beta: true,// 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    appId: "{:config('weixin.appID')}", // 必填，企业微信的corpID
+    timestamp: {$sdkConfig.timestamp}, // 必填，生成签名的时间戳
+    nonceStr: '{$sdkConfig.noncestr}', // 必填，生成签名的随机串
+    signature: '{$sdkConfig.signature}',// 必填，签名，见附录1
+    jsApiList: [
+        'scanQRCode'
+    ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+});
+</script>
+<div class="mui-content" style="margin-top:0">
+	<div class="scan" id="scan"><img src="{:RES}/image/scan.png"></div>
+	<p style="text-align: center;">扫描快递单条形码，上传快递图片</p>
+</div>
+<script type="text/javascript">
+$(function(){
+	$("#scan").click(function(){
+		wx.scanQRCode({
+			needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+			scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+			success: function (res) {
+				var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+				if (checkUrl(result)){
+					//window.location.href = result;
+				}else{
+					result = result.split(",");
+					url = "{:url('index/image')}?order="+result[1];
+					window.location.href = url;
+				}				
+			}
+		});
+	})
+})
+
+function checkUrl(v){
+	var strRegex = "^((https|http)://)?[a-z0-9A-Z]{3}\.[a-z0-9A-Z][a-z0-9A-Z]{0,61}?[a-z0-9A-Z]\.com|net|cn|cc (:s[0-9]{1-4})?/$";
+	var re = new RegExp(strRegex);
+	if (re.test(v)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+</script>

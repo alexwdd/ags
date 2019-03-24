@@ -1,0 +1,38 @@
+<div class="tabMenu">
+    <li class="active"><a href="{:url("order/pay","order_no=".$list['order_no'])}">在线支付</a></li>
+    <li><a href="{:url("order/cardpay","order_no=".$list['order_no'])}">银行转账</a></li>
+</div>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <div class="payPrice">
+        <li>
+            <h2>￥{$list.money}</h2>            
+        </li>        
+    </div>
+
+	<div class="payInfo">
+        <div class="qrcode"><img src="{:url('order/qrcode')}?url=<?php echo urlencode($url);?>" style="display: block; width: 50%; margin: auto;" /></div>
+        <div class="cardIntr">
+            请长按上面的支付码进行支付
+        </div>
+        
+    	<div class="payOk">
+    		<div class="fd">
+    			<p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
+    		</div>
+    	</div>
+    </div>
+</div>
+<script type="text/javascript">
+var check = setInterval(checkOrder,2000);
+function checkOrder(){
+    $.post('{:url("www/order/checkpay")}',{'order_no':'{$list.order_no}'},function(res){
+        if (res.code==1){
+            clearInterval(check);
+            $(".payInfo").html('<div class="payOk"><i class="layui-icon layui-icon-ok-circle"></i> 支付成功</div><p style="text-align: center;"><a class="layui-btn layui-btn-primary" href="{:url('index/index')}">返回首页</a><a class="layui-btn" href="{:url('order/index')}">订单中心</a></p>');
+        }
+    },"json")
+}
+</script>

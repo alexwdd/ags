@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+<body>
+
+{include file="public:header" /}
+
+<div class="main" style="margin-top:20px">
+	<div class="indexFocus">
+		<div class="layui-carousel" id="banner">
+		    <div carousel-item>
+		    	{volist name="ad" id="vo"}
+		        <div class="bannerItem"><a href="{$vo.url}"><img src="{$vo.picname|getThumb=500,325}" style="height:362px" /></a></div>
+		        {/volist}
+		    </div>
+		</div>
+	</div>
+	<script>
+	layui.use('carousel', function(){
+		var carousel = layui.carousel;
+		carousel.render({
+	        elem: '#banner',
+	        width: '100%', //设置容器宽度
+	        height:'362px',
+	        arrow: 'always', //始终显示箭头
+	        indicator: 'inside' //切换动画方式
+	    });
+	});
+	</script>
+	<div class="layui-row brandList">
+		{volist name="brand" id="vo"}
+		<div class="layui-col-md2 brand"><a href="{:url('store/lists','bid='.$vo['id'])}"><img src="{$vo.logo|getThumb=200,125}" alt="{$vo.name}"></a></div>
+		{/volist}
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<div class="indexTitle">
+	<h1>本周特价</h1>
+</div>
+
+<div class="main" style="margin-bottom:30px">
+	<div class="productList">	
+		{volist name="goods" id="vo"}	
+		<li>
+			<div class="product">
+				<a href="{:url('store/detail','id='.$vo['id'])}">
+				<img src="{$vo.picname|getThumb=280,280}" alt="">
+				</a>
+				<div class="bd">
+					<a href="">
+					<h1 class="layui-elip">{$vo.name}</h1>
+					</a>
+					{gt name="user.id" value="0"}
+					<div class="price">
+						<p>价格：<span>${$vo.price}</span></p>
+						<p>会员价：<span>${$vo.price1}</span></p>
+						<div class="setNumber">
+							<span class="set">-</span>
+							<span>1</span>
+							<span class="set">+</span>
+						</div>
+					</div>
+					<div class="action">
+						<div class="addCart" data-img="{$vo.picname|getThumb=280,280}"><i class="layui-icon layui-icon-cart"></i></div>
+					</div>
+					{/gt}
+				</div>
+			</div>
+		</li>
+		{/volist}		
+	</div>
+</div>
+
+<script>
+$(function() { 
+	$('.addCart').on('click', function () {
+	    var cart = $('#topCart');
+	    var imgtodrag = $(this).parent().parent().parent('.product').find("img").eq(0);
+	    if (imgtodrag) {
+	        var imgclone = imgtodrag.clone()
+	            .offset({
+	            top: imgtodrag.offset().top,
+	            left: imgtodrag.offset().left
+	        })
+	            .css({
+	            'opacity': '0.5',
+	                'position': 'absolute',
+	                'height': '150px',
+	                'width': '150px',
+	                'z-index': '100'
+	        })
+	            .appendTo($('body'))
+	            .animate({
+	            'top': cart.offset().top + 10,
+	                'left': cart.offset().left + 10,
+	                'width': 75,
+	                'height': 75
+	        }, 500);
+	        
+	        imgclone.animate({
+	            'width': 0,
+	                'height': 0
+	        }, function () {
+	        	//回调
+	            $(this).detach();
+
+	        });
+	    }
+	});  
+}); 
+</script>
+    
+{include file="public:footer" /}
+</body>
+</html>

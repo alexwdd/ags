@@ -1,0 +1,132 @@
+<table class="layui-table">
+    <colgroup>
+    <col width="80">
+    <col>
+    <col width="80">
+    <col width="120">                
+    <col width="90">                
+    <col width="60">
+    </colgroup>
+    <thead>                
+        <tr>
+            <th></th>
+            <th>商品</th>
+            <th>价格</th>
+            <th style="text-align: center;">总件数</th>
+            <th style="text-align: center;">剩余数量</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {volist name="list" id="vo" key="k"}
+        <tr>
+            <td><img src="{$vo.goods.picname|getThumb=280,280}" style="height: 60px"></td>
+            <td style="text-align: left;">
+                <h1 style="font-size: 16px; color: #000">{notempty name="vo.goods.wuliu"}【{$vo.goods.wuliu}】{/notempty}{$vo.goods.name}{$vo.extends}</h1>
+                {volist name="vo.server" id="s"}
+                <p>{$s.name} ${$s.price}</p>
+                {/volist}
+            </td>
+            <td>${$vo.goods.price}</td>
+            <td>
+                <div class="numberAction" data-id="{$vo.id}" data-number="{$vo.goods.number}">
+                    <span class="set" data-action="dec">-</span>
+                    <span id="buyNum{$vo.id}">{$vo.number}</span>
+                    <span class="set" data-action="inc">+</span>
+                </div> 
+            </td>
+            <td class="checkNumber" item-id="{$vo.itemID}" id="goodsNumber{$vo.id}" style="text-align: center;">{$vo.goodsNumber}</td>
+            <td>
+                <p style="margin-bottom: 5px"><button type="button" class="layui-btn layui-btn-xs action" data-index="{$k-1}" data-id="{$vo.id}" data-action="inc" data-number="{$vo.goods.step}">添加</button></p>
+                <p><button type="button" class="layui-btn layui-btn-xs layui-btn-danger action" data-index="{$k-1}" data-id="{$vo.id}" data-action="dec" data-number="{$vo.goods.step}">删减</button></p>
+            </td>
+        </tr>
+        {/volist}
+    </tbody>
+</table>
+<script type="text/javascript">
+var dataJson = {$data};
+$(function() {        
+    //更改购物车数量
+    $('.numberAction .set').on('click', function () {
+        var action = $(this).attr("data-action");
+        var cartID = $(this).parent().attr("data-id");
+        var addNumber = parseInt($(this).parent().attr("data-number"));
+        var number = $("#buyNum"+cartID);
+        var goodsNumberDiv = $("#goodsNumber"+cartID);
+        var n = parseInt($(goodsNumberDiv).html());
+        oldNum = parseInt(number.html());
+        if (action=='inc'){
+            v = oldNum+1;                
+            $(goodsNumberDiv).html(n+addNumber);
+        }else{
+            if (oldNum>1 && n>=addNumber){
+                v = oldNum-1;
+                $(goodsNumberDiv).html(n-addNumber);
+            }else{
+                return;
+            }
+        }
+        number.html(v);
+
+        if (v != oldNum){
+            $.get("{:url('cart/setCartNum')}?number="+v+"&cartID="+cartID+"&temp="+new Date().getTime(),function(res){
+                $("#total").html("$"+res.total); 
+                $("#orderTotalMoney").val(res.total); 
+            },'json'); 
+        }
+
+        var num = 0;
+        $(".checkNumber").each(function(){
+            num += parseInt($(this).html()); 
+        });
+        if (num>0){
+            $("#doJiesuan").addClass("layui-btn-disabled");
+        }else{
+            $("#doJiesuan").removeClass("layui-btn-disabled");
+        }
+    });
+
+    $('.action').on('click', function () {
+        var act = $(this).attr("data-action");
+        var id = $(this).attr("data-id");
+        var index = $(this).attr("data-index");
+        var data = dataJson[index];
+        //data = JSON.parse(data);
+        var goodsNumber = parseInt($("#goodsNumber"+data.id).html());  
+        var addNumber = parseInt($(this).attr("data-number")); 
+        goods = {
+            'goodsID':data.goodsID,
+            'itemID':data.itemID,
+            'server':data.server,
+            'number':1,
+            'goodsNumber':addNumber,
+            'name':data.goods.name,
+            'short':data.goods.short,
+            'picname':data.goods.picname,            
+            'typeID':data.typeID,
+            'exts':data.extends,
+            'flag':data.flag
+        }  
+        if (act=='inc'){
+            if (goodsNumber<1){
+                return false;
+            }
+            goodsNumber = goodsNumber - addNumber;
+            $("#goodsNumber"+data.id).html(goodsNumber);            
+            cart.addproduct(goods);
+            cart.render();
+        }else{
+            if (cart.existproduct(goods)){
+                goodsNumber = goodsNumber + addNumber;
+                $("#goodsNumber"+data.id).html(goodsNumber);
+                cart.deleteproduct(goods);
+                cart.render();  
+            }                      
+        }
+
+        $(".kuaidi li").removeClass("active");
+        $(".kdResult").html('');
+        $("#kuaidi").val('');
+    })    
+})

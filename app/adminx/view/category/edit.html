@@ -1,0 +1,83 @@
+<form class="layui-form">		
+	<div class="layui-form-item">
+		<label class="layui-form-label">父栏目</label>
+		<div class="layui-input-block">
+			<select name="fid" id="fid" default="{$list['fid']}" lay-filter="fid" lay-verify="required">
+			<option value="0">根栏目</option>
+	        {volist name="cate" id="vo"}
+	        <option value="{$vo['id']}">{php}
+	            for($i=0; $i<$vo['count']*2; $i++){
+	               echo '&nbsp;&nbsp;';            
+	            }
+	        {/php}{$vo['name']}</option>
+	        {/volist}
+	        </select>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="name" lay-verify="required" class="layui-input" value="{$list['name']}" placeholder="必填">
+		</div>
+	</div>	
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">颜色</label>
+		<div class="layui-input-inline">
+			<input type="color" name="color" value="{$list.color}" class="layui-input" />
+		</div>
+		
+		{eq name="flag" value="1"}
+		<label class="layui-form-label">关联品牌</label>
+		<div class="layui-input-inline">
+			<select name="brandID" class="fsSelect fsDict" default="{$list.brandID}" dict="brand" addNull="1">
+				</select>
+		</div>
+		{/eq}
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">外链</label>
+		<div class="layui-input-block">
+			<input type="text" name="url" value="{$list['url']}" class="layui-input" lay-verify="_url">
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">图片地址</label>
+		<div class="layui-input-inline" style="width:400px">
+			<input type="text" id="picname" name="picname" value="{$list.picname}" class="layui-input">
+		</div>
+		<div class="layui-inline">
+			<button type="button"  class="layui-btn" function="upload" fileElem="#picname" srcElem="#picname_src" fileAccept="images" fileExts="jpg|png|gif|jpeg" fileSize="5120" inputs="type:test">上传图片</button>
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">首页展示</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="comm" value="1" title="是" {php}if($list['comm']==1) echo 'checked';{/php}>
+			<input type="radio" name="comm" value="0" title="否" {php}if($list['comm']==0) echo 'checked';{/php}>
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">排序</label>
+		<div class="layui-input-block">
+			<input type="text" name="sort" class="layui-input" value="{$list['sort']}" placeholder="必填" lay-verify="number">
+		</div>
+	</div>
+	
+	<hr>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Category/edit')}"><i class="layui-icon">&#xe642;</i>编辑</button>
+     	<button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+    </div>
+	<input type="hidden" name="id" value="{$list['id']}" />
+	<input type="hidden" name="thisFID" value="{$list['fid']}" />
+	<input type="hidden" name="path" value="{$list['path']}" />
+	<input type="hidden" name="model" value="{$list['model']}">
+</form>

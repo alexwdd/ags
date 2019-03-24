@@ -1,0 +1,85 @@
+<layout name='layout' />
+
+<form class="layui-form">		
+	{php}if($list['pid']>0){{/php}
+	<div class="layui-form-item">
+		<label class="layui-form-label">父节点</label>
+		<div class="layui-form-mid">
+			{$pname}
+		</div>
+	</div>
+	{php} } {/php}
+	
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">{$nodeName}描述</label>
+		<div class="layui-input-inline">
+			<input type="text" name="name" class="layui-input" lay-verify="required" value="{$list['name']}"  placeholder="中文描述">
+		</div>
+		<label class="layui-form-label">{$nodeName}值</label>
+		<div class="layui-input-inline">
+			<input type="text" name="value" class="layui-input" lay-verify="required" value="{$list['value']}" placeholder="填写{$nodeName}值">
+		</div>			
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="status" value="1" title="开启" {php}if($list['status']=='1')echo 'checked';{/php}>
+			<input type="radio" name="status" value="0" title="关闭" {php}if($list['status']=='0')echo 'checked';{/php}>
+		</div>
+	</div>
+	
+	{php}if($list['level']==2){{/php}
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">归属</label>
+		<div class="layui-input-inline">
+			<select name="data" id="data" default="{$list.data}" lay-verify="required">
+			<option value="">==请选择==</option>
+			{volist name="leftMenu" id="vo"}
+			<option value="{$vo.menuName}">{$vo.menuName}</option>
+			{/volist}
+			</select>
+		</div>
+	</div>	
+	{php}}{/php}	
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">菜单</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="display" value="1" title="显示" {php}if($list['display']=='1')echo 'checked';{/php}>
+			<input type="radio" name="display" value="0" title="隐藏" {php}if($list['display']=='0')echo 'checked';{/php}>
+		</div>
+
+		<label class="layui-form-label">图标</label>
+		<div class="layui-input-inline">
+			<input type="text" name="icon" value="{$list.icon}" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">备注</label>
+		<div class="layui-input-block">
+			<input type="text" name="remark" class="layui-input" value="{$list['remark']}">
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">排序</label>
+		<div class="layui-input-inline">
+			<input type="text" name="sort" class="layui-input" value="{$list['sort']}" placeholder="必填" lay-verify="number">
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button id="subBtn" class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Node/edit')}"><i class="layui-icon">&#xe642;</i>编辑</button>
+     	<button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+    </div>	
+
+	<input type="hidden" name="pid" value="{$list['pid']}" />
+	<input type="hidden" name="level" value="{$list['level']}" />
+	<input type="hidden" name="id" value="{$list['id']}" />
+	<input type="hidden" name="dosubmit">
+</form>

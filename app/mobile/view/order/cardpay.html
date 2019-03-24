@@ -1,0 +1,79 @@
+<div class="tabMenu">
+    <li><a href="{:url("order/pay","order_no=".$list['order_no'])}">在线支付</a></li>
+    <li class="active"><a href="{:url("order/cardpay","order_no=".$list['order_no'])}">银行转账</a></li>
+</div>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <div class="payPrice">
+        <li>
+            <h2>￥{$list.money}</h2>            
+        </li>        
+    </div>
+
+	<form id="myForm" style="background:none">
+    <div>
+        <select name="cardID" id="cardID" checkType="required" checkMsg="请选择收款账户">
+            <option value="">选择收款账户</option>
+            {volist name="card" id="vo"}
+            <option value="{$vo.id}">{$vo.name}</option>
+            {/volist}
+        </select>
+    </div>
+
+    <div id="result" class="cardInfo"></div>
+    
+	<div class="payOk">
+		<div class="fd">
+			<p>支付时请备注单号 <strong style="color:#000">{$list.order_no}</strong><span class="copyBtn" data-clipboard-text="{$list.order_no}">复制</span></p>
+			<p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
+		</div>
+	</div>
+
+    <div class="jietu" onclick="uploadImage('jietu','{:url('upload/image')}');"><img id="jietu_src" src="{empty name="list.jietu"}{:RES}/image/pay.png{else/}{$list.jietu}{/empty}" /></div>
+
+    <input type="file" id="uploadfile"/>     
+    <input type="hidden" name="image" id="jietu" value="" checkType="required" checkMsg="请上传支付截图">
+    <input type="hidden" name="id" value="{$list.id}">
+
+    <div class="mui-content-padded">
+        <button type="button" id="submitBtn" action="{:url('order/cardpay')}" class="mui-btn my-btn mui-btn-block">保存</button>
+    </div> 
+    </form>
+</div>
+<script type="text/javascript">
+$(function(){
+    $("#cardID").change(function(){
+        var v = $(this).val();
+        if (v!=''){
+            $("#result").show().html('<i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i> 信息读取中');
+            $.post('{:url('member/getCard')}',{'cardID':v},function(res){
+                if (res.code==1){
+                    data = res.data;
+                    _html = '<p>银行：'+data.bank+'</p><p>账户：'+data.account+'</p><p>BSB：'+data.bsb+'</p><p>账号：'+data.cardno+'</p>';
+                    $("#result").html(_html);
+                }else{
+                    layer.alert(res.msg);
+                    $("#result").hide()
+                }
+            },'json')
+        }else{
+            $("#result").html('').hide();
+        }
+    })
+})
+</script>
+<script src="{:RES}/js/clipboard.min.js"></script>
+<script>
+function myOrder(){
+    window.location.href="{:url('Order/index')}";
+}
+var clipboard = new ClipboardJS('.copyBtn');
+clipboard.on('success', function(e) {
+    mui.toast("已复制到粘贴板");
+});
+clipboard.on('error', function(e) {
+    mui.toast("系统不支持");
+});
+</script>

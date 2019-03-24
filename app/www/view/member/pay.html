@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / 会员充值
+    </div>
+    
+    <div style="padding: 10px; padding-top: 0">
+    <blockquote class="layui-elem-quote layui-quote-nm">提示：预充值成为会员，可享会员价！首充$3000成为会员，续充$2000即可，特殊要求请联系客服。</blockquote>
+    <form class="layui-form" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">应充值金额</label>
+            <div class="layui-input-inline">
+                <div style="color: #f00; font-size: 30px; line-height: 38px">${$money}</div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单号</label>
+            <div class="layui-form-mid">{$order_no}</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">充值方式</label>
+            <div class="layui-input-block">
+                <input type="radio" name="payType" value="1" title="银行卡充值" lay-filter="type">
+                <input type="radio" name="payType" value="2" title="在线充值" checked lay-filter="type">
+            </div>
+        </div>
+        
+        <div id="demo" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">收款账户</label>
+                <div class="layui-input-inline">
+                    <select name="cardID" id="cardID" lay-filter="card">
+                        <option value="">请选择</option>
+                        {volist name="list" id="vo"}
+                        <option value="{$vo.id}">{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+
+            <div id="result" class="cardInfo"></div>        
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">支付截图</label>
+                <div class="layui-input-inline">
+                    <div class="sn" style="width: 300px" onclick="uploadImage('image','{:url('upload/image')}');"><img id="image_src" src="{:RES}/image/image.jpg" /></div>
+
+                    <p style="clear: both; overflow: hidden;color: #f00">转账时请备注订单号</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="go" url="{:url('Member/pay')}">提交</button>
+            </div>                    
+        </div>
+        <input type="hidden" name="image" id="image" value="">
+        <input type="hidden" name="order_no" value="{$order_no}">
+        <input type="hidden" name="payType" id="payType" value="2">
+    </form>
+    </div>
+</div>
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+<input type="file" id="uploadfile" hidden /> 
+<script type="text/javascript">
+layui.use(['form'],function(){
+    form = layui.form;
+
+    form.on('radio(type)', function(data){
+        var value = data.value; //被点击的radio的value值
+        if (value==1){
+            $("#demo").show();
+        }else{
+            $("#demo").hide();
+        }
+        $("#payType").val(value);
+        form.render();
+    });  
+
+    form.on('select(card)', function(data){
+        if (data.value!=''){
+            $("#result").show().html('<i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i> 信息读取中');
+            $.post('{:url('member/getCard')}',{'cardID':data.value},function(res){
+                if (res.code==1){
+                    data = res.data;
+                    _html = '<p>银行：'+data.bank+'</p><p>账户：'+data.account+'</p><p>BSB：'+data.bsb+'</p><p>账号：'+data.cardno+'</p>';
+                    $("#result").html(_html);
+                }else{
+                    layer.alert(res.msg);
+                    $("#result").hide()
+                }
+            },'json')
+        }else{
+            $("#result").html('').hide();
+        }        
+    });
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+    <div class="multSelect">
+        <label>收件人</label>
+        <div id="addressStr" class="layui-elip addressStr"></div>        
+        <button type="button" id="aBtn" class="layui-btn">选择</button>
+        <button type="button" id="selectAddress" class="layui-btn">新增</button>
+        <input type="hidden" id="addressID" name="addressID">
+        <input type="hidden" name="province" id="province" value="">
+    </div>
+
+    <div class="multSelect">
+        <label>发件人</label>
+        <div id="senderStr" class="addressStr"></div> 
+        <input type="hidden" id="sender" name="sender">
+        <button type="button" id="sBtn" class="layui-btn">选择</button>
+        <button type="button" id="selectSender" class="layui-btn">新增</button>
+    </div>    
+
+    <div class="mBox">
+        <div class="hd">商品</div>
+        <div class="bd">
+            <table class="layui-table my-table">
+                <thead>
+                    <col width="70">
+                    <col>
+                    <col width="80">        
+                </thead>
+                <tbody id="goods"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mBox" id="signBox" style="display: none;">
+        <div class="hd">订单签名</div>
+        <div class="bd">
+            <input type="text" maxlength="10" name="sign" id="sign" class="layui-input" placeholder="请输入您要的签名（必填，中文一个字， 英文不超过10个字母）" lay-verify="sign"/>
+            <!-- <input type="text" name="intr" id="intr" class="layui-input" placeholder="订单的备注信息(选填)" /> -->
+        </div>
+    </div>
+
+    <div class="mBox">
+        <div class="hd">快递选择</div>
+        <div class="bd">
+            <div class="kuaidi">
+                {volist name="wuliu" id="vo"}
+                <li data-id="{$vo.id}">{$vo.name}</li>
+                {/volist}    
+            </div>
+            <div class="kdResult"></div>  
+            <input type="hidden" id="kuaidi" value="">
+        </div>
+    </div>
+    <hr>
+    <div style="text-align: center;">
+        <button type="button" class="layui-btn layui-btn-lg" id="doSubmit">保存订单</button>
+    </div>
+
+<script type="text/javascript">
+$(function() {
+    $("#aBtn").click(function(){
+        openModel ('{:url('mult/selectAddress',['kid'=>$kid,'sid'=>$sid])}','选择收件人','80%','80%');
+    });
+
+    $("#sBtn").click(function(){
+        openModel ('{:url('mult/selectSender',['kid'=>$kid,'sid'=>$sid])}','添加收件人','80%','80%');
+    });
+
+    $("#selectAddress").click(function(){
+        openModel ('{:url('mult/address')}','新增收件人','80%','80%');
+    })
+    $("#selectSender").click(function(){
+        openModel ('{:url('mult/sender')}','新增发件人','600px','300px');
+    })
+
+    //计算物流
+    $(".kuaidi li").click(function(){
+
+        if (!localStorage.getItem("ShoppingCart")){
+            layer.alert("请先添加商品");
+            return false;
+        }else{
+            goods = cart.getproductlist();
+            if (goods.length==0){
+                layer.alert("请先添加商品");
+                return false;
+            }
+        }
+        province = $("#province").val();
+        if (province==''){
+            layer.alert("请选择收件人");
+            return;
+        }
+        $(".kuaidi li").removeClass("active");
+        $(this).addClass('active');
+        var id = $(this).attr("data-id");
+        data = {
+            'kid':id,
+            'goods':JSON.stringify(goods),
+            'province':province
+        }
+        $.post("{:url('mult/getYunfei')}",data,function(res){
+            if (res.code==1) {
+                data = res.data;
+                _html = '<div class="kdTotle">共 '+data.baoguo.length+' 箱 - $'+data.totalPrice+'</div>';
+                _html += '<div class="kdBaoguo">';  
+                if (data.totalExtend>0){
+                _html += '<li><div class="goods">偏远地区加收邮费</div><div class="yunfei">$'+data.totalExtend+'</div></li>';  
+                }              
+                for (var i = 0; i < data.baoguo.length; i++) {
+                    _html += '<li>';
+                    _html += '<div class="goods">';
+                    for (var j = 0; j < data.baoguo[i].goods.length; j++) {
+                    _html += '<p>'+data.baoguo[i].goods[j]['goodsNumber']+' * '+data.baoguo[i].goods[j]['name']+'</p>';
+                    }
+                    _html += '</div>';
+                    _html += '<div class="yunfei">'+data.baoguo[i].kuaidi+' - 约'+data.baoguo[i].totalWuliuWeight+'kg - $'+data.baoguo[i].yunfei+'</div>';
+                    _html += '</li>';
+                }                
+                _html += '</div>';
+                $(".kdResult").html(_html);
+                kuaidi = $("#kuaidi").val(id);
+            }else{
+                layer.alert(res.msg);
+            }
+        },'json');
+    })
+
+    //保存临时订单
+    $("#doSubmit").click(function(){
+        if (!localStorage.getItem("ShoppingCart")){
+            layer.alert("请先添加商品");
+            return false;
+        }else{
+            var goods = cart.getproductlist();
+            if (goods.length==0){
+                layer.alert("请先添加商品");
+                return false;
+            }
+        }
+        var addressID = $("#addressID").val();
+        if (addressID==''){
+            layer.alert("请选择收件人");
+            return;
+        }
+        var sender = $("#sender").val();
+        if (sender==''){
+            layer.alert("请选择发件人");
+            return;
+        }
+        var kuaidi = $("#kuaidi").val();
+        if (kuaidi==''){
+            layer.alert("请选择快递公司");
+            return;
+        }
+
+        if($("#signBox").css('display')!='none'){
+            val = $("#sign").val();
+            if(val =='') {
+                layer.alert("请输入签名，中文1个汉字，英文不超过1个单词");
+                return false;
+            }
+            if (testChina(val)){
+                if (val.length>1){
+                    layer.alert("中文只能1个汉字");
+                    return false;
+                }
+            }else{
+                if (val.indexOf(' ') >= 0){
+                    layer.alert("英文不能超过1个单词");
+                    return false;
+                }
+            }
+        }
+
+        //var intr = $("#intr").val();
+        var sign = $("#sign").val();
+        data = {
+            'kuaidi':kuaidi,
+            'goods':JSON.stringify(goods),
+            'addressID':addressID,
+            'sender':sender,
+            'intr':'',
+            'sign':sign
+        }
+        var load = layer.load(0,{shade: [0.7, '#000000']});
+        $.post("{:url('mult/save')}",data,function(res){
+            layer.close(load);
+            if (res.code==1) {
+                layer.alert("操作成功");
+                $("#person").append('<li data-id="'+res.data.personID+'"><span class="personTag">'+res.data.name+' 邮费$'+res.data.single+'</span><i class="layui-icon layui-icon-close delBtn"></i></li>')
+                $("#yunfei").html(res.data.yunfei);
+                var num = 0;
+                $(".checkNumber").each(function(){
+                    num += parseInt($(this).html()); 
+                });
+                if (num>0){
+                    createOrder();
+                }else{
+                    $("#orderBox").html('');  
+                    $("#doJiesuan").removeClass("layui-btn-disabled");
+                }
+                localStorage.removeItem("ShoppingCart");
+            }else{
+                layer.alert(res.msg);
+            }
+        },'json');
+    })
+})
+
+function testChina(v){ 
+    var pattern = /^[\u4E00-\u9FA5]{1,500}$/;
+    flag = pattern.test(v);
+    if(!flag){
+        return false;
+    }else{
+        return true;
+    }
+}
+</script>

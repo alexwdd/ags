@@ -1,0 +1,18 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">帮助中心</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <ul class="mui-table-view">
+		{volist name="list" id="vo" empty="$empty"}
+	    <li class="mui-table-view-cell">
+		<a href="{:url('Member/detail',array('id'=>$vo['id']))}" title="{$vo.title}" class="mui-navigate-right">{$vo.title}</a>
+	    </li>
+	    {/volist}
+	</ul>
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />

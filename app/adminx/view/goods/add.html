@@ -1,0 +1,350 @@
+<form class="layui-form">
+	<div class="layui-tab">
+		<ul class="layui-tab-title">
+			<li class="layui-this">通用信息</li>
+			<li>商品相册</li>
+			<li>商品属性</li>
+			<li>参数规格</li>
+			<li>贴心服务</li>
+  		</ul>
+		<div class="layui-tab-content">
+			<!--基本信息-->
+			<div class="layui-tab-item layui-show">
+				<div class="layui-form-item">
+					<label class="layui-form-label">名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="name" lay-verify="required" placeholder="请输入商品名称" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">短名称</label>
+					<div class="layui-input-inline">
+						<input type="text" name="short" lay-verify="required" placeholder="10个字内" maxlength="10" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">特色描述</label>
+					<div class="layui-input-inline">
+						<input type="text" name="say" placeholder="15个字内" maxlength="10" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">颜色</label>
+					<div class="layui-input-inline">
+						<select name="color" class="fsSelect fsDict" dict="color" addNull="1">
+	      				</select>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">关键词</label>
+					<div class="layui-input-block">
+						<input type="text" name="keyword" class="layui-input">
+					</div>
+				</div>	
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">描述</label>
+					<div class="layui-input-block">
+						<input type="text" name="intr" placeholder="一句话描述商品" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item layui-form-text">
+					<label class="layui-form-label">图片</label>
+					<div class="layui-input-inline" style="width:400px">
+						<input type="text" id="picname" name="picname" class="layui-input">
+					</div>
+					<div class="layui-inline">
+						<button type="button"  class="layui-btn" function="upload" fileElem="#picname" srcElem="#logo_src" fileAccept="images" fileExts="jpg|png|gif|jpeg" fileSize="5120" inputs="type:test">上传图片<i class="fa fa-user"></i></button>
+						<i class="layui-icon showImage" tag="picname">&#xe64a;</i>
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">分类一</label>
+					<div class="layui-input-inline">
+						<select name="cid" id="cid" lay-verify="required">
+				    	<option value="">==请选择==</option>
+				        {volist name="cate" id="vo"}
+				        <option value="{$vo['id']},{$vo['path']}">{php}
+				            for($i=0; $i<$vo['count']*2; $i++){
+				               echo '&nbsp;&nbsp;';            
+				            }
+				        {/php}{$vo['name']}</option>
+				        {/volist}
+				        </select>
+					</div>
+					<label class="layui-form-label">分类二</label>
+					<div class="layui-input-inline">
+						<select name="cid1" id="cid1">
+				    	<option value="">==请选择==</option>
+				        {volist name="cate" id="vo"}
+				        <option value="{$vo['id']},{$vo['path']}">{php}
+				            for($i=0; $i<$vo['count']*2; $i++){
+				               echo '&nbsp;&nbsp;';            
+				            }
+				        {/php}{$vo['name']}</option>
+				        {/volist}
+				        </select>
+					</div>
+
+					<label class="layui-form-label">排序</label>
+					<div class="layui-input-inline">
+						<input type="text" name="sort" id="sort" value="50" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">品牌</label>
+					<div class="layui-input-inline">
+						<select name="brandID" class="fsSelect fsDict" lay-verify="required" dict="brand" addNull="1">
+	      				</select>
+					</div>
+
+					<label class="layui-form-label">包裹类型</label>
+					<div class="layui-input-inline">
+						<select name="typeID" class="fsSelect fsDict" lay-verify="required" dict="baoguo" addNull="1">
+	      				</select>
+					</div>
+
+					<label class="layui-form-label">每日限购</label>
+					<div class="layui-input-inline">
+						<input type="number" name="max" value="0" lay-verify="required" autocomplete="off" class="layui-input" placeholder="0代表不限购" />
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">状态</label>
+					<div class="layui-input-inline">
+						<input type="radio" name="show" value="1" title="显示" checked="checked">
+						<input type="radio" name="show" value="0" title="隐藏">
+					</div>
+
+					<label class="layui-form-label">首页显示</label>
+					<div class="layui-input-inline">
+						<input type="radio" name="comm" value="1" title="是">
+						<input type="radio" name="comm" value="0" title="否" checked="checked">
+					</div>	
+
+					<label class="layui-form-label">售罄</label>
+					<div class="layui-input-inline">
+						<input type="radio" name="empty" value="1" title="是">
+						<input type="radio" name="empty" value="0" title="否" checked="checked">
+					</div>	
+
+					<label class="layui-form-label">是否含税</label>
+					<div class="layui-input-inline">
+						<input type="radio" name="gst" value="1" title="是">
+						<input type="radio" name="gst" value="0" title="否" checked="checked">
+					</div>	
+				</div>		
+
+				<div class="layui-form-item">					
+					<label class="layui-form-label">进货价</label>
+					<div class="layui-input-inline">
+						<input type="number" step="0.01" name="inprice" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+				</div>
+
+				<div class="layui-form-item">					
+					<label class="layui-form-label">价格</label>
+					<div class="layui-input-inline">
+						<input type="number" step="0.01" name="price" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+
+					<label class="layui-form-label">会员价</label>
+					<div class="layui-input-inline">
+						<input type="number" step="0.01" name="price1" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+
+					<label class="layui-form-label">商品重量</label>
+					<div class="layui-input-inline">
+						<input type="number" step="0.01" name="weight" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+
+					<label class="layui-form-label">物流重量</label>
+					<div class="layui-input-inline">
+						<input type="number" step="0.01" name="wuliuWeight" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">保质期</label>
+					<div class="layui-input-inline">
+						<input type="text" name="endDate" id="endDate" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">初始销量</label>
+					<div class="layui-input-inline">
+						<input type="number" name="sellNumber" value="0" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">网站库存</label>
+					<div class="layui-input-inline">
+						<input type="number" name="stock" id="stock" value="999" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">店铺库存</label>
+					<div class="layui-input-inline">
+						<input type="number" name="stock1" id="stock1" value="999" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">单品数量</label>
+					<div class="layui-input-inline">
+						<input type="number" name="number" id="number" value="1" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">快递</label>
+					<div class="layui-input-inline">
+						<select name="wuliu">
+							<option value="">无</option>
+					        {volist name="wuliu" id="vo"}
+					        <option value="{$vo.name}">{$vo.name}</option>
+					        {/volist}
+	      				</select>
+					</div>
+
+					<label class="layui-form-label">水印</label>
+					<div class="layui-input-inline">
+						<select name="tag" id="tag">
+							<option value="">无</option>
+					        <option value="1">包邮</option>
+					        <option value="2">三罐包邮</option>
+					        <option value="3">三袋包邮</option>
+					        <option value="4">六袋包邮</option>
+	      				</select>
+					</div>	
+				</div>
+
+				<div class="layui-form-item">
+					<label class="layui-form-label">正文</label>
+					<div class="layui-input-block">
+						<textarea name="content" id="container" lay-verify="content">文章正文</textarea>
+						<script type="text/javascript" src="{:config('UE_CONFIG.uedir')}/my.config.js"></script>
+						<script type="text/javascript" src="{:config('UE_CONFIG.uedir')}/ueditor.all.min.js"></script>
+						<script type="text/javascript" src="{:config('UE_CONFIG.uedir')}/lang/zh-cn/zh-cn.js"></script>
+						<script type="text/javascript">
+						var editor = UE.getEditor('container');
+						</script>
+					</div>
+				</div>
+			</div>
+
+			<!--相册-->
+			<div class="layui-tab-item">
+				<div class="insert-img" id="insert-img">
+					<a href="javascript:;" class="insert-btn"
+					 id="muploud"
+					 url="{:url('Upload/image')}"
+					 size="5120"
+					 exts="jpg|png|gif|jpeg"
+					 accept="images"
+					 tag="insert-img"
+					 >+</a> 
+				</div>				
+			</div>
+
+			<!--属性-->
+			<div class="layui-tab-item">
+				<table class="layui-table">        
+				    <tbody id="specBox">
+				    	<tr>
+				    		<td style="width: 150px"><b>分类一</b></td>
+				    		<td style="width: 150px"><b>分类二</b></td>
+				    		<td><b>状态</b></td>
+				    		<td><b>名称</b></td>
+				    		<td><b>短名称</b></td>
+				    		<td style="width: 80px"><b>价格</b></td>
+			               	<td style="width: 80px"><b>会员价</b></td>
+			               	<td style="width: 80px"><b>单品数量</b></td>			               	
+			               	<td style="width: 120px"><b>快递</b></td>
+			               	<td style="width: 100px"><b>水印</b></td>
+			               	<td style="width: 60px"><a href="javascript:void(0)" class="layui-btn layui-btn-normal layui-btn-xs" id="addBtn">添加</a></td>
+			            </tr>
+				    </tbody>
+				</table> 			
+			</div>
+			<script type="text/javascript">
+			$(function(){
+				layui.use('form', function(){
+					var form = layui.form;	
+					$("#addBtn").click(function(){
+						$.get('{:url('goods/getSpec')}',function(res){
+							$("#specBox").append(res);
+							form.render();
+						})
+					})
+				});
+			})
+			function delSpec(obj){
+				$(obj).parent().parent().remove();
+			}
+			</script>
+
+			<!--参数规格-->
+			<div class="layui-tab-item">
+				<div class="layui-row">
+					{volist name="attr" id="vo"}	
+					<div class="layui-col-md3">
+						<label class="layui-form-label">{$vo.name}</label>
+						<div class="layui-input-inline">
+							<select name="attr_{$vo.id}[]">
+								<option value="">无</option>
+								{volist name="vo.item" id="f"}
+								<option value="{$f}">{$f}</option>
+								{/volist}
+							</select>
+						</div>
+					</div>
+					{/volist}
+				</div>
+
+				<div class="layui-row" style="margin-top: 10px">
+					<div class="layui-col-md12">						
+				    	<textarea name="extends" class="layui-textarea">{$list.extends}</textarea>
+				    	<p>扩展参数，一行代表一个可选项</p>					 
+					</div>
+				</div>
+			</div>
+
+			<!--贴心服务-->
+			<div class="layui-tab-item">				
+				{volist name="server" id="vo"}			
+				<p style="padding: 10px 0"><input type="checkbox" name="server[]" lay-skin="primary" title="{$vo.name}" value="{$vo.id}"></p>
+				{/volist}
+			</div>
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button id="subBtn" class="layui-btn" lay-submit="" lay-filter="save" url="{:url('Goods/add')}">新增</button>
+
+	    <button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+	</div>
+	<input type="hidden" id="goods_id" value="">
+</form>
+<script>
+/** 以下 商品规格相关 js*/
+$(document).ready(function() {
+	layui.use(['form','layer'],function(){
+		var form = layui.form;
+		var layer = layui.layer;
+
+		$(".showImage").click(function(){
+			var o = $(this).attr("tag");
+			if ($("#"+o).val()!=''){
+				layer.open({
+					area: ['50%', '50%'],
+					content: '<img src="'+$("#"+o).val()+'" />'
+				});
+			};
+		});		
+	})
+});
+</script>
+<script src="{:RES}/js/upload.js"></script>

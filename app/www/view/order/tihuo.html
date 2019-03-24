@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / <a href="{:url('order/index')}">我的订单</a> / 订单详情
+    </div>
+
+    <div style="padding: 10px; padding-top: 0">
+        <div class="layui-row layui-col-space15">
+        	<div class="layui-col-md5">
+        		<div class="layui-card my-card">
+			        <div class="layui-card-header">订单号：{$list.order_no}</div>
+			        <div class="layui-card-body">
+			            <div class="list">
+			                <li>
+			                    <label>下单时间</label>
+			                    <p>{$list.createTime|date="Y-m-d H:i:s",###}</p>
+			                </li>
+			                <li>
+			                    <label>商品金额</label>
+			                    <p>{$list.goodsMoney}</p>
+			                </li>
+			                <li>
+			                    <label>运费</label>
+			                    <p>{$list.payment}</p>
+			                </li>
+			                <li>
+			                    <label>总金额</label>
+			                    <p>{$list.money}</p>
+			                </li>
+			                <li>
+			                    <label>支付方式</label>
+			                    <p>{$list.payType|getPayType}</p>
+			                </li>
+			                <li>
+			                    <label>状态</label>
+			                    <p>
+			                    	<?php
+		                            if($list['cardID']>0 && $vo['payStatus']==0){
+		                            	echo '<span class="red">待审核</span>';
+		                            }else{
+										echo getPayStatus($list['payStatus']);
+		                        	}
+		                            ?>
+                        		</p>
+			                </li>
+			                <li>
+			                    <label>备注</label>
+			                    <p>{$list.intr}</p>
+			                </li>
+			            </div>
+			        </div>		
+		        	{gt name="list.payType" value="1"}
+                    {eq name="list.payStatus" value="0"}<p class="text-center" style="padding: 15px 0"><a href="{:url('order/pay','order_no='.$list['order_no'])}" class="layui-btn layui-btn-danger">去支付</a></p>{/eq}
+                    {/gt}		
+			    </div>
+        	</div>
+
+        	<div class="layui-col-md7">
+				<div class="layui-card my-card">
+			        <div class="layui-card-header">商品信息</div>
+			        <div class="layui-card-body">
+			        	 <table class="layui-table">
+			        	 	<thead>
+								<tr>
+									<th>名称</th>
+									<th>数量</th>
+									<th>金额</th>
+								</tr> 
+							</thead>
+		                    <tbody>
+		                    	{volist name="goods" id="vo"}                  
+		                        <tr>
+		                        	<td>{$vo.name}</td>
+		                        	<td>{$vo.number}</td>
+		                            <td>${$vo.number * $vo.price}</td>
+		                        </tr>   
+		                        {/volist}                             
+		                    </tbody>
+		                </table>
+			        </div>
+			    </div>        
+        	</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">管理员登录</h1>
+</header>
+
+<div class="mui-content">
+    <form id="myForm" class="mui-input-group">
+        <div class="mui-input-row">
+            <label>用户名</label>
+            <input type="text" name="username" id="username" class="mui-input-clear mui-input" placeholder="请输入账号" checkType="required" checkMsg="请输入账号">
+        </div>
+
+        <div class="mui-input-row">
+            <label>密码</label>
+            <input type="password" name="password" id="password" class="mui-input-password" placeholder="请输入密码" checkType="required" checkMsg="请输入密码">
+        </div>     
+    </form>
+
+    <div class="mui-content-padded">
+        <button type="button" id="submitBtn" action="{:url('Login/loginDo')}" class="mui-btn mui-btn-block my-btn">登录</button>
+    </div>
+</div>

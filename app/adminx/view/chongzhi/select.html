@@ -1,0 +1,51 @@
+<style>
+.tongjiDiv{clear: both; overflow: hidden; margin-bottom: 10px; line-height: 30px; font-size: 16px; padding-left: 15px}
+</style>
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<fieldset class="layui-elem-field">
+			<legend>金额：${$pai.money}</legend>
+			<div class="layui-field-box">
+
+				<form class="layui-form">
+					<div class="layui-form-item">
+						<label class="layui-form-label">用户账号</label>
+						<div class="layui-form-mid">
+							<strong>{$pai.id}</strong>
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">手机</label>
+						<div class="layui-form-mid">
+							<strong>{$pai.mobile}</strong>
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">申请日期</label>
+						<div class="layui-form-mid">
+							<strong>{$pai.createTime|date="Y-m-d H:i:s",###}</strong>
+						</div>
+					</div>	
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">驳回理由</label>
+						<div class="layui-input-block">
+							<input type="text" name="back" class="layui-input">
+						</div>
+					</div>				
+
+					<hr/>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label"></label>
+				     	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Chongzhi/doMatch')}">确认</button>
+						<button class="layui-btn layui-btn-danger" lay-submit="" lay-filter="edit" url="{:url('Chongzhi/bohui')}">驳回</button>				 
+				    </div>					
+					<input type="hidden" name="txID" value="{$pai['id']}">
+				</form>
+			</div>
+		</fieldset>
+	</div>
+</div>

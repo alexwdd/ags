@@ -1,0 +1,80 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">添加账户</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <div class="tabMenu">
+        <li {eq name="type" value="1"}class="active"{/eq}><a href="{:url('member/addBank','type=1')}">银行卡</a></li>
+        <li {eq name="type" value="2"}class="active"{/eq}><a href="{:url('member/addBank','type=2')}">微信钱包</a></li>
+        <li {eq name="type" value="3"}class="active"{/eq}><a href="{:url('member/addBank','type=3')}">支付宝</a></li>
+    </div>
+
+    <form id="myForm" class="mui-input-group">
+        {eq name="type" value="1"}
+        <div class="bankItem" id="bank">
+            <div class="mui-input-row">
+                <input type="text" name="bank" class="mui-input-clear" placeholder="所属银行(必填)" >
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="account" class="mui-input-clear" placeholder="开户行(必填)" >
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="cardNo" class="mui-input-clear" placeholder="银行卡号(必填)" >
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="name" value="{$user.name}" class="mui-input-clear" placeholder="姓名(必填)">
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="mobile" value="{$user.mobile}" class="mui-input-clear" placeholder="手机(必填)">
+            </div>
+        </div>
+        {/eq}
+        
+        {eq name="type" value="2"}
+        <div class="bankItem" id="weixin">
+            <div class="mui-input-row">
+                <input type="text" name="weixin" class="mui-input-clear" placeholder="微信号(必填)" >
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="name" value="{$user.name}" class="mui-input-clear" placeholder="姓名(必填)">
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="mobile" value="{$user.mobile}" class="mui-input-clear" placeholder="手机(必填)">
+            </div>
+        </div>
+        {/eq}
+        
+        {eq name="type" value="3"}
+        <div class="bankItem" id="alipay">
+            <div class="mui-input-row">
+                <input type="text" name="alipay" class="mui-input-clear" placeholder="支付宝账户(必填)">
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="name" value="{$user.name}" class="mui-input-clear" placeholder="姓名(必填)">
+            </div>
+
+            <div class="mui-input-row">
+                <input type="text" name="mobile" value="{$user.mobile}" class="mui-input-clear" placeholder="手机(必填)">
+            </div>
+        </div>
+        {/eq}
+        <input type="hidden" name="type" value="{$type}"/>
+    </form>
+
+    <div class="main" style="padding-bottom:0">
+        <button id="submitBtn" action="{:url('member/addBank')}" type="button" class="mui-btn mui-btn-blue mui-btn-block my-btn">保存</button>
+    </div>
+</div>
+
+
+<input type="hidden" id="activeIndex" value="member" />

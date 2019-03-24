@@ -1,0 +1,38 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+	    <div class="layui-col-md12">
+	    	<button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('Invoiced/add')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="新增">
+			  <i class="layui-icon">&#xe654;</i>新增
+			</button>
+
+			<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Invoiced/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="id:">
+			  <i class="layui-icon">&#xe640;</i>删除
+			</button>
+			
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>			
+	    </div>
+
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Invoiced/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-60"></table>
+
+	        <div class="fsDatagridCols">
+				<p checkbox="true"/>				
+				<p field="id" title="ID" width="80"/>
+				<p field="name" title="姓名" width="80"/>	
+				<p field="tel" title="电话" width="150"/>	
+				<p field="company" title="公司" width="200"/>	
+				<p field="abn" title="ABN" width="100"/>
+				<p field="address" title="地址" width="300"/>		
+				<p fixed="right" align="center" toolbar="#barDemo" title="操作" width="100"/>
+			</div>
+
+		
+			<script type="text/html" id="barDemo">					
+ 				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Invoiced/edit")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑">编辑</a>
+			</script>
+	    </div>
+	</div>
+</div>

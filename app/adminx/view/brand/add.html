@@ -1,0 +1,77 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-form-item">
+	    <label class="layui-form-label">品牌名称</label>
+	    <div class="layui-input-inline">
+	    	<input type="text" name="name" lay-verType="tips" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">LOGO</label>
+		<div class="layui-input-inline" style="width:400px">
+			<input type="text" id="logo" name="logo" class="layui-input">
+		</div>
+		<div class="layui-inline">
+			<button type="button"  class="layui-btn" function="upload" fileElem="#logo" srcElem="#logo_src" fileAccept="images" fileExts="jpg|png|gif|jpeg" fileSize="5120" inputs="type:test">上传图片<i class="fa fa-user"></i></button>
+			<i class="layui-icon showImage" tag="logo">&#xe64a;</i>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">官网</label>
+	    <div class="layui-input-block">
+	    	<input type="text" name="url" lay-verType="tips" autocomplete="off" class="layui-input"/>
+	    </div>
+	</div>
+
+	<div class="layui-form-item">
+	    <label class="layui-form-label">品牌描述</label>
+	    <div class="layui-input-block">
+	    	<textarea name="desc" class="layui-textarea"></textarea>
+	    </div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">首页推荐</label>
+		<div class="layui-input-inline">			
+			<input type="radio" name="comm" value="1" title="是">
+			<input type="radio" name="comm" value="0" title="否" checked>
+		</div>
+
+		<label class="layui-form-label">导航推荐</label>
+		<div class="layui-input-inline">			
+			<input type="radio" name="top" value="1" title="是">
+			<input type="radio" name="top" value="0" title="否" checked>
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">排序</label>
+		<div class="layui-input-inline">
+			<input type="text" name="sort" class="layui-input" value="50" placeholder="必填" lay-verify="number">
+		</div>
+	</div>
+
+	<hr/>
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button class="layui-btn" lay-submit="" lay-filter="save" url="{:url('Brand/add')}">新增</button>
+	    <button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+	</div>
+</form>
+<script>
+$(function(){
+	$(".showImage").click(function(){
+		var o = $(this).attr("tag");
+		if ($("#"+o).val()!=''){
+			layui.use('layer', function(){
+				layer.open({
+					content: '<img src="'+$("#"+o).val()+'" />'
+				});
+			})
+		};
+	});
+})
+</script>

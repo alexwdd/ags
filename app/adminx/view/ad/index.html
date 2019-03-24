@@ -1,0 +1,64 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form class="layui-form" style="margin-bottom:10px">
+			<div class="layui-inline">
+				<label class="layui-form-mid">分类</label>
+				<div class="layui-input-inline">
+					<select name="path" id="path">
+						<option value="0">全部</option>
+						{volist name="cate" id="vo"}
+						<option value='{$vo['path']}'>{php}
+				            for($i=0; $i<$vo['count']*2; $i++){
+				               echo '&nbsp;&nbsp;';            
+				            }
+				        {/php}{$vo['name']}</option>
+						{/volist}
+					</select>				
+				</div>
+			</div>
+		</form>
+		
+	    <div class="layui-col-md12">
+	    	<button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('Ad/add')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="新增">
+			  <i class="layui-icon">&#xe654;</i>新增
+			</button>
+
+			<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Ad/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="id:">
+			  <i class="layui-icon">&#xe640;</i>批量删除
+			</button>
+
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+
+			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+	    </div>
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Ad/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-108"></table>	
+	        <div class="fsDatagridCols">
+				<p checkbox="true"/>	
+				<p field="name" title="名称" width="200"/>		
+				<p title="图片" templet="#imageTpl" width="60"/>	
+				<p field="cate" title="分类" width="100"/>	
+				<p field="url" title="链接地址" width="300"/>	
+				<p field="sort" title="排序值" width="80"/>
+				<p field="createTime" title="发布日期" width="180" sort="true"/>
+				<p field="updateTime" title="更新日期" width="180" sort="true"/>
+				<p fixed="right" align="left" toolbar="#barDemo" title="操作" width="80"/>
+			</div>
+
+			<script type="text/html" id="imageTpl">
+				{{# if(d.picname == ''){ }}
+				-
+				{{# }else{ }}
+				<a href="{{d.picname}}" target="_blank"><i class="layui-icon">&#xe64a;</i></a>
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="barDemo">	
+ 				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Ad/edit")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑">编辑</a>
+			</script>
+	    </div>
+	</div>
+</div>

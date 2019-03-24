@@ -1,0 +1,88 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form class="layui-form" style="margin-bottom:10px">
+			<div class="layui-inline">
+				<label class="layui-form-mid">级别</label>
+				<div class="layui-input-inline">
+					<select name="group" id="group" class="fsSelect" dict="memberGroup" addNull="1"></select>					
+				</div>
+			</div>
+
+			<div class="layui-inline">
+				<label class="layui-form-mid">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
+				</div>
+			</div>
+
+			<div class="layui-input-inline">
+				<select name="disable" class="fsSelect" dict="disable" addNull="1"></select>
+			</div>
+
+			<div class="layui-input-inline">
+				<input type="text" name="mobile" placeholder="用户名/手机号码" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-input-inline">
+				<input type="text" name="tjName" placeholder="推荐人" class="layui-input layui-btn-small">
+			</div>
+		</form>
+		
+	    <div class="layui-col-md12">
+	    	<!-- <button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('Member/add')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="新增">
+	    				  <i class="layui-icon">&#xe654;</i>新增
+	    				</button> -->
+
+			<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Member/del")}" isMutiDml="1" isConfirm="1" confirmMsg="确定吗？" inputs="id:">
+			  <i class="layui-icon">&#xe640;</i>批量封号
+			</button>
+
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+
+			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+	    </div>
+
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Member/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-108"></table>	
+	        <div class="fsDatagridCols">
+				<p checkbox="true"/>
+				<p field="group" title="身份" width="100" dict="memberGroup"/>	
+				<p field="face" title="头像" width="100" templet="#face"/>
+				<p field="id" title="账号" width="80"/>
+				<p field="username" title="昵称" width="120"/>		
+				<p field="mobile" title="手机号码" width="120"/>		
+				<p field="name" title="姓名" width="100"/>
+				<p field="qq" title="QQ" width="100"/>
+				<p field="weixin" title="微信" width="100"/>				
+				<p field="money" title="账户余额" width="100"/>				
+				<p field="vip" title="老客户" width="100" templet="#buy"/>
+				<p field="disable" title="状态" width="100" dict="disable" sort="true"/>
+				<p field="createTime" title="注册日期" width="180" sort="true"/>
+				<p fixed="right" align="left" toolbar="#barDemo" title="操作" width="140"/>
+			</div>
+
+			<script type="text/html" id="face">
+				{{# if(d.face == ''){ }}
+				-
+				{{# }else{ }}
+				<img src="{{d.face}}" style="height:40px"/>
+				{{# } }}				
+			</script>
+
+			<script type="text/html" id="buy">	
+ 				{{# if(d.vip==0){ }}
+ 				否
+ 				{{# }else{ }}
+ 				<span style="color: blue">是</span>
+ 				{{# } }}
+			</script>
+
+			<script type="text/html" id="barDemo">	
+ 				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("Member/edit")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑">编辑</a>
+
+ 				<a href="{:url("Member/go")}?id={{d.id}}" target="_blank" class="layui-btn layui-btn-xs">会员中心</a>
+			</script>
+	    </div>
+	</div>
+</div>

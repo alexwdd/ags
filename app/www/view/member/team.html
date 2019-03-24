@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>用户中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<link href="{:RES}/css/member.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="public:header" /}
+
+<div class="topBlock"></div>
+
+<div class="container white-bg mt20">
+    <div class="page-header">
+      <h1>用户中心 <small>Member Center</small></h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2" id="memberMenu">
+            {include file="public:usermenu" /}       
+        </div>
+
+        <div class="col-md-10">
+            <div class="pageName">我的团队</div>
+            <div class="userList">
+                {volist name="list" id="vo"}
+                <li>
+                    <div class="uface">
+                    {empty name="vo.face"}
+                    <img src="{:RES}/image/face.png"/>
+                    {else/}
+                    <img src="{$vo.face}"/>
+                    {/empty}
+                    </div>
+                    <div class="name">{$vo.username}<br/>{$vo.mobile}</div>
+                </li>
+                {/volist}
+            </div>
+
+            {$list->render()}
+
+        </div>
+    </div>
+</div>
+
+{include file="public:footer" /}
+</body>
+</html>

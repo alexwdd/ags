@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物车-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+h1{font-size: 40px;}
+.goodsInfo{margin-bottom:0px;margin-left:0px;}
+</style>
+</head>
+<body>
+<div style="padding: 10px; background: #fff">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md8">
+            <div class="layui-inline" style="width: 200px">
+                <input type="text" class="layui-input" id="orderKey" placeholder="姓名/电话">
+            </div>
+            <div class="layui-inline">
+                <button type="button" id="searchBtn" class="layui-btn">查询</button>
+            </div>
+        </div>
+        <div class="layui-col-md4" style="text-align: right;"><a href="javascript:void(0)" class="layui-btn" id="manage">管理收件人</a></div>
+    </div>    
+    <table class="layui-hide" id="test"></table>
+</div>
+<input type="hidden" id="server">
+<input type="hidden" id="picname" value="{$goods.picname}">
+<input type="hidden" id="price" value="{$goods.price}">
+
+<script type="text/html" id="area">
+    {{d.province}}/{{d.city}}/{{d.area}}              
+</script>
+
+<script type="text/html" id="front">
+    {{# if(d.front == ''){ }}
+    -
+    {{# }else{ }}
+    <a href="{{d.front}}" target="_blank"><i class="layui-icon layui-icon-picture"></i></a>
+    {{# } }}                
+</script>
+
+<script type="text/html" id="back">
+    {{# if(d.back == ''){ }}
+    -
+    {{# }else{ }}
+    <a href="{{d.back}}" target="_blank"><i class="layui-icon layui-icon-picture"></i></a>
+    {{# } }}                
+</script>
+
+<script type="text/html" id="barDemo">          
+    <a href="javascript:void(0)" class="layui-btn layui-btn-xs" onclick="selectAddress({{d.id}})">选择</a>
+</script>
+
+<script type="text/javascript" charset="utf-8">
+$(function(){ 
+    $(function(){
+        getData();
+    })
+
+    $("#searchBtn").click(function(){
+        getData();
+    })
+
+    function getData(){
+        layui.use('table', function(){
+            var table = layui.table;  
+            table.render({
+                elem: '#test',
+                url:'{:url('cart/address')}',
+                method:'post',
+                where: {keyword:$("#orderKey").val()},
+                cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                cols: [[
+                  {field:'name', width:100, title: '姓名'},
+                  {field:'mobile', width:150, title: '电话'},
+                  {field:'province', width:300, title: '地区',templet:"#area"},
+                  {field:'address', title: '地址'},
+                  {field:'sn', width:200, title: '身份证号'},
+                  {field:'front', width:120, title: '身份证(正)',templet:"#front"},
+                  {field:'back', width:120, title: '身份证(反)',templet:"#back"},
+                  {width:80, fixed:"right",title: '操作',toolbar:"#barDemo"}
+                ]],
+                page: {
+                    limit:20
+                }
+            });
+        });
+    }
+
+    $("#manage").click(function(){
+        parent.layer.closeAll();
+        parent.location.href = '{:url("address/index")}';
+    });   
+})
+function selectAddress(id){
+    parent.layer.closeAll();
+    parent.location.href = '/www/cart/order.html?kid={$kid}&sid={$sid}&aid='+id;
+}
+</script>
+</body>
+</html>

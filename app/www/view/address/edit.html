@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / <a href="{:url("address/index")}">收件人管理</a> / 编辑
+    </div>
+
+    <script src="{:RES}/js/data.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{:RES}/js/province.js" type="text/javascript" charset="utf-8"></script>
+    <div style="padding: 10px; padding-top: 0">
+    <form class="layui-form" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" value="{$address.name}" lay-verify="required"  placeholder="必填" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-inline">
+                <input type="number" name="mobile" id="mobile" value="{$address.mobile}" required lay-verify="__mobile" placeholder="必填" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">地区</label>
+            <div class="layui-input-inline">
+                <select name="province" id="provid" lay-filter="provid">
+                    <option value="">请选择省</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="city" id="cityid" lay-filter="cityid">
+                    <option value="">请选择市</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="area" id="areaid" lay-filter="areaid">
+                    <option value="">请选择县/区</option>
+                </select>
+            </div>
+        </div>
+        <script>
+        var defaults = {
+            s1: 'provid',
+            s2: 'cityid',
+            s3: 'areaid',
+            v1: '{$address.province}',
+            v2: '{$address.city}',
+            v3: '{$address.area}'
+        };
+        </script>
+        <div class="layui-form-item">
+            <label class="layui-form-label">详细地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="address" value="{$address.address}" lay-verify="required" placeholder="必填" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证号</label>
+            <div class="layui-input-block">
+                <input type="text" name="sn" value="{$address.sn}" lay-verify="_cardNo" placeholder="选填" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证照片</label>
+            <div class="layui-input-block">
+                <div class="sn" onclick="uploadImage('front','{:url('upload/image','water=1')}');"><img id="front_src" src="{empty name="address.front"}{:RES}/image/sn1.png{else/}{$address.front}{/empty}" /></div>
+                <div class="sn" onclick="uploadImage('back','{:url('upload/image','water=1')}');"><img id="back_src" src="{empty name="address.back"}{:RES}/image/sn2.png{else/}{$address.back}{/empty}" /></div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="go" url="{:url('address/edit')}">保存</button>
+                <a href="javascript:window.history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
+            </div>                    
+        </div>
+        <input type="hidden" name="front" id="front" value="{$address.front}">
+        <input type="hidden" name="back" id="back" value="{$address.back}">
+        <input type="hidden" name="id" value="{$address.id}">
+    </form>
+    </div>
+</div>
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+<input type="file" id="uploadfile" hidden /> 
+</body>
+</html>

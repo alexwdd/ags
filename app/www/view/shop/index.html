@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会员中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / 店面订单
+    </div>
+
+    <div style="padding: 10px; padding-top: 0">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-inline" style="width: 200px">
+                    <input type="text" class="layui-input" id="day" value="{$day}" placeholder=" - ">
+                </div>
+                <div class="layui-inline">
+                    <button type="button" class="sBtn layui-btn">查询</button>
+                </div>
+            </div>
+            <script>
+            layui.use('laydate', function(){
+                var laydate = layui.laydate;
+                //日期范围
+                laydate.render({
+                elem: '#day'
+                ,range: true
+                });
+
+                $(".sBtn").click(function(){     
+                    var day = $("#day").val();
+                    window.location.href = "{:url('shop/index')}?day="+day;                   
+                })
+            })
+            </script>
+        </div>        
+
+        <table class="layui-table">
+            <colgroup>
+                <col>
+                <col width="100">                       
+                <col width="100">                       
+                <col width="100">                       
+                <col width="180">                       
+                <col width="120">             
+            </colgroup>
+            <thead>
+            <tr style="background: #fff">
+              <th>订单号</th>
+              <th>小票号</th>
+              <th>支付方式</th>
+              <th>金额</th>
+              <th>时间</th>
+              <th>订单操作</th>
+            </tr> 
+            </thead>
+            <tbody>
+                {volist name="list" id="vo" empty="$empty"}
+                <tr>
+                    <td>{eq name="vo.temp" value="1"}预订单已生成，请前往店面提供手机或账号，到店支付{else/}{$vo.order_no}{/eq}</td>
+                    <td>{$vo.No}</td>
+                    <td>{eq name="vo.temp" value="1"}到店支付{else/}{$vo.payType}{/eq}</td>
+                    <td>${$vo.total}</td>
+                    <td>{eq name="vo.temp" value="1"}-{else/}{$vo.createTime|date="Y-m-d H:i:s",###}{/eq}</td>
+                    <td><a href="{:url('shop/detail',array('id'=>$vo['id']))}" class="layui-btn layui-btn-primary layui-btn-xs layui-btn-fluid">订单详情</a></td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>       
+        {$page}
+    </div>
+</div>
+
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

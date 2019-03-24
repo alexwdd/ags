@@ -1,0 +1,280 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <a href="{:url('index/index')}" class="mui-icon mui-icon-home mui-pull-left"></a>
+    <h1 class="mui-title">商品详情</h1>
+</header>
+
+
+<div class="mui-content">
+    <div class="mui-slider">
+        <div class="mui-slider-group mui-slider-loop">  
+            {notempty name="first"}
+            <div class="mui-slider-item">
+            <img src="{$first}" style="display:block">
+            </div>
+            {/notempty}
+
+            {volist name="image" id="vo"}
+            <div class="mui-slider-item">
+            <img src="{$vo}" style="display:block">
+            </div>
+            {/volist}
+            
+            {notempty name="last"}
+            <div class="mui-slider-item">
+            <img src="{$last}" style="display:block">
+            </div>
+            {/notempty}
+        </div>        
+        <div class="mui-slider-indicator">
+            {volist name="image" id="vo"}
+            <div class='mui-indicator'></div>
+            {/volist}
+        </div>
+    </div>
+
+    <div class="goodsInfo">
+        <div class="goodsName">{eq name="list.empty" value="1"}【售罄】{/eq}{$list.name}</div>
+
+        <div class="intr">{$list.intr}</div>
+
+        <div class="priceBox">
+            {eq name="user.id" value="0"}
+                <li><a href="{:url('login/index')}" class="mui-btn">登录后查看价格</a></li> 
+            {else/}
+            {empty name="thisSpec"}
+                <li>价格：<span class="money" id="goods_price">${$list.price}</span></li>
+                <li>会员价：<span class="money" id="goods_price1">${$list.price1}</span></li>
+                <input type="hidden" id="goodsNumber" value="{$list.number}">
+            {else/}
+                <li>价格：<span class="money" id="goods_price">${$thisSpec.price}</span></li>
+                <li>会员价：<span class="money" id="goods_price1">${$thisSpec.price1}</span></li>
+                <input type="hidden" id="goodsNumber" value="{$thisSpec.number}">
+            {/empty}
+            {/eq}
+
+            {gt name="list.max" value="0"}
+            <li>每日限购 {$list.max} 件</li>
+            {/gt}
+            <li>参考保质期 {$list.endDate}</li>
+            <li>重量 {$list.weight}kg</li>  
+            <!-- <li>销量 {$list.sellNumber} 件</li>  -->         
+        </div>   
+
+        <!--选择数量-->
+        <div class="plus">
+            <span class="btn" onclick="changeNum(-1);">-</span>
+            <span class="mp_mp">
+                <input type="tel" class="buyNum" id="buyNum" residuenum="{$goods.kucun}" name="goods_num" value="1" min="1" max="{$goods.kucun}" readonly="readonly">
+            </span>
+            <span class="btn" onclick="changeNum(1);">+</span>
+        </div>
+
+        {notempty name="spec"}
+        <div class="serverBox">
+            <div class="hd">套餐</div>
+            <div class="choic-sel">               
+                {volist name="spec" id="vo"}     
+                <span onclick="switch_spec(this);" data-id="{$vo.id}" data-price="{$vo.price}" data-price1="{$vo.price1}" {eq name="vo.id" value="$specid"}class="red"{/eq}>
+                {notempty name="vo.wuliu"}【{$vo.wuliu}】包邮 {/notempty}{$vo.name} {$vo.weight}kg{gt name="user.id" value="0"} 价格：${$vo.price} 会员价：${$vo.price1}{/gt}
+                </span>        
+                {/volist} 
+            </div>   
+        </div>
+        {/notempty}
+
+        {notempty name="list.extends"}
+        <div class="extendsBox">
+            <div class="choic-sel">               
+                {volist name="list.extends" id="vo"}     
+                <span onclick="switch_extend(this);" data-name="{$vo}">
+                {$vo}
+                </span>        
+                {/volist} 
+            </div>   
+        </div>
+        {/notempty}
+
+        {notempty name="server"}
+        <div class="serverBox">
+            <div class="hd">贴心服务</div>
+            <div class="bd">巧克力、软糖、胶囊类等易融化的产品，由于运输过程中温度变化导致的变形、粘连等不在理赔范围，所有液体膏体易碎品需加固打包泡泡纸或气柱，物流公司才能理赔。</div>
+            <div class="fd">
+                {volist name="server" id="vo"}
+                <li class="serLi" data-id="{$vo.id}" data-price="{$vo.price}">{$vo.name} ${$vo.price}</li>
+                {/volist}
+            </div>
+        </div>
+        {/notempty}       
+    </div>
+
+    <div class="selectFooter">
+        <div class="cartInfo" onclick="window.location.href='{:url('cart/index')}'">
+            <div class="cart" id="topCart">
+                <i class="icon icon-cart"></i>
+                <em id="cartNumber">0</em>
+            </div>
+        </div> 
+        {eq name="list.empty" value="1"}
+        <div class="btn cartBtn" onclick="buy_now();">商品已售罄</div>
+        {else/}
+            {eq name="user.id" value="0"}
+            <div class="btn" onclick="{:url('login/index')}">请先登录</div>
+            {else/}
+            <div class="btn cartBtn" onClick="AjaxAddCart({$list.id});">加入购物车</div>
+            <div class="btn" onclick="buyNow();">立即购买</div>
+            {/eq}            
+        {/eq}
+        
+    </div>
+</div>
+
+<input type="hidden" id="spec_id" name="spec_id" value="{$specid}">
+<input type="hidden" id="extends" name="extends" value="">
+{empty name="thisSpec"}
+<input type="hidden" id="price" value="{$list.price}">
+<input type="hidden" id="price1" value="{$list.price1}">
+{else/}
+<input type="hidden" id="price" value="{$thisSpec.price}">
+<input type="hidden" id="price1" value="{$thisSpec.price1}">
+{/empty}
+<input type="hidden" id="server" value="">
+<input type="hidden" id="serverMoney" value="0">
+
+<script type="text/javascript" charset="utf-8">
+mui.init();
+mui.ready(function(){ 
+    $(".serLi").click(function(){
+        if ($(this).hasClass('active')){
+            $(this).removeClass('active');        
+        }else{
+            $(this).addClass('active');
+        } 
+
+        val = '';
+        money = 0;
+        $(".fd li.active").each(function(i){
+            if (i==0){
+                val = $(this).attr("data-id");
+            }else{
+                val += ","+$(this).attr("data-id");
+            }
+            money += parseFloat($(this).attr("data-price"));
+        })
+        num = parseInt($("#goodsNumber").val());
+        serverMoney = money*num;
+        $("#server").val(val);
+        $("#serverMoney").val(serverMoney.toFixed(2));
+        goods_price = parseFloat($("#price").val());
+        goods_price1 = parseFloat($("#price1").val());
+        $("#goods_price").html("$"+(goods_price+serverMoney).toFixed(2));
+        $("#goods_price1").html("$"+(goods_price1+serverMoney).toFixed(2));
+    });
+
+    $.get("/www/cart/ajaxCartNumber?temp="+new Date().getTime(),function(res){
+        if (res.number >0){
+            $("#cartNumber").show().html(res.number);
+        };            
+    },'json');
+})
+
+function AjaxAddCart(){
+    var spec_id = $("#spec_id").val();
+    var number = $("#buyNum").val();
+    var exts = $("#extends").val();
+    var goodsID = {$list.id};
+    var typeID = {$list.typeID};
+    var server = $("#server").val();
+    mui.showLoading();
+    $.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&server="+server+"&number="+number+"&exts="+exts+"&temp="+new Date().getTime(),function(res){
+        mui.hideLoading();
+        if (res.code==0){
+            mui.alert(res.msg);
+        }else{
+            //mui.alert('操作成功');
+            $('#cartNumber').show().html(res.msg);
+        }
+    },'json');
+}
+
+function buyNow(){
+    var spec_id = $("#spec_id").val();
+    var number = $("#buyNum").val();
+    var exts = $("#extends").val();
+    var goodsID = {$list.id};
+    var typeID = {$list.typeID};
+    var server = $("#server").val();
+    mui.showLoading();
+    $.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&server="+server+"&number="+number+"&exts="+exts+"&temp="+new Date().getTime(),function(res){
+        mui.hideLoading();
+        if (res.code==0){
+            mui.alert(res.msg);
+        }else{
+            window.location.href = "{:url('cart/index')}"
+        }
+    },'json');
+}
+
+//增减数量
+function changeNum(type){
+    oldNum = parseInt($("#buyNum").val());
+    if (type > 0) {
+        v = oldNum+1;
+    }else if(type="del"){
+        v = oldNum-1;
+        if (v<1) {
+          v=1;
+        }    
+    }
+    $("#buyNum").val(v);    
+}
+
+function switch_extend(spec) {
+    $(spec).siblings().removeClass('red');
+    if ($(spec).hasClass('red')){
+        $(spec).removeClass('red');
+        $("#extends").val("");
+    }else{
+        $(spec).addClass('red');
+        $("#extends").val($(spec).attr("data-name"));
+    }    
+}
+
+var old = {$specid};
+var oldPrice = {$list.price};
+var oldPrice1 = {$list.price1};
+var old = {$specid};
+{empty name="thisSpec"}
+var oldNumber = {$list.number};
+{else/}
+var oldNumber = {$thisSpec.number};
+{/empty}
+
+//切换规格
+function switch_spec(spec) {
+    serverMoney = parseFloat($("#serverMoney").val());
+    $(spec).siblings().removeClass('red');
+    $(spec).parent().parent().find('input').removeAttr('checked');
+    if ($(spec).hasClass('red')){
+        $(spec).removeClass('red');
+        $("#spec_id").val(old);
+        $("#goods_price").html('$'+(oldPrice+serverMoney).toFixed(2));
+        $("#goods_price1").html('$'+(oldPrice1+serverMoney).toFixed(2));
+        $("#price").val(oldPrice);
+        $("#price1").val(oldPrice1);
+        $("#goodsNumber").val(oldNumber);
+    }else{
+        $(spec).addClass('red');
+        price = parseFloat($(spec).attr("data-price"));
+        price1 = parseFloat($(spec).attr("data-price1"));
+        $("#spec_id").val($(spec).attr("data-id"));
+        $("#goods_price").html('$'+(price+serverMoney).toFixed(2));
+        $("#goods_price1").html('$'+(price1+serverMoney).toFixed(2));
+        $("#price").val(price);
+        $("#price1").val(price1);
+        $("#goodsNumber").val($(spec).attr("data-number"));
+    }    
+    //商品价格库存显示
+    //initGoodsPrice();
+}
+</script>

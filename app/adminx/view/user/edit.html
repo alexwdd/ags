@@ -1,0 +1,56 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">用户名</label>
+		<div class="layui-form-mid">
+			<strong>{$list.username}</strong>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">密码</label>
+		<div class="layui-input-inline">
+			<input type="password" id="password" name="password" lay-verify="_password" class="layui-input">
+		</div>
+		<p class="layui-form-mid layui-word-aux">不修改请留空</p>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="status" value="1" title="开启" {php}if($list['status']=='1')echo 'checked';{/php}>
+			<input type="radio" name="status" value="0" title="关闭" {php}if($list['status']=='0')echo 'checked';{/php}>
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">用户组</label>
+		<div class="layui-input-inline">
+			<select name="group" lay-verify="required" lay-verType="tips" default="{$list.group}" class="fsSelect fsDict" dict="group" addNull="1">
+	      	</select>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">姓名</label>
+		<div class="layui-input-inline">
+			<input type="text" id="name" name="name" value="{$list.name}" class="layui-input" lay-verify="required">
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">电话</label>
+		<div class="layui-input-inline">
+			<input type="text" id="phone" name="phone" value="{$list.phone}" class="layui-input">
+		</div>
+	</div>
+
+	<hr/>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('User/edit')}"><i class="layui-icon">&#xe642;</i>编辑</button>
+     	<button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+    </div>
+	<input type="hidden" name="id"  />
+</form>

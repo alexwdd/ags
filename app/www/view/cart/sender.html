@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物车-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+h1{font-size: 40px;}
+.goodsInfo{margin-bottom:0px;margin-left:0px;}
+</style>
+</head>
+<body>
+<div style="padding: 10px; background: #fff">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-xs8">
+            <div class="layui-inline" style="width: 200px">
+                <input type="text" class="layui-input" id="orderKey" placeholder="姓名/电话">
+            </div>
+            <div class="layui-inline">
+                <button type="button" id="searchBtn" class="layui-btn">查询</button>
+            </div>
+        </div>
+        <div class="layui-col-xs4" style="text-align: right;"><a href="javascript:void(0)" class="layui-btn" id="manage">管理寄件人</a></div>
+    </div>    
+    <table class="layui-hide" id="test"></table>
+</div>
+
+
+<script type="text/html" id="barDemo">          
+    <a href="javascript:void(0)" class="layui-btn layui-btn-xs" onclick="selectAddress({{d.id}})">选择</a>
+</script>
+
+<script type="text/javascript" charset="utf-8">
+$(function(){ 
+    $(function(){
+        getData();
+    })
+
+    $("#searchBtn").click(function(){
+        getData();
+    })
+
+    function getData(){
+        layui.use('table', function(){
+            var table = layui.table;  
+            table.render({
+                elem: '#test',
+                url:'{:url('cart/sender')}',
+                method:'post',
+                where: {keyword:$("#orderKey").val()},
+                cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                cols: [[
+                  {field:'name', width:100, title: '姓名'},
+                  {field:'mobile', width:200, title: '电话'},                
+                  {width:80, fixed:"right",title: '操作',toolbar:"#barDemo"}
+                ]],
+                page: {
+                    limit:20
+                }
+            });
+        });
+    }
+
+    $("#manage").click(function(){
+        parent.layer.closeAll();
+        parent.location.href = '{:url("address/index")}';
+    });   
+})
+function selectAddress(id){
+    parent.layer.closeAll();
+    parent.location.href = '/www/cart/order.html?kid={$kid}&aid={$aid}&sid='+id;
+}
+</script>
+</body>
+</html>

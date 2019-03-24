@@ -1,0 +1,8 @@
+.loginBg{background: url(../image/login.jpg);background-size: cover;}
+.loginBox{width: 100%;}
+.loginBox li{width: 70%; margin: auto;} 
+.logo{clear: both; text-align: center; padding: 80px 0;}
+.logo img{width:40%;}
+.mui-input-row{clear: both;}
+.mui-input-row .mui-input,.mui-input-row .mui-input-password{border: 0; border-radius: 20px}
+.my-btn{border: 0; background: #39c4da; color: #fff; border-radius: 26px}

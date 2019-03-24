@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物车-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+.my-card-header{border-left:3px #39c4da solid; font-size: 16px}
+.address i{color: #39c4da}
+.rate{ font-size: 20px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+{include file="public:header" /}
+
+<div class="main">
+    <div class="indexTitle"><h1>结算中心</h1></div>
+    <form class="layui-form" method="post">
+    <div style="width: 1000px; margin: 20px auto; margin-bottom: 100px">
+        <div class="rate">当前汇率：{$rate}</div>
+        <div class="layui-card">
+            <div class="layui-card-header my-card-header">收货人信息
+                <span id="aBtn" style="float:right;cursor: pointer; font-size: 12px;color: #39c4da;"><i class="layui-icon layui-icon-add-1"></i>新增</span>
+                <span id="sBtn" style="float:right;cursor: pointer; font-size: 12px;color: #39c4da; margin-right: 10px"><i class="layui-icon layui-icon-edit"></i>更改</span></div>
+            <div class="layui-card-body address">
+                {notempty name="address"}
+                <i class="layui-icon layui-icon-username"></i>{$address['name']}, <i class="layui-icon layui-icon-cellphone"></i>{$address['mobile']}, <i class="layui-icon layui-icon-location"></i>{$address['province']} {$address['city']} {$address['area']} {$address['address']} 
+     
+                <!-- <div style="margin-top: 15px;">
+                    <input type="text" name="sn" value="{$address.sn}" lay-verify="_cardNo" placeholder="身份证号码，非必填，下单后可继续完善信息" autocomplete="off" class="layui-input">
+                </div>
+                
+                <div style="clear: both; padding: 15px 0">
+                    <div class="sn" onclick="uploadImage('front','{:url('upload/image','water=1')}');"><img id="front_src" src="{empty name="address.front"}{:RES}/image/sn1.png{else/}{$address.front}{/empty}" /></div>
+                    <div class="sn" onclick="uploadImage('back','{:url('upload/image','water=1')}');"><img id="back_src" src="{empty name="address.back"}{:RES}/image/sn2.png{else/}{$address.back}{/empty}" /></div>
+                </div> -->
+
+                <input type="hidden" id="province" name="province" value="{$address['province']}">
+                <input type="hidden" id="city" name="city" value="{$address['city']}">
+                <input type="hidden" id="area" name="area" value="{$address['area']}">
+                <input type="hidden" id="address" name="address" value="{$address['address']}">
+                <input type="hidden" name="name" id="name" value="{$address['name']}">
+                <input type="hidden" name="mobile" id="mobile" value="{$address['mobile']}">
+                <input type="hidden" name="front" id="front" value="{$address.front}">
+                <input type="hidden" name="back" id="back" value="{$address.back}">
+                <input type="hidden" name="addressID" value="{$address.id}">
+
+                {else/}
+                <input type="hidden" id="address" name="address" value="" lay-verify="required" >
+                {/notempty}
+            </div>
+        </div>
+
+        <div class="layui-card">
+            <div class="layui-card-header my-card-header">寄件人信息
+            <span id="senderBtn" style="float:right;cursor: pointer; font-size: 12px;color: #39c4da;"><i class="layui-icon layui-icon-add-1"></i>新增</span>
+            <span id="senderSelectBtn" style="float:right;cursor: pointer; font-size: 12px;color: #39c4da; margin-right: 10px"><i class="layui-icon layui-icon-edit"></i>更改</span>
+            </div>
+            <div class="layui-card-body">
+                {notempty name="sender"}
+                <i class="layui-icon layui-icon-username"></i>{$sender['name']}, <i class="layui-icon layui-icon-cellphone"></i>{$sender['mobile']}
+                <input type="hidden" name="sender" value="{$sender.name},{$sender.mobile}" lay-verify="required"/>
+                {else/}
+                <input type="hidden" name="sender" value="" lay-verify="required"/>
+                {/notempty}       
+            </div>
+        </div>
+
+        <div class="layui-card">
+            <div class="layui-card-header my-card-header">偏远地区额外收费(新疆、西藏、内蒙)</div>
+            <div class="layui-card-body">
+                <div class="list">
+                    <li>
+                        <label>额外收费</label>
+                        <p class="money">${$baoguo.totalExtend}</p>
+                    </li>
+                </div>
+            </div>
+        </div>
+        
+        {eq name="flag" value="1"}
+        <div class="layui-card">
+            <div class="layui-card-header my-card-header">订单签名</div>
+            <div class="layui-card-body">                
+                <p style="margin-bottom: 10px"><input type="text" maxlength="10" name="sign" class="layui-input" placeholder="请输入您要的签名（必填，中文一个字，英文不超过1个单词）" lay-verify="sign"/></p>                
+                <!-- <p><input type="text" name="intr" class="layui-input" placeholder="订单的备注信息(选填)" /></p> -->
+            </div>
+        </div>
+        {/eq}
+
+        <div class="layui-card">
+            <div class="layui-card-header my-card-header">费用明细</div>
+            <div class="layui-card-body">
+                <div class="list">
+                    <li>
+                        <label>商品金额</label>
+                        <p class="money">${$money.total|number_format=###,2}</p>
+                    </li>
+                    {eq name="kid" value="0"}
+                    <li>
+                        <label>运费</label>
+                        <p class="money">$0</p>
+                    </li>
+                    {else/}
+                    <li>
+                        <label>运费</label>
+                        <p class="money">${$baoguo.totalPrice}</p>
+                    </li>
+                    {/eq}
+                </div>
+
+                <div class="doPay">
+                    <li>订单金额：<span>${$total|number_format=###,2}</span></li>
+                    <li>账户预存款：${$user.money|number_format=###,2}</li>
+                    <li><button class="layui-btn layui-btn-lg layui-btn-danger" lay-submit lay-filter="gogo" url="{:url('cart/doSubmit')}"><?php if($user['money'] >= $total){ echo '确认付款';}else{ echo '去支付 $'.number_format($payMoney,2);}?></button></li>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="kid" value="{$kid}">
+    </form>
+</div>
+<input type="file" id="uploadfile" hidden /> 
+<script type="text/javascript">
+$(function(){
+    $("#sBtn").click(function(){
+        openModel ('{:url('cart/address',['kid'=>$kid,'sid'=>$sid])}','选择收件人','80%','80%');
+    });
+
+    $("#aBtn").click(function(){
+        openModel ('{:url('cart/addPerson',['kid'=>$kid,'sid'=>$sid])}','添加收件人','80%','80%');
+    });
+
+    $("#senderSelectBtn").click(function(){
+        openModel ('{:url('cart/sender',['kid'=>$kid,'aid'=>$aid])}','选择寄件人','800px','80%');
+    });
+
+    $("#senderBtn").click(function(){
+        openModel ('{:url('cart/addSender',['kid'=>$kid,'aid'=>$aid])}','添加寄件人','400px','300px');
+    });
+
+    layui.use('form', function(){
+        var form = layui.form; 
+        form.on('submit(gogo)', function(data){
+            <?php
+            if($user['money'] > 0){
+                $money = $total >= $user['money'] ? $user['money'] : $total;
+                echo '_html = "订单共【$'.number_format($total,2).'元】，使用余额【$'.number_format($money,2).'元】";';
+            }else{
+                echo '_html="订单共计【$'.number_format($total,2).'元】";';
+            }?>
+            layer.confirm(_html, {
+                btn: ['确定','取消']},
+                function(){
+                    layer.closeAll();
+                    var load = layer.load(0,{shade: [0.7, '#000000']});
+                    var formUrl = data.elem.getAttribute("url");
+                    $.ajax({
+                        url:formUrl,
+                        method:'post',
+                        data:data.field,
+                        dataType:'JSON',
+                        success:function(res){
+                            layer.close(load);
+                            if(res.code == 1){                 
+                                if(res.url!='' && res.url!=undefined && res.url!="undefined"){
+                                    if (res.data=='reload') {
+                                        window.location.reload();
+                                    }else{
+                                        window.location.href = res.url;
+                                    }                                   
+                                }
+                            }else{
+                                layer.alert(res.msg);
+                            }
+                        },
+                        error:function (data) {
+                            layer.close(load);
+                            layer.alert("服务器连接失败");
+                        }
+                    })
+                });
+            return false;
+        })
+    })
+})
+
+function uploadImage(o,url){
+    $("#uploadfile").click();
+    $("#uploadfile").bind("change", function(){
+        if ($(this).val() != "") {
+            load = layer.load(0,{shade: [0.7, '#000000']});
+            var fileObj = document.getElementById("uploadfile").files[0]; // js 获取文件对象
+            var form = new FormData(); // FormData 对象            
+            if(fileObj.size/1024 > 1025) { //大于1M，进行压缩上传
+                cutImageBase64(document.getElementById("uploadfile"),800,0.8, function(base64Codes){
+                    //console.log("压缩后：" + base64Codes.length / 1024 + " " + base64Codes);
+                    var bl = convertBase64UrlToBlob(base64Codes);
+                    form.append("file", bl, "file_"+Date.parse(new Date())+".jpg"); // 文件对象
+                    _upload(url,form,o);
+                });
+            }else{ //小于等于1M 原图上传
+                form.append("file", fileObj); // 文件对象
+                _upload(url,form,o);
+            }
+        }
+    });
+}
+
+function _upload(url,form,o){
+    $.ajax({
+        url: url,
+        type: 'POST',
+        cache: false,
+        data: form,
+        dataType:'json',
+        timeout: 5000,
+        //必须false才会避开jQuery对 formdata 的默认处理 
+        // XMLHttpRequest会对 formdata 进行正确的处理
+        processData: false,
+        //必须false才会自动加上正确的Content-Type 
+        contentType: false,
+        xhrFields: {
+           withCredentials: true
+        },
+        success: function(res) {
+            layer.close(load);
+            if(res.code=='1'){
+                $("#uploadfile").unbind("change");
+                $("#uploadfile").val("");                        
+                $("#"+o).val(res.msg);
+                $("#"+o+"_src").attr("src",res.msg);
+            }else{
+                layer.alert(res.msg);
+            }
+        }
+    })
+}
+
+/*
+ * @param m_this当前对象
+ * @param id展示图片id
+ * @param wid压缩后宽度
+ * @param quality压缩质量 
+ * */  
+function cutImageBase64(m_this,wid,quality,callback) {    
+    var file = m_this.files[0];
+    var URL = window.URL || window.webkitURL;
+    var blob = URL.createObjectURL(file);
+    var base64;
+    var img = new Image();
+    img.src = blob;
+    img.onload = function() {
+        var that = this;
+        //生成比例
+        var w = that.width,
+            h = that.height,
+            scale = w / h;
+            w = wid || w;
+            h = w / scale;
+        //生成canvas
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        $(canvas).attr({
+            width: w,
+            height: h
+        });
+        ctx.drawImage(that, 0, 0, w, h);
+        // 生成base64            
+        base64 = canvas.toDataURL('image/jpeg', quality || 0.8);
+        callback(base64);
+        //$(id).attr('src',base64);
+    };
+}
+
+/**
+ * 将以base64的图片url数据转换为Blob
+ * @param urlData
+ * 用url方式表示的base64图片数据
+ */
+function convertBase64UrlToBlob(urlData){
+    var arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
+</script>
+</body>
+</html>

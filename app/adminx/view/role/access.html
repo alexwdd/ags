@@ -1,0 +1,49 @@
+<layout name='layout' />
+
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+	<legend>【{$role.name}】权限设置</legend>
+</fieldset>
+
+<form class="layui-form">
+	{volist name="list" id="vo"}
+	<fieldset class="layui-elem-field auth">
+		<legend style="margin:0 10px;padding: 0px;"><input data-id="action-{$vo.id}" lay-filter="access" type="checkbox" name="mod[]" value="{$vo.id}-{$vo.level}-{$vo.pid}" {php}if(in_array($vo['id'],$nodeArr)) echo 'checked';{/php} title="{$vo.name}"/></legend>
+		{volist name="vo['children']" id="f"}
+		<dl class="action action-{$vo.id}">	
+		    <dt>			    
+		    	<input data-id="fun-{$f.id}" lay-skin="primary" lay-filter="access" type="checkbox" name="mod[]" value="{$f.id}-{$f.level}-{$f.pid}" {php}if(in_array($f['id'],$nodeArr)) echo 'checked';{/php} title="{$f.name}"/>
+			</dt>				
+			<dd class="fun-{$f.id}">
+	    		{volist name="f['children']" id="f2"}
+	    		<li>
+	    		<input type="checkbox" name="mod[]" lay-skin="primary" value="{$f2.id}-{$f2.level}-{$f2.pid}" {php}if(in_array($f2['id'],$nodeArr)) echo 'checked';{/php} title="{$f2.name}"/>
+	    		</li>
+	    		{/volist}
+	    	</dd>		    	
+	    </dl>	
+		{/volist}				
+	</fieldset>
+	{/volist}
+
+	<hr>
+
+	<div class="layui-form-item">
+	 	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Role/access')}"><i class="layui-icon">&#xe642;</i>保存</button>
+	 	<button type="button" class="layui-btn layui-btn-primary" onclick="window.history.go(-1)">返回</button>
+	</div>
+	<input type="hidden" name="role_id" value="{$role.id}" />
+</form>
+
+<script type="text/javascript">
+layui.use(["jquery","form"],function() {
+	var $=layui.jquery,form=layui.form;
+	form.on('checkbox(access)', function(data){
+		var oID=$(data.elem).attr("data-id");
+		$("."+oID).find("input").each(function(index, item){  
+          	item.checked = data.elem.checked;  
+        });
+        form.render('checkbox'); 
+	});   
+});
+</script>

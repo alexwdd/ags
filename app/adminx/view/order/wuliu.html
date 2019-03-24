@@ -1,0 +1,118 @@
+<form class="layui-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">快递公司</label>
+		<div class="layui-form-mid">
+			{$list.kuaidi}
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">物流单号</label>
+		<div class="layui-input-block">
+			<input type="text" name="kdNo" id="kdNo" value="{$list.kdNo}" placeholder="物流单号" lay-verify="required" class="layui-input">
+			<p>多个用英文逗号隔开</p>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">电子面单</label>
+		<div class="layui-input-inline" style="width: 80%">
+			<div class="insert-img" id="insert-img1">
+				{volist name="list.eimg" id="vo"}
+				<li><img src="{$vo}" /><input type="hidden" name="eimg[]" value="{$vo}" /><i class="layui-icon" onclick="removeLi(this)">&#x1006;</i></li>
+				{/volist}
+				<a href="javascript:;" class="insert-btn"
+				 id="muploud1"
+				 url="{:url('Upload/image')}"
+				 size="5120"
+				 exts="jpg|png|gif|jpeg"
+				 accept="images"
+				 tag="insert-img1"
+				 >+</a> 
+			</div>
+		</div>
+	</div>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label">照片</label>
+		<div class="layui-input-inline" style="width: 80%">
+			<div class="insert-img" id="insert-img">
+				{volist name="list.image" id="vo"}
+				<li><img src="{$vo}" /><input type="hidden" name="image[]" value="{$vo}" /><i class="layui-icon" onclick="removeLi(this)">&#x1006;</i></li>
+				{/volist}
+				<a href="javascript:;" class="insert-btn"
+				 id="muploud"
+				 url="{:url('Upload/image')}"
+				 size="5120"
+				 exts="jpg|png|gif|jpeg"
+				 accept="images"
+				 tag="insert-img"
+				 >+</a> 
+			</div>
+		</div>
+	</div>
+
+	<!-- <div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="flagRadio" value="0" title="未发货" {php}if($list['flag']==0) echo 'checked';{/php} lay-filter="type">
+			<input type="radio" name="flagRadio" value="1" title="已发货" {php}if($list['flag']==1) echo 'checked';{/php} lay-filter="type">
+		</div>
+	</div> -->
+
+	<hr>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button type="button" id="subBtn" class="layui-btn" url="{:url('order/wuliu')}">保存</button>
+	</div>
+	<input type="hidden" name="id" id="id" value="{$list.id}">
+	<input type="hidden" name="flag" id="flag" value="{$list.flag}">
+	<input type="hidden" name="orderID" id="orderID" value="{$list.orderID}">
+</form>
+<script src="{:RES}/js/upload.js"></script>
+<script type="text/javascript" charset="utf-8">
+$(function(){ 
+	layui.use(['form'],function(){
+		form = layui.form;
+	    form.on('radio(type)', function(data){
+	        var value = data.value; //被点击的radio的value值
+	        $("#flag").val(value);
+	    });
+    });
+
+    $('#subBtn').click(function(){
+    	var id = $("#id").val();
+    	var kdNo = $("#kdNo").val();
+    	var eimg = $("#eimg").val();
+    	var flag = $("#flag").val();
+    	var orderID = $("#orderID").val();
+    	var image = '';
+    	$("input[name='image[]']").each(function(index){
+    		if (index==0){
+    			image = $(this).val()
+    		}else{
+    			image += ','+$(this).val()
+    		}
+    	});
+    	$("input[name='eimg[]']").each(function(index){
+    		if (index==0){
+    			eimg = $(this).val()
+    		}else{
+    			eimg += ','+$(this).val()
+    		}
+    	});
+    	data = {'kdNo':kdNo,'eimg':eimg,'image':image,'flag':flag,'orderID':orderID,'id':id};
+    	$.post("{:url('order/wuliu')}",data,function(res){
+    		if (res.code==1){
+    			layer.alert("操作成功",function(){
+    				parent.layer.closeAll();
+        			parent.location.reload();
+    			})
+    		}else{
+    			layer.alert(res.msg);
+    		}
+    	});        
+    });
+})
+</script>

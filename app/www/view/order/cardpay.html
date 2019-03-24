@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>订单支付-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+.payInfo{background: #fff; width: 1000px; clear: both; margin: 40px auto; box-shadow: 0 0 5px #ccc; padding: 20px; box-sizing: border-box;}
+.payInfo .payMoney{ text-align: center; font-size: 30px; padding: 20px 0 }
+.payInfo .qrcode{float: left; width: 50%; box-sizing: border-box; border-right: 1px #dbdbdb solid}
+.payInfo .qrcode .qrIntr{clear: both; text-align: center; font-size: 18px;}
+.payInfo .payOrderInfo{float: right; width: 50%}
+.payInfo .payOrderInfo .omiPayInfo{background: #f1f1f1; margin:10px 30px; margin-left: 50px; border:1px #ddd solid; border-radius: 10px; padding: 15px;}
+.payInfo .payOrderInfo .omiPayInfo li{clear: both; padding: 10px 0}
+.payInfo .payOrderInfo .omiPayInfo li label{padding-bottom: 5px; color: #666}
+.payInfo .payOrderInfo .omiPayInfo li p{font-size: 18px; color: #333}
+</style>
+</head>
+<body>
+{include file="public:header" /}
+
+
+<div class="main">
+    <div class="indexTitle"><h1>订单支付</h1></div>
+    
+    <div class="payType">
+        <li><a href="{:url("order/pay","order_no=".$list['order_no'])}">扫码支付</a></li>
+        <li class="active"><a href="{:url("order/cardpay","order_no=".$list['order_no'])}">银行转账</a></li>
+    </div>
+
+    <div class="payInfo">
+    	<div class="payMoney">${$list.money}</div>
+        <div style="text-align: center; font-size: 18px; margin-bottom: 15px">请务必备注<span style="background-color: #f00;color: #fff; font-size: 18px; font-weight: bold;">订单号</span>，否则将会影响审核发货速度。 </div>
+    	<div class="qrcode">
+    		<form class="layui-form" method="post">                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">收款账户</label>
+                    <div class="layui-input-inline">
+                        <select name="cardID" id="cardID" lay-verify="required" lay-filter="card">
+                            <option value="">请选择</option>
+                            {volist name="card" id="vo"}
+                            <option value="{$vo.id}">{$vo.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div id="result" class="cardInfo"></div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">支付截图</label>
+                    <div class="layui-input-inline">
+                        <div class="sn" style="width: 300px" onclick="uploadImage('image','{:url('upload/image')}');"><img id="image_src" src="{:RES}/image/image.jpg" /></div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="go" url="{:url('order/cardpay')}">提交</button>
+                    </div>                    
+                </div>
+                <input type="hidden" name="image" id="image" value="">
+                <input type="hidden" name="id" value="{$list.id}">
+            </form>
+    	</div>
+    	<div class="payOrderInfo">
+    		<div class="omiPayInfo">
+    			<li>
+	                <label style="background-color: #f00;color: #fff; padding: 0">订单号</label>
+	                <p style="margin-top: 5px">{$list.order_no}</p>
+	            </li>
+
+	            <li>
+                    <label>订单金额</label>
+                    <p>${$list.money}</p>
+                </li>
+    		</div>
+    	</div>
+    	<div class="clearfix"></div>
+    </div>
+</div>
+<input type="file" id="uploadfile" hidden /> 
+<script type="text/javascript">
+layui.use(['form'],function(){
+    form = layui.form;
+    form.on('select(card)', function(data){
+        if (data.value!=''){
+            $("#result").show().html('<i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"></i> 信息读取中');
+            $.post('{:url('member/getCard')}',{'cardID':data.value},function(res){
+                if (res.code==1){
+                    data = res.data;
+                    _html = '<p>银行：'+data.bank+'</p><p>账户：'+data.account+'</p><p>BSB：'+data.bsb+'</p><p>账号：'+data.cardno+'</p>';
+                    $("#result").html(_html);
+                }else{
+                    layer.alert(res.msg);
+                    $("#result").hide()
+                }
+            },'json')
+        }else{
+            $("#result").html('').hide();
+        }
+        
+    });
+})
+</script>
+
+{include file="public:footer" /}
+</body>
+</html>

@@ -1,0 +1,30 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">我的团队</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <div class="tabMenu">
+        <li><a href="{:url('member/tree')}">关系图</a></li>
+        <li class="active"><a href="{:url('member/tuijian')}">待激活</a>{gt name="noactive" value="0"}<span style="color:#f00">({$noactive})</span>{/gt}</li>
+    </div>
+
+    <div class="userList">
+        {volist name="list" id="vo"}
+        <li>
+            <a href="{:url('member/active','id='.$vo['id'])}">
+            <div class="face">
+            {empty name="vo.face"}
+            <img src="{:RES}/image/face.png"/>
+            {else/}
+            <img src="{$vo.face}"/>
+            {/empty}
+            </div>
+            <div class="name">{$vo.username}<br/>{$vo.mobile}</div>
+            </a>
+        </li>
+        {/volist}
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<nav class="mui-bar mui-bar-tab">
+	<a href="{:url('index/index')}" data="index" class="mui-tab-item">
+		<span class="mui-icon icon icon-home"></span>
+		<span class="mui-tab-label">首页</span>
+	</a>
+
+	<a href="{:url('store/category')}" data="category" class="mui-tab-item">
+		<span class="mui-icon icon icon-menu"></span>
+		<span class="mui-tab-label">分类</span>
+	</a>
+
+	<a href="{:url('store/brand')}" data="brand" class="mui-tab-item">
+		<span class="mui-icon icon icon-star-o"></span>
+		<span class="mui-tab-label">品牌</span>
+	</a>
+
+	<a href="{:url('cart/index')}" data="cart" class="mui-tab-item">
+		<span class="mui-icon icon icon-cart"><span class="mui-badge" id="barNumber" style="display: none;"></span></span>
+		<span class="mui-tab-label">购物车</span>
+	</a>
+
+	<a href="{:url('member/index')}" data="member" class="mui-tab-item">
+		<span class="mui-icon icon icon-user"></span>
+		<span class="mui-tab-label">我的</span>
+	</a>
+</nav>
+<script>
+mui.ready(function(){
+	mui('.mui-bar-tab').on('tap','a',function(){
+		document.location.href=this.href;}
+	);
+
+	var val = $("#activeIndex").val();
+	$(".mui-tab-item").each(function(){
+		if ($(this).attr("data")==val){
+			$(this).addClass("mui-active");
+		};
+	});
+
+	{gt name="user.id" value="0"}
+	$(function(){
+        $.get("/www/cart/ajaxCartNumber?temp="+new Date().getTime(),function(res){
+            if (res.number >0){
+                $("#barNumber").show().html(res.number);
+            };            
+        },'json');
+    })
+    {/gt}
+})
+</script>

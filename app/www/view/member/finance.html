@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+
+<body>
+{include file="public:header" /}
+
+<div class="leftBox">
+    {include file="public:usermenu" /}
+</div>
+
+<div class="rightBox">
+    <div class="guide">
+        <a href="/">首页</a> / 财务记录
+    </div>
+
+    <div class="layui-col-md12" style="padding:10px;padding-top: 0">
+        <div class="layui-row"> 
+            
+            <p>
+            <a href="javascript:void(0)" class="layui-btn layui-btn-primary">当前余额：<span style="color: #c00">${$money.money}</span></a>
+
+            <a href="{:url("member/pay")}" class="layui-btn">去充值</a>
+
+            <a href="{:url("member/history")}" class="layui-btn">充值记录</a>
+
+            </p>
+            <div class="layui-col-md12">
+                <table class="layui-hide" id="test"></table>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(function(){
+        getData();
+    })
+
+    $("#searchBtn").click(function(){
+        getData();
+    })
+
+    function getData(){
+        layui.use('table', function(){
+            var table = layui.table;  
+            table.render({
+                elem: '#test',
+                url:'{:url('member/finance','type='.$type)}',
+                method:'post',
+                where: {keyword:$("#keyword").val(),type:$("#type").val(), createDate: $("#createDate").val()},
+                cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                cols: [[
+                  {field:'createTime', width:180, title: '日期'},
+                  {field:'type', width:100, title: '类型'},
+                  {field:'money', width:100, title: '金额'},
+                  {field:'oldMoney', width:100, title: '原始金额'},
+                  {field:'newMoney', width:100, title: '新的金额'},
+                  {field:'msg', width:"", title: '备注'}
+                ]],
+                done: function(res){
+                    $("#total").html(res.total);
+                },
+                page: {
+                    limit:20
+                }
+            });
+        });
+    }
+    </script>
+</div>
+<script type="text/javascript" src="{:RES}/js/iframe.js"></script>
+</body>
+</html>

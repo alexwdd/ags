@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物车-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+<body>
+{include file="public:header" /}
+
+<div class="main">
+    <div class="layui-row">
+        <div class="layui-col-xs6" style="padding: 10px">
+            <div class="layui-card">
+                <div class="layui-card-header">购物车</div>
+                <div class="layui-card-body">
+                    <div class="layui-row">
+                        {volist name="list" id="vo"}
+                        <div class="layui-col-xs3">
+                            <div class="cartProduct">
+                                <img src="{$vo.goods.picname|getThumb=280,280}">
+                                <h1 class="layui-elip">{$vo.goods.name}</h1>
+                                <div class="price">
+                                    <p>价格：<span>${$vo.goods.price}</span></p>
+                                    <p>会员价：<span>${$vo.goods.price1}</span></p>
+                                </div>
+                                <div class="delBtn" data-id="{$vo.id}"><i class="layui-icon layui-icon-delete"></i></div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6" style="padding: 10px">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    订单
+                    <p style="float: right;"><button type="button" class="layui-btn layui-btn-sm createBtn">+ 添加</button></p>
+                </div>
+                <div class="layui-card-body">
+                    <div class="orderBox" id="orderBox"></div>
+                    <div class="cartOrderList" id="cartOrderList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="payBox">
+    <div class="box">
+    合计金额：<span id="total">0</span>
+    <button class="layui-btn layui-btn-lg layui-btn-danger">去结算</button>
+    </div>
+</div>
+<script type="text/javascript">
+$(function() {
+    initWindow();
+    $(window).resize(function() {
+        initWindow();
+    })
+
+    function initWindow() {
+        wh = $(window).height(); //窗口高度
+        $(".layui-card-body").height(wh - 220);
+    }
+
+    $(".delBtn").click(function(){
+        id = $(this).attr('data-id');
+        o = $(this);
+        $.get('{:url("store/delcart")}?id='+id,function(){
+            $(o).parent().remove();
+        })
+    })
+
+    $(".createBtn").click(function(){
+        if ($("#orderBox").html()!=''){
+            layer.alert("请先完成当前订单");
+            return false;
+        }
+        $.get('{:url("store/createOrder")}',function(res){
+            
+        })
+    })
+})
+</script>
+</body>
+</html>

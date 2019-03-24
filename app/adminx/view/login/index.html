@@ -1,0 +1,46 @@
+<div class="layui-col-md12">
+	<div class="beg-login-box">
+		<header>
+			<h1>后台登录</h1>
+		</header>
+		<div class="beg-login-main">
+			<form class="layui-form" method="post">
+				<div class="layui-form-item">
+					<label class="beg-login-icon">
+                        <i class="layui-icon">&#xe612;</i>
+                    </label>
+					<input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="请输入登录名" class="layui-input">
+				</div>
+				<div class="layui-form-item">
+					<label class="beg-login-icon">
+                        <i class="layui-icon">&#xe642;</i>
+                    </label>
+					<input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="请输入密码" class="layui-input">
+				</div>
+				<div class="layui-form-item">
+					<label class="beg-login-icon">
+                        <i class="layui-icon">&#xe64a;</i>
+                    </label>
+					<input type="text" name="checkcode" id="checkcode" lay-verify="required" autocomplete="off" placeholder="请输入验证码" class="layui-input">
+				</div>
+				<div class="layui-form-item">
+					<div class="beg-pull-left beg-login-remember">
+						<img id="verifyImg" SRC="{:url('Login/verify')}" onClick="fleshVerify()" style="cursor:pointer" align="absmiddle" />
+					</div>
+					<div class="beg-pull-right">
+						<button class="layui-btn layui-btn-primary" lay-submit url="{:url('Login/doLogin')}" lay-filter="save">
+                        <i class="layui-icon">&#xe650;</i> 登录
+                    </button>
+					</div>
+					<div class="beg-clear"></div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+$(function(){
+	$("html").css("background","#393D49");
+	$("body").css("background","#393D49");
+})
+</script>

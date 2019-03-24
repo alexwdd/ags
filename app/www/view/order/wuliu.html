@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+<body>
+
+<div class="layui-row" style="margin: 5px">
+    <table class="layui-table">
+        <colgroup>
+            <col width="200">
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+          <th>时间</th>
+          <th>位置</th>
+          <th>状态</th>
+        </tr> 
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td>阿德莱德处理中心-Australia</td>
+                <td>运单已创建</td>
+            </tr>
+            {notempty name="list.image"}
+            <tr>
+                <td>-</td>
+                <td>阿德莱德处理中心-Australia</td>
+                <td>货物打板装车，正运往悉尼</td>
+            </tr>
+            {/notempty}
+            {volist name="result.TrackList" id="vo"}
+            <tr>
+                <td>{$vo.StatusTime}</td>
+                <td>{$vo.Location}</td>
+                <td>{$vo.StatusDetail}</td>
+            </tr>
+            {/volist}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

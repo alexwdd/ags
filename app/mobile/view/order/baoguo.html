@@ -1,0 +1,54 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <a href="{:url('index/index')}" class="mui-icon mui-icon-home mui-pull-left"></a>
+	<h1 class="mui-title">待收货包裹</h1>
+</header>
+
+<div class="mui-content">
+
+	{volist name="list" id="vo" empty="$empty"}
+    <div class="orderList">
+        <div class="hd">包裹{$i}<span color="red">{$vo.status|getStatus}</span></div>
+        <div class="bd">
+            {volist name="vo.goods" id="f"}
+            <div class="orderDetail">
+                <img src="{$f.picname}">
+                <li>
+                    <p>{$f.pname}</p>
+                    <p>单价：{$f.price}</p>
+                    <p>数量：{$f.number}</p> 
+                    {notempty name="f.pram"}
+                    <p>{$f.pram}</p>
+                    {/notempty}
+                </li>
+            </div>
+            <div class="orderDetail">
+                <img src="{$f.picname}">
+                <li>
+                    <p>{$f.pname}</p>
+                    <p>单价：{$f.price}</p>
+                    <p>数量：{$f.number}</p> 
+                    {notempty name="f.pram"}
+                    <p>{$f.pram}</p>
+                    {/notempty}
+                </li>
+            </div>
+            {/volist}
+            
+            {eq name="vo.status" value="1"}
+            <div style="text-align:right;padding:10px"><a href="{:url('order/shouhuo','id='.$vo['id'])}" class="mui-btn my-btn">确认收货</a></div>
+            {/eq}
+        </div>
+        {notempty name="vo.wuliuNumber"}
+        <div class="fd">                    
+            {$vo.wuliu} 单号：{$vo.wuliuNumber}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{$vo.wuliuUrl}" target="_blank" style="font-size:14px;color:#5a0c58">物流查询</a>
+        </div>
+        <div class="fdImage">
+            {volist name="vo.image" id="img"}
+            <a href="{$img}"><img src="{$img}" /></a>
+            {/volist}
+        </div>
+        {/notempty}
+    </div>
+    {/volist} 
+</div>

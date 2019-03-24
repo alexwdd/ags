@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>用户中心-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+<body style="background: #fff">
+            
+<div class="article-tit">
+    <h1>{$list['title']}</h1>
+    <p>{$list['createTime']|date="Y-m-d",###}</p>
+</div>
+
+<div class="article-content">{$list.content|htmlspecialchars_decode=###}</div>
+
+</body>
+</html>

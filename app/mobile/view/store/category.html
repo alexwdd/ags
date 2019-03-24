@@ -1,0 +1,163 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title"><div class="cateTab"><span class="active"><a href="{:url('store/category')}">按分类</a></span><span><a href="{:url('store/brand')}">按品牌</a></span></div></h1>
+</header>
+
+<div class="mui-content">
+    <div class="cateBox">
+		<div class="cateLeft">
+			{volist name="cate" id="vo" key="k"}
+			<li class="mui-ellipsis" data-path="{$vo.path}">{$vo.name}</li>
+			{/volist}
+		</div>
+		<div class="cateRight"></div>
+	</div>
+</div>
+
+<div class="selectFooter">
+    <div class="cartInfo">
+    	<div class="cart" id="topCart">
+    		<i class="icon icon-cart"></i>
+    		<em id="cartNumber">0</em>
+    	</div>
+    </div>             
+	{eq name="user.id" value="0"}
+	<div  action="{:url('order/dopay')}" class="btn">马上下单</div>
+	{else/}
+    <div id="gotoBtn" class="btn">马上下单</div>
+    {/eq}
+</div>
+<script>
+$(function(){
+	h = $(window).height();
+	$(".cateLeft").height(h-88);
+	$(".cateRight").height(h-88);
+
+	$(".cateLeft li").click(function(){
+		$(".cateLeft li").removeClass("active");
+		$(this).addClass("active");
+		data = {"path":$(this).attr("data-path")};
+		mui.showLoading();
+		$.post("{:url('store/ajax')}",data,function(res){
+			mui.hideLoading();
+			$(".cateRight").html(res);			
+		})
+	})
+	$(".cateLeft li").eq(0).click();
+
+	$.get("/www/cart/ajaxCartNumber?temp="+new Date().getTime(),function(res){
+        if (res.number >0){
+            $("#cartNumber").show().html(res.number);
+        };            
+    },'json');
+
+    $("#gotoBtn").click(function(){
+    	num = parseInt($("#cartNumber").html());
+    	if(num>0){
+    		window.location.href = '{:url('cart/index')}';
+    	}
+    });
+
+	$(document).on('click','.canBuy .set', function (){
+	    var action = $(this).attr("data-action");	    
+	    var spec_id = $(this).parent().attr("spec-id");
+	    var goodsID = $(this).parent().attr("data-id");
+	    var typeID = $(this).parent().attr("data-type");
+	    var number = $("#number"+spec_id);
+	    var cart = $('#topCart');
+	    var imgtodrag = $(this).parent().parent().parent('.product').find("img").eq(0);
+	    if (action=='inc'){
+	    	number.html(parseInt(number.html())+1);
+	    	var number = $("#number"+spec_id).html();
+		    $.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&number=1&act=inc&temp="+new Date().getTime(),function(res){
+			        if (res.code==1){
+			            $("#cartNumber").show().html(res.msg);
+			        }
+			    },'json'); 
+
+		    var imgclone = imgtodrag.clone()
+	            .offset({
+	            top: imgtodrag.offset().top,
+	            left: imgtodrag.offset().left
+	        })
+	            .css({
+	            'opacity': '0.5',
+	            'position': 'absolute',
+	            'height': '150px',
+	            'width': '150px',  
+	            'z-index': '1000'
+	        })
+	            .appendTo($('body'))
+	            .animate({
+	            'top': cart.offset().top + 10,
+	            'left': cart.offset().left + 20,
+	            'width': 75,
+	            'height': 75
+	        }, 500);
+	        
+	        imgclone.animate({
+	            'width': 0,
+	                'height': 0
+	        }, function () {
+	        	//回调
+	            $(this).detach(); 
+	        });
+	    }else{
+	    	if (parseInt(number.html())==0){
+	    		return false;
+	    	}else{
+	    		number.html(parseInt(number.html())-1);
+	    		$.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&number=1&act=dec&temp="+new Date().getTime(),function(res){	    			
+			        if (res.code==1){
+			            $("#cartNumber").show().html(res.msg);
+			        }
+			    },'json'); 
+	    	}	    	
+	    }
+	}); 
+
+	$('.addCart').on('click', function () {
+	    var cart = $('#topCart');
+	    var goodsID = $(this).attr("data-id");
+	    var spec_id = $(this).attr("spec-id");
+	    var typeID = $(this).attr("data-type");
+	    var number = $("#number"+spec_id).html();
+	    var imgtodrag = $(this).parent().parent('.product').find("img").eq(0);
+        var imgclone = imgtodrag.clone()
+            .offset({
+            top: imgtodrag.offset().top,
+            left: imgtodrag.offset().left
+        })
+            .css({
+            'opacity': '0.5',
+            'position': 'absolute',
+            'height': '150px',
+            'width': '150px',  
+            'z-index': '1000'
+        })
+            .appendTo($('body'))
+            .animate({
+            'top': cart.offset().top + 10,
+            'left': cart.offset().left + 50,
+            'width': 75,
+            'height': 75
+        }, 500);
+        
+        imgclone.animate({
+            'width': 0,
+                'height': 0
+        }, function () {
+        	//回调
+            $(this).detach();
+            $.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&number="+number+"&temp="+new Date().getTime(),function(res){
+		        if (res.code==1){
+		            $("#cartNumber").show().html(res.msg);
+		        }
+		    },'json');
+
+        });
+	}); 
+});
+</script>
+
+<input type="hidden" id="activeIndex" value="category" />

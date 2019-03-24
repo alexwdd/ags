@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{$thisCate.name}-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+</head>
+<body>
+<div style="padding:20px">
+{if condition="$filter_spec neq ''"}
+{foreach item="spec" key="key" name="filter_spec"}
+<div class="shulges">
+    <p>{$key}</p>  
+    <div class="choic-sel">               
+        {foreach name="spec" item="v2" key="k2"}        
+        <span id="goods_spec_a_{$v2[item_id]}" title="{$v2[item]}" onclick="switch_spec(this);">
+        <input id="goods_spec_{$v2[item_id]}" type="radio" style="display:none;" name="goods_spec[{$key}]" value="{$v2[item_id]}"/>{$v2[item]}</span>        
+        {/foreach} 
+    </div>   
+</div>
+{/foreach}
+{/if}
+</div>
+<script>
+var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+
+</script>
+</body>
+</html>

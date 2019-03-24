@@ -1,0 +1,171 @@
+<style type="text/css">
+.rate{ font-size:14px; text-align: center; line-height: 40px;background: #fff}
+</style>
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">结算中心</h1>
+</header>
+
+<div class="mui-content">
+    <form id="myForm" style="background:none">
+    <div class="rate">当前汇率：{$rate}</div>
+    <div class="infobox" id="addressInfo" style="margin-bottom:10px">
+        <div class="hd"><i class="mui-icon mui-icon-contact"></i> 收件人信息</div>
+        {notempty name="address"}
+            <p class="address_item">{$address['province']} {$address['city']} {$address['area']} {$address['address']} <br>
+                {$address['name']}, {$address['mobile']}</p>
+            <input type="hidden" id="province" name="province" value="{$address['province']}">
+            <input type="hidden" id="city" name="city" value="{$address['city']}">
+            <input type="hidden" id="area" name="area" value="{$address['area']}">
+            <input type="hidden" id="address" name="address" value="{$address['address']}">
+            <input type="hidden" name="name" id="name" value="{$address['name']}">
+            <input type="hidden" name="mobile" id="mobile" value="{$address['mobile']}">
+            <input type="hidden" name="front" id="front" value="{$address.front}" >
+            <input type="hidden" name="back" id="back" value="{$address.back}" >
+            <input type="hidden" name="addressID" value="{$address.id}">
+        {else/}
+            <input type="hidden" id="address" name="address" value="" checkType="required" checkMsg="请选择收货地址">
+        {/notempty}
+        <p><a href="{:url('address/index',array('kid'=>$kid,'sid'=>$sender['id']))}" class="mui-btn my-btn">选择收件人</a></p>
+    </div>
+
+    <div class="infobox" id="addressInfo" style="margin-bottom:10px">
+        <div class="hd"><i class="mui-icon mui-icon-contact"></i> 发件人信息</div>
+        {notempty name="sender"}
+            <p class="address_item">{$sender['name']}, {$sender['mobile']}</p>
+            <input type="hidden" id="sender" name="sender" value="{$sender['name']}, {$sender['mobile']}">
+        {else/}
+            <input type="hidden" id="sender" name="sender" value="" checkType="required" checkMsg="请选择发件人">
+        {/notempty}
+        <p><a href="{:url('address/sender',array('kid'=>$kid,'aid'=>$address['id']))}" class="mui-btn my-btn">选择发件人</a></p>
+    </div>
+    
+    {eq name="flag" value="1"}
+    <div class="infobox" style="margin-bottom:10px">
+        <div class="hd"><i class="mui-icon mui-icon-compose"></i> 订单签名</div>        
+        <input type="text" name="sign" placeholder="输入签名（必填，中文一个字，英文不超过1个单词）" style="border:1px #dbdbdb solid;" checkType="sign" checkMsg="签名错误" />
+    </div>
+    {/eq}
+
+    <div class="infobox" style="margin-bottom:10px">
+        <div class="hd"><i class="mui-icon mui-icon-bars"></i> 费用明细</div>
+        <div class="list">
+            <li>
+                <p>商品金额</p>
+                <span class="money">${$money.total}</span>
+            </li>
+            {gt name="baoguo.totalExtend" value="0"}
+            <li>
+                <p style="width:80%">偏远地区额外收费(新疆、西藏、内蒙)</p>
+                <span class="money">${$baoguo.totalExtend}</span>
+            </li>
+            {/gt}
+            {eq name="kid" value="0"}
+            <li>
+                <p>运费</p>
+                <span class="money">$0</span>
+            </li>
+            {else/}
+            <li>
+                <p>运费</p>
+                <span class="money">${$baoguo.totalPrice}</span>
+            </li>
+            {/eq}
+        </div>
+    </div>
+
+    <div class="infobox">
+        <div class="hd"><i class="mui-icon mui-icon-info"></i> 支付方式</div>
+        <div class="payType">
+            <li data-id=2 <?php if($user['money'] <= 0){ echo 'class="disable"';}else{echo 'class="do";';} ?>>
+                <div class="item">
+                    <img src="{:RES}/image/wallet.jpg">
+                    <span>余额支付</span>
+                    <i <?php if($user['money'] >= $total){ echo 'class="active"';} ?>></i>
+                </div>
+            </li>
+            <li data-id=3 <?php if($user['money'] >= $total){ echo 'class="disable"';}else{echo 'class="do";';} ?>>
+                <div class="item">
+                    <img src="{:RES}/image/omi.jpg">
+                    <span>OMI支付<br/>集成支付宝、微信支付</span>
+                    <i></i>
+                </div>
+            </li>
+            <li data-id=4 <?php if($user['money'] >= $total){ echo 'class="disable"';}else{echo 'class="do";';} ?>>
+                <div class="item">
+                    <img src="{:RES}/image/bank.jpg">
+                    <span>银行卡支付<br/>上传支付截图，人工审核</span>
+                    <i></i>
+                </div>
+            </li>
+        </div>
+    </div>
+
+    <div style="height:70px; clear:both;border: 0"></div>
+
+    <div class="selectFooter">
+        <div class="cartInfo" style="font-size: 12px">
+            总金额 <span id="totalMoney" style="color:#f00">${$total}</span>
+            预存款 <span id="yunfei" style="color:#f00">${$user.money}</span>
+        </div> 
+        <div id="confirmBtn" action="{:url('www/cart/doSubmit')}" class="btn"><?php if($user['money'] >= $total){ echo '确认付款';}else{ echo '去支付 $'.$payMoney;}?></div>
+    </div>
+    <input type="hidden" name="kid" value="{$kid}">
+    <input type="hidden" name="payType" id="payType" value="<?php if($user['money'] >= $total){ echo 2;}else{ echo '';}?>" checkType="required" checkMsg="请选择支付方式">
+    </form>
+</div>
+<script>
+<?php
+if($user['money'] > 0){
+    $money = $total >= $user['money'] ? $user['money'] : $total;
+    echo 'var _html = "订单共【$'.number_format($total,2).'元】，使用余额【$'.number_format($money,2).'元】";';
+}else{
+    echo 'var _html="订单共计【$'.number_format($total,2).'元】";';
+}?>
+$(function(){
+    $("#confirmBtn").click(function(){
+        var btnArray = ['确认', '取消'];
+        var btn = $(this);
+        mui.confirm(_html,function(e){
+            if (e.index == 1) {
+                var res = muiFormCheck('#myForm');
+                //提交
+                if(res){
+                    url = btn.attr("action");
+                    var data = mui.getFormData('#myForm');
+                    mui.showLoading();
+                    mui.post(url,data,function(r){
+                        mui.hideLoading();
+                        if (r.code=='1'){
+                            if ($("#cartContent").length > 0) {
+                                $("#cartContent").html($("#emptyDiv").html());
+                            }
+                            mui.alert(r.msg, '系统消息', function(){
+                                if(r.url!='' && r.url!=undefined){
+                                    if (r.url=='reload') {
+                                        window.location.reload();
+                                    }else{
+                                        window.location.href = r.url;
+                                    }                                   
+                                }                       
+                            })          
+                        }else{
+                            mui.toast(r.msg);
+                        }
+
+                        if ($("#verifyImg").length > 0) {
+                            $("#verifyImg").click();
+                            $("#checkcode").val("");
+                        }
+                    },'json');
+                }
+            }
+        })
+    })
+    $(".payType li.do").click(function(){
+        $(".payType li.do i").removeClass("active");
+        $(this).find('i').addClass("active");
+        $("#payType").val($(this).attr("data-id"))
+    });
+})
+</script>

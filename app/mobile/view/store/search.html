@@ -1,0 +1,67 @@
+{include file="public/nav" /}
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">搜索</h1>
+</header>
+
+<div id="app" class="mui-content">
+    <div class="topSearch">
+        <input type="text" name="keyword" id="keyword" v-model="keyword" class="mui-input-clear" placeholder="商品名称">
+    </div>
+
+    <div class="productList">
+        <div id="loadding" class="loadding" v-show="loadShow">
+            <span class="mui-spinner"></span>
+        </div> 
+        <li v-for="vo in lists">
+            <div class="item">
+                <a :href="'/mobile/store/detail/id/'+vo.id">
+                <img :src="vo.picname">    
+                <p class="mui-ellipsis">{{vo.name}}</p>
+                {gt name="user.id" value="0"}
+                <span>{{vo.price}}</span><span><i>/会员</i>{{vo.price1}}</span>
+                {/gt}
+                {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}
+                </a>
+            </div>
+        </li>
+    </div>
+</div>
+
+<script>
+mui.init();
+vm = new Vue({
+    el : "#app",
+    data : {
+        loadShow : false,
+        keyword : '',
+        lists:[]
+    },
+    watch : {
+        keyword : function(newValue,oldValue){
+            if (newValue!=''){
+                this.loadShow = true;
+                this.search(newValue);
+            }else{
+                this.lists = [];
+            }         
+        }
+    },
+    methods: {
+        search : function(keyword){
+            var that = this;
+            data = {
+                keyword : keyword
+            };
+            url = "{:url('store/search')}";
+            $.post(url,data,function(res){        
+                that.loadShow = false;        
+                that.lists = res;
+            },'json')
+        }
+    },
+    created : function(){       
+    }
+});
+</script>

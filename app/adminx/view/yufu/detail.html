@@ -1,0 +1,95 @@
+<style>
+.tongjiDiv{clear: both; overflow: hidden; margin-bottom: 10px; line-height: 30px; font-size: 16px; padding-left: 15px}
+</style>
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+
+
+				<form class="layui-form">
+					<div class="tongjiDiv">
+						合计金额<span id="money" style="color:#f00; padding:0 5px">{$money}</span>	
+					</div>		
+
+					<table class="layui-table">
+						<colgroup>
+						    <col width="150">
+						    <col width="200">
+						    <col width="200">
+						    <col>
+						    <col>
+						    <col>
+						</colgroup>
+						<thead>
+					    <tr>
+						    <th>单号</th>
+							<th>金额</th>
+							<th>付款方</th>
+							<th>收款方</th>						
+							<th>付款截图</th>						
+							<th>匹配时间</th>
+							<th>付款时间</th>
+							<th>确认时间</th>
+							<th>状态</th>
+							<th>操作</th>
+					    </tr> 
+						</thead>
+					  	<tbody>
+							{volist name="list" id="vo"}
+							<tr>
+								<td>{$vo.order_no}</td>
+								<td><font color="#f00">{$vo.money}</font></td>
+								<td>{$vo.p_user}({$vo.p_mobile})</td>
+								<td>{$vo.t_user}({$vo.t_mobile})</td>
+								<td>{empty name="vo.picname"}-{else/}<a href="{$vo.picname}" target="_blank">查看</a>{/empty}</td>
+								<td>{$vo.createTime|date='Y-m-d H:i:s',###}</td>
+								<td>{eq name="vo.payTime" value="0"}-{else/}{$vo.payTime|date='Y-m-d H:i:s',###}{/eq}</td>
+								<td>{eq name="vo.confirmTime" value="0"}-{else/}{$vo.confirmTime|date='Y-m-d H:i:s',###}{/eq}</td>
+								<td>
+								{switch name="vo.status"}
+				                    {case value="0"}<span style="color:red">待付款</span>{/case}
+				                    {case value="1"}<span style="color:blue">待确认</span>{/case}
+				                    {case value="2"}<span style="color:green">匹配完成</span>{/case}
+								{/switch}
+								</td>
+								<td>{eq name="vo.status" value="1"}<a href="javascript:void(0)" data-id="{$vo.id}" id="conBtn" class="layui-btn layui-btn-mini">确认收款</a>{/eq}</td>
+							</tr>		
+							{/volist}
+						</tbody>
+					</table>
+				</form>
+
+	</div>
+</div>
+<script>
+$(function(){
+	$("#conBtn").click(function(){
+		load = parent.layer.load(0,{shade: [0.7, '#000000']});
+		$.ajax({
+			url : '<{:url('Order/confirm')}>',
+			dataType : 'json',
+			type : 'post',
+			data : {'selectedids[]':$(this).attr('data-id')},
+			success : function(responseText){
+				parent.layer.close(load);
+				if (responseText.status==1) {
+					parent.layer.open({
+						type:0, 
+						icon:1,
+						content:responseText.info,
+						time:3000,
+						end: function(){ 
+							location.reload();
+						} 
+					});
+				}else{
+					parent.layer.open({
+						type:0, 
+						icon:2,
+						content:responseText.info
+					});
+				}
+			}
+		})
+	})	
+})
+</script>

@@ -1,0 +1,60 @@
+<link href="{:RES}/mui/css/mui.picker.min.css" rel="stylesheet" />
+<link href="{:RES}/mui/css/mui.poppicker.css" rel="stylesheet" />
+
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">{$date}收益明细</h1>
+    <a href="javascript:void(0)" class="mui-pull-right dateBtn" data-options='{"type":"month","endYear":<?php echo date("Y");?>}'  style="margin-top:12px">日期筛选</a>
+</header>
+
+<div class="mui-content">
+	<div class="detail">
+		{volist name="list" id="vo" empty="$empty"}
+        <li onclick="window.location.href='{:url('finance/info','id='.$vo['id'])}'">
+        	<div class="hd">
+        		￥{$vo.jiangjin|number_format=###,2}
+        		<?php
+        		if ($user['group']==2 && $vo['js1']==0) {
+        			echo '<span style="color:#f00">状态:未结算</span>';
+        		}
+        		if ($user['group']==2 && $vo['js1']==1) {
+        			echo '<span>状态:已结算</span>';
+        		}
+        		if ($user['group']==3 && $vo['js2']==0) {
+        			echo '<span style="color:#f00">状态:未结算</span>';
+        		}
+        		if ($user['group']==3 && $vo['js2']==1) {
+        			echo '<span>状态:已结算</span>';
+        		}
+        		?>        		
+        	</div>
+        	<div class="bd">
+            订单号{$vo.order_no}，总金额：{$vo.money}<br/>
+            顾客：{$vo.name}，时间：{$vo.createTime|date="Y-m-d H:i:s",###}
+            </div>
+        </li>
+        {/volist}
+    </div>
+</div>
+
+<script src="{:RES}/mui/plugin/mui.picker.min.js"></script>
+<script src="{:RES}/mui/plugin/mui.poppicker.js"></script>
+<script>
+mui.init();
+mui.ready(function() {
+    //选择日期
+    var btns = $('.dateBtn');
+    btns.each(function(i, btn) {
+        btn.addEventListener('tap', function() {
+            var optionsJson = this.getAttribute('data-options') || '{}';
+            var options = JSON.parse(optionsJson);  
+            var picker = new mui.DtPicker(options);
+            picker.show(function(rs) {
+                window.location.href='{:url('finance/order')}?date='+rs.text;
+                picker.dispose();
+            });
+        }, false);
+    });
+});
+
+</script>

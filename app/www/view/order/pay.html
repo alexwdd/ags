@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>订单支付-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+.payInfo{background: #fff; width: 1000px; clear: both; margin: 40px auto; box-shadow: 0 0 5px #ccc; padding: 20px; box-sizing: border-box;}
+.payInfo .payMoney{ text-align: center; font-size: 30px; padding: 20px 0 }
+.payInfo .qrcode{float: left; width: 50%; box-sizing: border-box; border-right: 1px #dbdbdb solid}
+.payInfo .qrcode .qrIntr{clear: both; text-align: center; font-size: 18px;}
+.payInfo .payOrderInfo{float: right; width: 50%}
+.payInfo .payOrderInfo .omiPayInfo{background: #f1f1f1; margin:10px 30px; margin-left: 50px; border:1px #ddd solid; border-radius: 10px; padding: 15px;}
+.payInfo .payOrderInfo .omiPayInfo li{clear: both; padding: 10px 0}
+.payInfo .payOrderInfo .omiPayInfo li label{padding-bottom: 5px; color: #666}
+.payInfo .payOrderInfo .omiPayInfo li p{font-size: 18px; color: #333}
+.payOk{text-align: center; font-size: 40px; padding: 50px 0; color: #5cb85c}
+.payOk i{font-size:40px;}
+</style>
+</head>
+<body>
+{include file="public:header" /}
+
+
+<div class="main">
+    <div class="indexTitle"><h1>订单支付</h1></div>
+    
+    <div class="payType">
+        <li class="active"><a href="{:url("order/pay","order_no=".$list['order_no'])}">扫码支付</a></li>
+        <li><a href="{:url("order/cardpay","order_no=".$list['order_no'])}">银行转账</a></li>
+    </div>
+
+    <div class="payInfo">        
+    	<div class="payMoney">${$list.money}</div>
+        <div style="text-align: center; font-size: 18px; margin-bottom: 15px">扫码后将使用人民币付款，更有汇率详情哦。</div>
+    	<div class="qrcode">
+    		<img src="{:url('order/qrcode')}?url=<?php echo urlencode($url);?>" style="display: block; width: 50%; margin: auto;" />
+            <div class="qrIntr">
+                <img src="{:RES}/image/pay.jpg">
+                <p>使用微信或支付宝扫一扫功能，在线付款</p>
+                <!-- <p style="padding: 10px; width:100%; box-sizing: border-box;word-break:break-all"><a href="{$url}" target="_blank">{$url}</a></p> -->
+            </div>
+    	</div>
+    	<div class="payOrderInfo">
+    		<div class="omiPayInfo">
+    			<li>
+	                <label>订单号</label>
+	                <p>{$list.order_no}</p>
+	            </li>
+
+	            <li>
+	                <label>订单金额</label>
+	                <p>${$list.money}</p>
+	            </li>  
+    		</div>
+    	</div>
+    	<div class="clearfix"></div>
+    </div>
+</div>
+<script type="text/javascript">
+var check = setInterval(checkOrder,2000);
+function checkOrder(){
+    $.post('{:url("order/checkpay")}',{'order_no':'{$list.order_no}'},function(res){
+        if (res.code==1){
+            clearInterval(check);
+            $(".payInfo").html('<div class="payOk"><i class="layui-icon layui-icon-ok-circle"></i> 支付成功</div><p style="text-align: center;"><a class="layui-btn layui-btn-primary" href="{:url('index/index')}">返回首页</a><a class="layui-btn" href="{:url('order/index')}">订单中心</a></p>');
+        }
+    },"json")
+}
+</script>
+{include file="public:footer" /}
+</body>
+</html>

@@ -1,0 +1,22 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">{$name}</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+	<div class="detail">
+		{volist name="list" id="vo" empty="$empty"}
+        <li>
+        	<div class="hd">
+        		${$vo.money}
+        		<span>{$vo.createTime|date="Y-m-d",###}</span>
+        	</div>
+        	<div class="bd">{$vo.msg}</div>
+        </li>
+        {/volist}
+    </div>
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />

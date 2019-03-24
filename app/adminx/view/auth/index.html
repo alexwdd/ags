@@ -1,0 +1,70 @@
+<layout name='layout' />
+
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<form class="layui-form" style="margin-bottom:10px">
+			<div class="layui-inline">
+				<div class="layui-input-inline">
+					<input type="text" name="keyword" autocomplete="off" placeholder="关键词" class="layui-input"/>
+				</div>
+			</div>
+
+			<div class="layui-inline">
+				<label class="layui-form-mid">日期</label>
+				<div class="layui-input-inline">
+					<input type="text" name="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
+				</div>
+			</div>
+		</form>
+		
+	    <div class="layui-col-md12">
+	    	<button class="layui-btn layui-btn-sm layui-btn-danger" function="submit" method="post" url="{:url("Auth/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="id:">
+			  <i class="layui-icon">&#xe640;</i>批量删除
+			</button>
+
+			<button class="layui-btn layui-btn-sm" function="refresh">
+			  <i class="layui-icon">&#xe669;</i>刷新
+			</button>
+
+			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
+	    </div>
+
+	    <div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Auth/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-108"></table>
+	        <div class="fsDatagridCols">
+	        	<p checkbox="true"/>
+				<p field="name" title="姓名" width="100" />		
+				<p field="sn" title="身份证号" width="200"/>				
+				<p field="front" title="正面" width="150" templet="#image1"/>				
+				<p field="back" title="反面" width="150" templet="#image2"/>
+				<p field="createTime" title="日期" width="180" sort="true"/>
+				<p fixed="right" align="left" toolbar="#barDemo" title="操作" width="120"/>
+			</div>
+	    </div>
+	</div>
+</div>
+<script type="text/html" id="image1">
+	<a href="{{d.front}}" target="_blank"><img src="{{d.front}}"/></a>
+</script>
+<script type="text/html" id="image2">
+	<a href="{{d.back}}" target="_blank"><img src="{{d.back}}"/></a>
+</script>
+
+<script type="text/html" id="barDemo">
+	<input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="通过|待审" lay-filter="status" {{ d.status == 1 ? 'checked' : '' }}>			
+</script>
+<script>
+layui.use('table', function(){
+	form = layui.form; 
+	//监听性别操作
+	form.on('switch(status)', function(obj){
+		url = '{:url('Auth/status')}';
+		var id = this.value;
+		var v = 0
+		if (obj.elem.checked){
+			v = 1;
+		} 
+		$.post(url, {id: this.value,status:v}, function (data) {}, "json");
+	});
+});
+</script>

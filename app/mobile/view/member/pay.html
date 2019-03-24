@@ -1,0 +1,89 @@
+<link rel="stylesheet" type="text/css" href="{:RES}/mui/css/mui.picker.css" />
+<link rel="stylesheet" type="text/css" href="{:RES}/mui/css/mui.poppicker.css" />
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">在线充值</h1>
+</header>
+
+
+<div class="mui-content">
+    <div class="price" style="text-align: center; padding: 20px 0">
+        <li>
+            <h2>{$money}</h2>
+            <span>充值金额<br/>订单号：{$order_no}</span>
+        </li>
+    </div>
+<form id="myForm" class="mui-input-group" style="padding-bottom:15px">
+
+    <div style="padding: 10px;border-bottom: 1px #ddd solid">
+    	<p>提示：预充值成为会员，可享会员价！首充$3000成为会员，续充$2000即可，特殊要求请联系客服。</p>
+
+        <button id="moneyBtn" class="mui-btn mui-btn-block" type="button">选择支付方式</button>
+        <input type="hidden" name="payType" id="payType" value="2" checkType="required" checkMsg="请选择支付方式">
+	</div>
+
+    <div id="cardBox" style="padding: 10px;border-bottom: 1px #ddd solid;display: none;">
+        <button id="cardBtn" class="mui-btn mui-btn-block" type="button">选择收款账户</button>
+
+        <div id="result" class="cardInfo"></div>
+
+        <input type="hidden" name="cardID" id="cardID" value="">
+
+        <div class="jietu" onclick="uploadImage('image','{:url('upload/image')}');"><img id="image_src" src="{:RES}/image/pay.png" /></div>
+
+        <input type="hidden" name="image" id="image" value="">
+    </div>    
+
+    <p style="margin-top: 10px">
+        <button type="button" id="submitBtn" action="{:url('member/pay')}" class="mui-btn mui-btn-block my-btn">保存</button>
+    </p>    
+    <input type="hidden" name="order_no" value="{$order_no}">        
+</form>
+</div>
+<input type="file" id="uploadfile"/> 
+
+<script src="{:RES}/mui/plugin/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:RES}/mui/plugin/mui.poppicker.js"></script>
+<script type="text/javascript">
+mui.init();
+mui.ready(function() {
+	//普通示例
+	var cardPicker = new mui.PopPicker();
+	cardPicker.setData({$list});
+	var cardBtn = document.getElementById('cardBtn');
+	cardBtn.addEventListener('tap', function(event) {
+		cardPicker.show(function(items) {
+            cardBtn.innerHTML = items[0]['text'];
+			$("#cardID").val(items[0]['value']);
+            cardID = items[0]['value'];
+            $("#result").show().html('信息读取中');
+            $.post('{:url('member/getCard')}',{'cardID':cardID},function(res){
+                if (res.code==1){
+                    data = res.data;
+                    _html = '<p>银行：'+data.bank+'</p><p>账户：'+data.account+'</p><p>BSB：'+data.bsb+'</p><p>账号：'+data.cardno+'</p><p style="clear: both; overflow: hidden;color: #f00">转账时请备注订单号</p>';
+                    $("#result").html(_html);
+                }else{
+                    layer.alert(res.msg);
+                    $("#result").hide()
+                }
+            },'json')
+		});
+	}, false);
+
+    var moneyPicker = new mui.PopPicker();
+    moneyPicker.setData([{value:1,text:'银行卡充值'},{value:2,text:'在线支付'}]);
+    var moneyBtn = document.getElementById('moneyBtn');
+    moneyBtn.addEventListener('tap', function(event) {
+        moneyPicker.show(function(items) {
+            moneyBtn.innerHTML = items[0].text;
+            $("#payType").val(items[0].value);
+            if (items[0].value==1){
+                $("#cardBox").show();
+            }else{
+                $("#cardBox").hide();
+            }
+        });
+    }, false);	
+});
+</script> 
