@@ -17,18 +17,21 @@ class Pay extends Admin {
 	public function add() {
 		if(request()->isPost()){
 	        $data['money'] = input('post.money');
+	        $msg = input('post.msg');
 	        $account = input('post.account');
 
-			$msg = '管理员为您账户充值 $'.$data['money'].'。';
+	        if ($msg=='') {
+	        	$msg = '管理员为您账户充值 $'.$data['money'].'。';
+	        }	
 
 			$user = db('Member');
-			$map['username|mobile'] = $account;
+			$map['id'] = $account;
         	$rs = $user->where($map)->find();
 
 	        if (!$rs) {
 	            $this->error('会员不存在！');
 	        }
-	        $fina = $this->getUserMoney($user['id']);
+	        $fina = $this->getUserMoney($rs['id']);
 	        $data['memberID'] = $rs['id'];
 	        $data['mobile'] = $rs['mobile'];
 	        $data['doID'] = $this->admin['id'];

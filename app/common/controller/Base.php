@@ -245,10 +245,10 @@ class Base extends Controller {
 
         $money = $inMoney + $tuiMoney - $outMoney;
         return array(       
-            'money' => $money,
-            'inMoney'=>$inMoney,
-            'tuiMoney'=>$tuiMoney,
-            'outMoney'=>$outMoney
+            'money' =>number_format($money,2),
+            'inMoney'=>number_format($inMoney,2),
+            'tuiMoney'=>number_format($tuiMoney,2),
+            'outMoney'=>number_format($outMoney,2)
         );
     }
 

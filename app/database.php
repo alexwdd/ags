@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 'myags590_ags',    
+    'database'        => 'ags',    
     // 用户名
-    'username'        => 'myags590_ags',
+    'username'        => 'root',
     // 密码
-    'password'        => 'alex8888',
+    'password'        => 'root',
     // 端口
     'hostport'        => '',
     // 连接dsn
