@@ -24,7 +24,7 @@ class Zhongyou {
 			unset($cart[$key]['sessionID']);
 			unset($cart[$key]['memberID']);
 
-			if ($value['typeID']==4) {
+			if (in_array($value['typeID'],[4,6,7,8,9,10])) {
 				array_push($baojianpin, $cart[$key]);
 				unset($cart[$key]);
 			}
@@ -92,28 +92,7 @@ class Zhongyou {
 		}
 
 		if (count($this->baojianpin)>0) {//如果有保健品的话
-			//将已分配好的包裹重量从小往大排列
-			$arr = array();
-	        foreach ($this->baoguoArr as $key => $row ){
-	            $arr[$key] = $row ['totalWeight'];
-	        }
-	        array_multisort($arr, SORT_ASC, $this->baoguoArr);
-
-	        //将保健品重量从大往小排列
-			$arr = array();
-	        foreach ($this->baojianpin as $key => $row ){
-	            $arr[$key] = $row ['weight'];
-	        }
-	        array_multisort($arr, SORT_DESC, $this->baojianpin);
-
-	        $result = $this->getHybirdBaoguo($this->baoguoArr,$this->baojianpin);
-
-	        //将保健品分配到不同包裹中
-	        foreach ($this->baoguoArr as $key => $value) {
-	        	if (in_array($value['type'],[8,9,10,11])) {
-					$this->baoguoArr[$key] = $this->insertBaoguo($value,$result['aveNumber']);
-				}
-	        }
+			$this->setBaojianpinBox();
 		}		
 
         //全部分箱后是否还有保健品
@@ -211,6 +190,121 @@ class Zhongyou {
 			}
 		}	
 		return $this->baoguoArr;
+	}
+
+	//分配护肤品、保健品、日用品
+	private function setBaojianpinBox(){
+		$totalGoodsNumber = 0;
+		$hufu30 = 0;
+		foreach ($this->baojianpin as $key => $value) {
+			$totalGoodsNumber += $value['goodsNumber'];
+			if ($value['typeID']==6) {
+				$hufu30 += $value['goodsNumber'];
+			}
+		}
+		$minBoxNumber = ceil($totalGoodsNumber/8);
+		if ($hufu30 > $minBoxNumber) {
+			$this->setHufu30();
+		}
+		
+		//处理剩余的护肤品、保健品、日用品
+		$i = 0;	
+		while ($this->baojianpin) {	
+			$baoguo = [
+				'type'=>0, 				//类型
+	            'totalNumber'=>0, 		//总数量
+	            'totalWeight'=>0, 		//商品总重量
+	            'totalWuliuWeight'=>0,	//包装后总重量
+	            'totalPrice'=>0,  		//商品中金额
+	            'yunfei'=>0,	  		//运费
+	            'extend'=>0,
+	            'kuaidi'=>'',
+	            'goods'=>[],
+	        ];
+	        
+	        foreach ($this->baojianpin as $key => $value) {
+	            $number = $this->canInsertBaojianpin($baoguo,$value);
+	            if ($number) {
+	            	//可以放入包裹中商品的单品总数量
+	            	$number = $number>$value['goodsNumber'] ? $value['goodsNumber'] : $number;
+	            	$value['goodsNumber'] = $number;
+	            	$baoguo['totalNumber'] += $number;
+	            	$baoguo['totalWeight'] += $number*$value['weight'];
+	            	$baoguo['totalWuliuWeight'] += $number*$value['wuliuWeight'];
+	            	$baoguo['totalPrice'] += $number*$value['price'];
+	            	$baoguo['type'] = $value['typeID'];	            	
+
+	                array_push($baoguo['goods'],$value);	                
+	                $this->deleteBaojianpin($value,$number);
+	            } 
+	        }
+	        array_push($this->baoguoArr,$baoguo);
+
+	        $i++;
+		}
+		//dump($this->baoguoArr);
+		die;
+	}
+
+	//两个一组的护肤品打包
+	private function setHufu30(){		
+		//将所有包裹重量从大往小排列
+		$arr = array();
+        foreach ($this->baojianpin as $key => $row ){
+            $arr[$key] = $row ['goodsNumber'];
+        }
+        array_multisort($arr, SORT_DESC, $this->baojianpin);
+        while ($this->baojianpin) {
+			$hufu30 = 0;
+			foreach ($this->baojianpin as $key => $value) {
+				if ($value['typeID']==6) {
+					$hufu30 += $value['goodsNumber'];
+				}
+			}
+			if ($hufu30<2) {
+				break;
+			}        	
+        	$baoguo = [
+				'type'=>0, 				//类型
+	            'totalNumber'=>0, 		//总数量
+	            'totalWeight'=>0, 		//商品总重量
+	            'totalWuliuWeight'=>0,	//包装后总重量
+	            'totalPrice'=>0,  		//商品中金额
+	            'yunfei'=>0,	  		//运费
+	            'extend'=>0,
+	            'kuaidi'=>'',
+	            'goods'=>[],
+	        ];
+	        foreach ($this->baojianpin as $key => $value) {
+	            if ($value['typeID']==6) {
+	            	$insertNumber = 2-$baoguo['totalNumber'];
+	            	$number = $value['goodsNumber']>$insertNumber ? $insertNumber : $value['goodsNumber'];
+	             	$value['goodsNumber'] = $number;
+	            	$baoguo['totalNumber'] += $number;
+	            	$baoguo['totalWeight'] += $number*$value['weight'];
+	            	$baoguo['totalWuliuWeight'] += $number*$value['wuliuWeight'];
+	            	$baoguo['totalPrice'] += $number*$value['price'];
+	            	$baoguo['type'] = $value['typeID'];	            	
+
+	                array_push($baoguo['goods'],$value);	                
+	                $this->deleteBaojianpin($value,$number);
+	     			if ($baoguo['totalNumber']==2) {
+	     				array_push($this->baoguoArr,$baoguo);
+	     				$baoguo = [
+							'type'=>0, 				//类型
+				            'totalNumber'=>0, 		//总数量
+				            'totalWeight'=>0, 		//商品总重量
+				            'totalWuliuWeight'=>0,	//包装后总重量
+				            'totalPrice'=>0,  		//商品中金额
+				            'yunfei'=>0,	  		//运费
+				            'extend'=>0,
+				            'kuaidi'=>'',
+				            'goods'=>[],
+				        ];
+	     			}
+	            } 
+	        }
+        } 
 	}
 
 	//从from包裹中移动商品到目标包裹to，目标包裹满足1公斤即可
@@ -333,31 +427,116 @@ class Zhongyou {
 		return $number;
 	}
 
-	//$aveNumber包裹商品数量平均数
-	private function insertBaoguo($baoguo,$aveNumber){
-		$number = $aveNumber - $baoguo['totalNumber'];
-		for ($i=0; $i < $number; $i++) { 
-			
-			if ($this->baojianpin[0]) {
+	//判断当前商品是否能放入包裹
+	private function canInsertBaojianpin($baoguo,$item){
+		//总数不能超过包裹商品数量
+		if ($baoguo['totalNumber']>=$this->maxNumber) {			
+			return false;
+		}
 
-				$goods = $this->baojianpin[0];
-				//检查重量
-				if ($goods['weight']+$baoguo['totalWeight'] > $this->maxWeight) {
-					break;
-				}
-				//检查金额
-				if ($goods['price']+$baoguo['totalPrice'] > $this->maxPrice) {
-					break;
-				}
+		//当前待处理的商品包裹类型
+		$type = $this->getBaoguoType($item);
 
-				//放入包裹
-				$baoguo = $this->goodsInsertBaoguo($baoguo,$goods);
+		//本类型商品还能放几个
+		$itemNumber = $this->getTypeNumber($baoguo,$item);
+		$tNum = $type['max'] - $itemNumber['typeNumber'];
+		if ($tNum < 1) {
+			return false;
+		}
 
-				//保健品中减去对应商品
-				$this->deleteBaojianpin($goods,1);
+		//单品允许放几个
+		$sNum = $type['same'] - $itemNumber['sameNumber'];
+		if ($sNum < 1) {
+			return false;
+		}
+
+		if ($tNum < $sNum) { //得到可以放进包裹的数量
+			$number = $tNum;
+		}else{
+			$number = $sNum;
+		}
+
+		$goods30 = 0; //30+以上护肤品
+		$goods25 = 0; //15-30护肤品
+		$fengmi15 = 0; //15+蜂蜜
+		$goods15 = 0;	//15以下护肤品
+		foreach ($baoguo['goods'] as $key => $value) {
+			if ($value['typeID']==6) {
+				$goods30 += $value['goodsNumber'];
+			}
+			if ($value['typeID']==7) {
+				$goods25 += $value['goodsNumber'];
+			}
+			if ($value['typeID']==9) {
+				$fengmi15 += $value['goodsNumber'];
+			}
+			if ($value['typeID']==8) {
+				$goods15 += $value['goodsNumber'];
 			}
 		}
-		return $baoguo;
+
+		//与当前包裹中的商品能否混寄
+		if(!$this->canHybrid($baoguo,$item)){
+			return false;
+		}
+
+		//30元以上的护肤品
+		if ($item['typeID']==6 && $goods15>2) {
+			return false;
+		}
+
+		//15++蜂蜜
+		if ($item['typeID']==9 && $goods15>2) {
+			return false;				
+		}
+
+		//15++蜂蜜
+		if ($item['typeID']==9 && $goods25>0) {
+			return false;				
+		}else{
+			$number = 2-$goods15;
+		}
+
+		//15-30元以下的护肤品
+		if ($item['typeID']==7) {
+			$number = 1-$goods15;
+		}		
+
+		//15元以下的护肤品
+		if ($item['typeID']==8) {
+			if ($goods30>0 || $fengmi15>0) {
+				$number = 2-$goods15;
+			}
+		}
+
+		//总数不能超过包裹商品数量
+		if (($baoguo['totalNumber'] + $number > $this->maxNumber)) {
+			$number = $this->maxNumber - $baoguo['totalNumber'];
+		}
+	
+		//是否超过总重量，在不超过总重量的情况下最多可以放几个商品
+		$weightNumber = $this->getMaxNumber($this->maxWeight,$baoguo['totalWeight'],$item['weight']);
+
+		$number = $number > $weightNumber ? $weightNumber : $number;
+
+		//是否超过总金额，在不超过总金额的情况下最多可以放几个商品
+		$priceNumber = $this->getMaxNumber($this->maxPrice,$baoguo['totalPrice'],$item['price']);
+
+		$number = $number > $priceNumber ? $priceNumber : $number;
+	
+		return $number;
+	}
+
+	//判断与当前包裹中的商品能否混寄
+	private function canHybrid($baoguo,$item){
+		foreach ($baoguo['goods'] as $key => $value) {
+			$arr = $this->getBaoguoType($value);
+			if (!in_array($item['typeID'],$arr['can'])) {
+				return false;
+				break;
+			}
+		}
+		return true;
 	}
 
 	//把商品放入包裹中
@@ -436,38 +615,7 @@ class Zhongyou {
 		return ['sameNumber'=>$sameNumber,'typeNumber'=>$typeNumber];
 	}
 
-	//判断保健品放到每个包裹中的数量，是否需要新增包裹
-	private function getHybirdBaoguo($baoguo,$goods){
-		$goodsNumber = 0;
-		$baoguoNumber = 0;
-		$localBaoguoNumber = 0;
-		foreach ($goods as $key => $value) {
-			$goodsNumber += $value['goodsNumber'];
-		}
-
-		foreach ($baoguo as $key => $value) {
-			if (in_array($value['type'],[8,9,10,11])) {
-				$baoguoNumber += $value['totalNumber'];
-				$localBaoguoNumber++;
-			}
-		}
-		$totalNumber = $goodsNumber + $baoguoNumber;
-		$totalBaoguoNumber = ceil($totalNumber / $this->maxNumber);
-		if ($totalBaoguoNumber <= $localBaoguoNumber) {
-			$aveNumber=ceil($totalNumber/$localBaoguoNumber);
-			return [
-				'status'=>1,
-				'aveNumber'=>$aveNumber
-			];
-		}else{//需要新增包裹的处理
-			$aveNumber=ceil($totalNumber/$totalBaoguoNumber);
-			return [
-				'status'=>0,
-				'aveNumber'=>$aveNumber
-			];
-		}
-	}
-
+	
 	//判断奶粉中是否包含签名，有签名的不能混寄
 	private function checkSign($baoguo,$item){
 		$sign = false;
