@@ -7,6 +7,12 @@ class About extends Home
 
     public function index()
     {        
+            return view();
+      
+    }
+
+    public function detail()
+    {        
         $id = input('param.id',1);
 
         if ($id=="" || !is_numeric($id)) {
