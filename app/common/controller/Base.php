@@ -243,12 +243,12 @@ class Base extends Controller {
             }   
         }
 
-        $money = $inMoney + $tuiMoney - $outMoney;
+        $money = bcsub(bcadd($inMoney , $tuiMoney,2) , $outMoney,2);
         return array(       
-            'money' =>number_format($money,2),
-            'inMoney'=>number_format($inMoney,2),
-            'tuiMoney'=>number_format($tuiMoney,2),
-            'outMoney'=>number_format($outMoney,2)
+            'money' =>$money,
+            'inMoney'=>$inMoney,
+            'tuiMoney'=>$tuiMoney,
+            'outMoney'=>$outMoney,
         );
     }
 

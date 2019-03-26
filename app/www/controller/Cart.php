@@ -254,7 +254,7 @@ class Cart extends User
             if ($flag==1) {
                 break;
             }
-        }        
+        }
         $this->assign("flag",$flag);
         return view();
     }
