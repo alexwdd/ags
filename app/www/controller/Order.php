@@ -133,10 +133,10 @@ class Order extends User
         $map['memberID'] = $this->user['id'];
         $list = db('Order')->where($map)->find();
         if ($list) {
+            $weight = 0;
             $person = db("OrderPerson")->where(array('orderID'=>$list['id']))->select();
             foreach ($person as $key => $value) {
                 $baoguo = db('OrderBaoguo')->where(array('personID'=>$value['id']))->select();
-                $weight = 0;
                 foreach ($baoguo as $k => $val) {
                     $baoguo[$k]['goods'] = db('OrderDetail')->where(array('baoguoID'=>$val['id']))->select();
                     if($val['image']){
@@ -144,7 +144,7 @@ class Order extends User
                     }
                     if($val['eimg']){
                         $baoguo[$k]['eimg'] = explode(",", $val['eimg']);
-                    }
+                    }   
                     if ($val['weight']<1) {
                         $val['weight']=1;
                     }
@@ -170,8 +170,8 @@ class Order extends User
                 }  
                 $goods[$key]['goodsNumber'] = $value['num'] / $item['number'];
                 $goods[$key]['goods'] = $item;
-                //$goods[$key]['money'] = $value['price']*($value['num']/$item['number']);
-                $goods[$key]['money'] = $value['price']*$value['num'];
+                $goods[$key]['money'] = $value['price']*($value['num']/$item['number']);
+                //$goods[$key]['money'] = $value['price']*$value['num'];
             }  
             $this->assign('goods',$goods);
             

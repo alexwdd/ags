@@ -5,8 +5,11 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		$token = $this->getAueToken();
-		echo $token;
+		$orderID = 359;
+		db("Order")->where('id',$orderID)->delete();
+		db("OrderPerson")->where('orderID',$orderID)->delete();
+		db("OrderDetail")->where('orderID',$orderID)->delete();
+		db("OrderBaoguo")->where('orderID',$orderID)->delete();
 	}
 	
 	//创建运单
