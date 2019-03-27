@@ -94,13 +94,14 @@
 						    	<input type="text" name="sendTime" {gt name="list.sendTime" value="0"}value="{$list.sendTime|date="Y-m-d",###}"{/gt} autocomplete="off" class="layui-input fsDate" dateType="date" readonly="readonly" />
 						    </div>
 						</div>
-
+						{eq name="list.cancel" value="0"}
 						<div class="layui-form-item">	
 							<label class="layui-form-label"></label>		
 							<div class="layui-input-inline">		
 						    	<button id="subBtn" class="layui-btn" lay-submit="" lay-filter="save" url="{:url('Order/baoguo')}">保存</button>
 							</div>
 						</div>
+						{/eq}
 					</div>
 				</div>
 			</fieldset>
@@ -184,11 +185,13 @@
 						        		<a href="{$img}" target="_blank"><img src="{$img}"></a>
 						        		{/volist}
 						        	</div>
+						        	{eq name="list.cancel" value="0"}
 						        	<div style="float: right">			
 						        	<button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal snBtn">上传身份证</button>
 						        	<button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal createBtn">生成运单</button>
 						        	<button type="button" data-url="{:url("Order/wuliu","id=".$f['id'])}" class="layui-btn wuliuBtn">运单信息</button>
 								    </div>
+								    {/eq}
 						        </div>				        
 						    </div>
 			                {/volist}

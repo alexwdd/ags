@@ -104,7 +104,7 @@ layui.fsDict = {
 			{"value":2,"name":"待配货","style":"color:gold;"},
 			{"value":3,"name":"配货中","style":"color:blue;"},
 			{"value":4,"name":"已发货","style":"color:green;"},
-			{"value":99,"name":"问题单","style":"color:red;"}
+			{"value":99,"name":"取消订单","style":"color:red;"}
 		]
 	},
 

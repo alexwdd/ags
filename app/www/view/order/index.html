@@ -34,7 +34,7 @@
             <button type="button" data-type="2" class="sBtn layui-btn <?php if($type==2){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">待配货({$num.num3})</button>
             <button type="button" data-type="3" class="sBtn layui-btn <?php if($type==3){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">配货中({$num.num4})</button>
             <button type="button" data-type="4" class="sBtn layui-btn <?php if($type==4){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">已发货({$num.num5})</button>
-            <button type="button" data-type="99" class="sBtn layui-btn <?php if($type==99){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">问题单({$num.num6})</button>
+            <button type="button" data-type="99" class="sBtn layui-btn <?php if($type==99){echo 'layui-btn-normal';}else{echo 'layui-btn-primary';}?>"">取消订单({$num.num6})</button>
             </div>
             <input type="hidden" id="type" value="{$type}">
 
@@ -132,7 +132,7 @@
                 {case value="2"}<span class="layui-badge layui-bg-blue">待配货</span>{/case}
                 {case value="3"}<span class="layui-badge">配货中</span>{/case}
                 {case value="4"}<span class="layui-badge layui-bg-green">已发货</span>{/case}
-                {case value="99"}<span class="layui-badge layui-bg-red">问题单</span>{/case}
+                {case value="99"}<span class="layui-badge layui-bg-red">取消订单</span>{/case}
             {/switch}
             <?php } ?>
 

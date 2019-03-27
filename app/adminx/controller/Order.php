@@ -67,9 +67,15 @@ class Order extends Admin {
             }else{
             	$order['sendTime'] = 0;
             }
-
-            $list = db('Order')->where(array('id'=>$orderID))->find();
+            if ($payStatus==99) {
+            	$order['cancel'] = 1;
+            }
             db('Order')->where(array('id'=>$orderID))->update($order);
+            if ($payStatus==99) {
+            	db('OrderPerson')->where('orderID',$orderID)->setField('cancel',1);
+            	db('OrderDetail')->where('orderID',$orderID)->setField('cancel',1);
+            	db('OrderBaoguo')->where('orderID',$orderID)->setField('cancel',1);
+            }
             $this->success('操作成功'); 
         }else{
 			$id = input("param.id");

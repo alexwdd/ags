@@ -50,6 +50,7 @@ class OrderBaoguo extends Admin
         }
         $map['del'] = 0;
         $map['status'] = 1;
+        $map['cancel'] = 0;
         $total = $this->where($map)->count();
         $pageSize = input('post.pageSize',20);
         $pages = ceil($total/$pageSize);
