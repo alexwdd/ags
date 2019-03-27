@@ -43,18 +43,17 @@ return [
         array('id'=>2,'name'=>'袋装奶粉','max'=>3,'same'=>99,'can'=>[]),
         array('id'=>3,'name'=>'小罐奶粉','max'=>3,'same'=>99,'can'=>[]),
         
-        array('id'=>4,'name'=>'保健品','max'=>8,'same'=>6,'can'=>[6,7,8,9,10]),
+        array('id'=>4,'name'=>'保健品','max'=>8,'same'=>6,'can'=>[6,7,8,9,10,11]),
         array('id'=>5,'name'=>'鞋子','max'=>1,'same'=>99,'can'=>[]),
 
         
-        array('id'=>6,'name'=>'15++蜂蜜','max'=>1,'same'=>1,'can'=>[4,9,10]),
-        array('id'=>7,'name'=>'30元以上','max'=>1,'same'=>1,'can'=>[4,8,9,10]),
-        array('id'=>8,'name'=>'15-30元','max'=>2,'same'=>2,'can'=>[4,7,9,10]),
-        array('id'=>9,'name'=>'15元以下','max'=>4,'same'=>4,'can'=>[4,6,7,8,10]), 
+        array('id'=>6,'name'=>'15++蜂蜜','max'=>1,'same'=>1,'can'=>[4,9,10,11]),
+        array('id'=>7,'name'=>'30元以上','max'=>1,'same'=>1,'can'=>[4,8,9,10,11]),
+        array('id'=>8,'name'=>'15-30元','max'=>2,'same'=>2,'can'=>[4,7,9,10,11]),
+        array('id'=>9,'name'=>'15元以下','max'=>4,'same'=>4,'can'=>[4,6,7,8,10,11]), 
 
-        array('id'=>10,'name'=>'日用品','max'=>6,'same'=>6,'can'=>[4,6,7,8,9]),
-
-        //array('id'=>11,'name'=>'特殊商品(4个可混)','max'=>4,'same'=>4,'can'=>[4]),
+        array('id'=>10,'name'=>'日用品','max'=>6,'same'=>6,'can'=>[4,6,7,8,9,11]),
+        array('id'=>11,'name'=>'2个可混(保健品)','max'=>2,'same'=>2,'can'=>[4,6,7,8,9,10]),
 
         array('id'=>12,'name'=>'红酒','max'=>999,'same'=>999,'can'=>[]),
         array('id'=>13,'name'=>'手动面单','max'=>999,'same'=>999,'can'=>[]),

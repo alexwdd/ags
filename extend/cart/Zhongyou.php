@@ -31,7 +31,7 @@ class Zhongyou {
 				unset($cart[$key]);
 			}
 
-			if (in_array($value['typeID'],[4,10])) {
+			if (in_array($value['typeID'],[4,10,11])) {
 				array_push($baojianpin, $cart[$key]);
 				unset($cart[$key]);
 			}
@@ -102,8 +102,7 @@ class Zhongyou {
 
 		if (count($this->hufupin)>0) {//如果有护肤品的话
 			$this->setHufupinBox();
-		}
-		
+		}	
 
         //处理剩余的保健品和日用品
         if (count($this->baojianpin)>0) {//如果有保健品的话
@@ -852,7 +851,24 @@ class Zhongyou {
 			
 			if ($this->baojianpin[0]) {
 
-				$goods = $this->baojianpin[0];
+				$goods = $this->baojianpin[0];	
+				//检查数量
+				//当前待处理的商品包裹类型
+				$type = $this->getBaoguoType($goods);
+
+				//本类型商品还能放几个
+				$itemNumber = $this->getTypeNumber($baoguo,$goods);
+				$tNum = $type['max'] - $itemNumber['typeNumber'];
+				if ($tNum < 1) {
+					break;
+				}
+
+				//单品允许放几个
+				$sNum = $type['same'] - $itemNumber['sameNumber'];
+				if ($sNum < 1) {
+					break;
+				}
+
 				//检查重量
 				if ($goods['weight']+$baoguo['totalWeight'] > $this->maxWeight) {
 					break;
