@@ -419,6 +419,22 @@ class Mult extends User
         $this->success("操作成功","",['personID'=>$personID,'name'=>$address['name'],'yunfei'=>$yunfei,'single'=>$totalYunfei]);
     }
 
+    public function checkGoods($cart){
+        $map['memberID'] = $this->user['id'];
+        $map['del'] = 1;
+        $detailGoods = db("OrderDetail")->field('itemID,sum(trueNumber) as goodsNumber')->where($map)->group("itemID")->order('itemID asc')->select();
+        if (count($detailGoods)!=count($cart)) {
+            return false;
+        }
+        for ($i=0; $i < count($cart); $i++) { 
+            if ($cart[$i]['goodsNumber'] != $detailGoods[$i]['goodsNumber']) {
+                return false;
+                break;
+            }
+        }
+        return true;
+    }
+
     //保存订单
     public function doSubmit(){
         $rate = $this->getRate();
@@ -427,7 +443,7 @@ class Mult extends User
         }
 
         $map['memberID'] = $this->user['id'];
-        $list = db("Cart")->where($map)->select();
+        $list = db("Cart")->where($map)->order('itemID asc')->select();
         if (!$list) {
             $this->error('没有选择任何商品');
         }
@@ -441,7 +457,12 @@ class Mult extends User
             }else{
                 $this->error('商品【'.$goods['name'].'】已经下架');
             }
-        } 
+        }
+
+        $res = $this->checkGoods($list);
+        if (!$res) {
+            $this->error('购物车中商品与已分配的商品不符');
+        }
 
         $cart = $this->getCartNumber($this->user);
         $totalPrice = $cart['total'];
@@ -497,6 +518,11 @@ class Mult extends User
         unset($map);
         $map['memberID'] = $this->user['id'];
         db("Cart")->where($map)->delete();
+        
+        $log['data'] = serialize($list);
+        $log['memberID'] = $this->user['id'];
+        $log['createTime'] = time();
+        db("CartLog")->where($map)->insert($log);
 
         //保存支付记录
         if ($wallet>0) {
