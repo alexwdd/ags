@@ -102,16 +102,18 @@ class Zhongyou {
 
 		if (count($this->hufupin)>0) {//如果有护肤品的话
 			$this->setHufupinBox();
-		}	
+		}			
 
         //处理剩余的保健品和日用品
         if (count($this->baojianpin)>0) {//如果有保健品的话
-			//将已分配好的包裹重量从小往大排列
+			//将已分配好的包裹重量从小往大排列			
 			$arr = array();
 	        foreach ($this->baoguoArr as $key => $row ){
 	            $arr[$key] = $row ['totalWeight'];
 	        }
+	
 	        array_multisort($arr, SORT_ASC, $this->baoguoArr);
+	
 
 	        //将保健品重量从大往小排列
 			$arr = array();
@@ -121,7 +123,7 @@ class Zhongyou {
 	        array_multisort($arr, SORT_DESC, $this->baojianpin);
 
 	        $result = $this->getHybirdBaoguo($this->baoguoArr,$this->baojianpin);
-
+	   
 	        //将保健品分配到不同包裹中
 	        foreach ($this->baoguoArr as $key => $value) {
 	        	if ($value['status']==0) {
@@ -129,6 +131,8 @@ class Zhongyou {
 				}
 	        }
 		}
+
+		
 
 		//全部分箱后是否还有保健品
         if (count($this->baojianpin)>0) {
@@ -276,19 +280,38 @@ class Zhongyou {
 		if ($hufu30 > $minBoxNumber) {
 			$number = $hufu30 - $minBoxNumber;
 			if($number%2!=0){
-				$number = $number+1;
+				$number = $number-1;
 			}
-			$this->setHufu30($number);
+			if ($number>2) {
+				$this->setHufu30($number);
+			}			
 		}
-
 		//将所有包裹重量从大往小排列
 		$arr = array();
         foreach ($this->hufupin as $key => $row ){
-            $arr[$key] = $row ['typeID'];
+            if ($row['typeID']==6) {
+            	array_push($arr,$row);
+            }
         }
-        array_multisort($arr, SORT_ASC, $this->hufupin);
+        foreach ($this->hufupin as $key => $row ){
+            if ($row['typeID']==7) {
+            	array_push($arr,$row);
+            }
+        }
+        foreach ($this->hufupin as $key => $row ){
+            if ($row['typeID']==9) {
+            	array_push($arr,$row);
+            }
+        }
+        foreach ($this->hufupin as $key => $row ){
+            if ($row['typeID']==8) {
+            	array_push($arr,$row);
+            }
+        }
+        $this->hufupin=$arr;
 
 		//处理剩余的护肤品
+		//$i = 0;
 		while ($this->hufupin) {
 			$baoguo = [
 				'type'=>0, 				//类型
@@ -318,10 +341,17 @@ class Zhongyou {
 	                $this->deleteHufupin($value,$number);
 	            }
 	        }
+	        /*if ($i>20) {
+	        	dump($baoguo);
+	        	dump($this->hufupin);
+	        	die;
+	        }*/
 	        $baoguo['status'] = $this->getHufuStatus($baoguo);
 	        array_push($this->baoguoArr,$baoguo);
+	        //$i++;
 		}
 	}
+
 
 	//两个一组的护肤品打包
 	private function setHufu30($totalNumber){		
@@ -359,6 +389,7 @@ class Zhongyou {
 				            'yunfei'=>0,	  		//运费
 				            'extend'=>0,
 				            'kuaidi'=>'',
+				            'status'=>1,
 				            'goods'=>[],
 				        ];
 	     			}
@@ -498,7 +529,7 @@ class Zhongyou {
 		//总数不能超过包裹商品数量
 		if ($baoguo['totalNumber']>=$this->maxNumber) {			
 			return false;
-		}
+		}	
 
 		//当前待处理的商品包裹类型
 		$type = $this->getBaoguoType($item);
@@ -525,7 +556,6 @@ class Zhongyou {
 		if(!$this->canHybrid($baoguo,$item)){return false;}
 
 		$hfNumber = $this->checkInsertHufupin($baoguo,$item);
-
 		if ($hfNumber==0) {
 			return false;
 		}else{
