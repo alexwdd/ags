@@ -31,7 +31,7 @@ class Zhongyou {
 				unset($cart[$key]);
 			}
 
-			if (in_array($value['typeID'],[4,10,11])) {
+			if (in_array($value['typeID'],[4,10,11,15])) {
 				array_push($baojianpin, $cart[$key]);
 				unset($cart[$key]);
 			}
@@ -102,7 +102,7 @@ class Zhongyou {
 
 		if (count($this->hufupin)>0) {//如果有护肤品的话
 			$this->setHufupinBox();
-		}			
+		}
 
         //处理剩余的保健品和日用品
         if (count($this->baojianpin)>0) {//如果有保健品的话
@@ -114,7 +114,6 @@ class Zhongyou {
 	
 	        array_multisort($arr, SORT_ASC, $this->baoguoArr);
 	
-
 	        //将保健品重量从大往小排列
 			$arr = array();
 	        foreach ($this->baojianpin as $key => $row ){
@@ -131,8 +130,6 @@ class Zhongyou {
 				}
 	        }
 		}
-
-		
 
 		//全部分箱后是否还有保健品
         if (count($this->baojianpin)>0) {
@@ -483,6 +480,10 @@ class Zhongyou {
 			}
 		}
 
+		if(!$this->canHybrid($baoguo,$item)){
+			return false;
+		}
+
 		//当前待处理的商品包裹类型
 		$type = $this->getBaoguoType($item);
 
@@ -526,6 +527,36 @@ class Zhongyou {
 
 	//判断当前商品是否能放入包裹
 	private function canInsertHufupin($baoguo,$item){
+		/*$goods15 = 0;
+		foreach ($this->hufupin as $key => $value) {
+			if ($value['typeID']==9) {
+				$goods15 += $value['goodsNumber'];
+			}
+		}
+		$baoguo30 = 0; //30+以上护肤品
+		$baoguo25 = 0; //15-30+以上护肤品
+		foreach ($baoguo['goods'] as $key => $value) {
+			if ($value['typeID']==7) {
+				$baoguo30 += $value['goodsNumber'];
+			}
+			if ($value['typeID']==8) {
+				$baoguo25 += $value['goodsNumber'];
+			}			
+		}
+		if ($item['typeID']==7) {			
+			if ((count($this->baojianpin)>0 && $baoguo25>0) || ($goods15>0 && $baoguo25>0)) {
+				return false;
+			}
+		}
+		if ($item['typeID']==8) {
+			dump($baoguo);
+			dump($item);
+			echo '<hr/>';
+			if ((count($this->baojianpin)>0 && $baoguo30>0) || ($goods15>0 && $baoguo30>0)) {
+				return false;
+			}
+		}*/
+		
 		//总数不能超过包裹商品数量
 		if ($baoguo['totalNumber']>=$this->maxNumber) {			
 			return false;
@@ -679,7 +710,7 @@ class Zhongyou {
 	private function canHybrid($baoguo,$item){
 		foreach ($baoguo['goods'] as $key => $value) {
 			$arr = $this->getBaoguoType($value);
-			if (!in_array($item['typeID'],$arr['can'])) {
+			if (!in_array($item['typeID'],$arr['can']) && $item['typeID']!=$value['typeID']) {
 				return false;
 				break;
 			}
@@ -876,12 +907,20 @@ class Zhongyou {
 
 	//$aveNumber包裹商品数量平均数
 	private function insertBaoguo($baoguo,$aveNumber){
+		$index = 9999;
+		foreach ($this->baojianpin as $key => $value) {
+			if($this->canHybrid($baoguo,$value)){
+				$index = $key;
+				break;
+			}
+		}
+
 		$number = $aveNumber - $baoguo['totalNumber'];
 		for ($i=0; $i < $number; $i++) { 
 			
-			if ($this->baojianpin[0]) {
+			if ($this->baojianpin[$index]) {
 
-				$goods = $this->baojianpin[0];	
+				$goods = $this->baojianpin[$index];	
 				//检查数量
 				//当前待处理的商品包裹类型
 				$type = $this->getBaoguoType($goods);
