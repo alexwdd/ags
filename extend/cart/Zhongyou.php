@@ -104,31 +104,32 @@ class Zhongyou {
 			$this->setHufupinBox();
 		}
 
-        //处理剩余的保健品和日用品
-        if (count($this->baojianpin)>0) {//如果有保健品的话
-			//将已分配好的包裹重量从小往大排列			
-			$arr = array();
-	        foreach ($this->baoguoArr as $key => $row ){
-	            $arr[$key] = $row ['totalWeight'];
-	        }
-	
-	        array_multisort($arr, SORT_ASC, $this->baoguoArr);
-	
-	        //将保健品重量从大往小排列
-			$arr = array();
-	        foreach ($this->baojianpin as $key => $row ){
-	            $arr[$key] = $row ['weight'];
-	        }
-	        array_multisort($arr, SORT_DESC, $this->baojianpin);
+		for($i=0;$i<3;$i++){
+	        //处理剩余的保健品和日用品
+	        if (count($this->baojianpin)>0) {//如果有保健品的话
+				//将已分配好的包裹重量从小往大排列			
+				$arr = array();
+		        foreach ($this->baoguoArr as $key => $row ){
+		            $arr[$key] = $row ['totalWeight'];
+		        }
+		
+		        array_multisort($arr, SORT_ASC, $this->baoguoArr);
+		
+		        //将保健品重量从大往小排列
+				$arr = array();
+		        foreach ($this->baojianpin as $key => $row ){
+		            $arr[$key] = $row ['weight'];
+		        }
+		        array_multisort($arr, SORT_DESC, $this->baojianpin);
 
-	        $result = $this->getHybirdBaoguo($this->baoguoArr,$this->baojianpin);
-	   
-	        //将保健品分配到不同包裹中
-	        foreach ($this->baoguoArr as $key => $value) {
-	        	if ($value['status']==0) {
-					$this->baoguoArr[$key] = $this->insertBaoguo($value,$result['aveNumber']);
-				}
-	        }
+		        $result = $this->getHybirdBaoguo($this->baoguoArr,$this->baojianpin);
+		        //将保健品分配到不同包裹中
+		        foreach ($this->baoguoArr as $key => $value) {
+		        	if ($value['status']==0) {	    
+						$this->baoguoArr[$key] = $this->insertBaoguo($value,$result['aveNumber']);
+					}
+		        }
+			}
 		}
 
 		//全部分箱后是否还有保健品
@@ -914,7 +915,6 @@ class Zhongyou {
 				break;
 			}
 		}
-
 		$number = $aveNumber - $baoguo['totalNumber'];
 		for ($i=0; $i < $number; $i++) { 
 			
