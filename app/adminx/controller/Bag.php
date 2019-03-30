@@ -33,7 +33,7 @@ class Bag extends Admin {
     public function export(){
     	$type = input('get.type');
     	$flag = input('get.flag');
-    	$createDate = input('get.createDate');
+    	$createDate = input('get.date');
     	if ($flag!='') {
             $map['flag'] = $flag;
         }

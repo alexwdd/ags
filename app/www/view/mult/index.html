@@ -123,10 +123,10 @@ $(function() {
                         var data = res.data.list;
                         for (var i = 0; i < data.length; i++) {
                             itemID = data[i]['itemID'];
-                            num = data[i]['number'];
+                            num = parseInt(data[i]['number']);
                             $(".checkNumber").each(function(){
                                 if ($(this).attr('item-id')==itemID){
-                                    num += parseInt($(this).html());    
+                                    num += parseInt($(this).html());
                                     $(this).html(num);
                                 }
                             });
