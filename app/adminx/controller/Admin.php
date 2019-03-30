@@ -27,6 +27,7 @@ class Admin extends Base {
         $this->admin = $user;        
         $request = Request::instance();
         $action_url = $request->module().'/'.$request->controller().'/'.$request->action();
+        $action_url = strtolower($action_url);
         if($user['administrator']!=1 && !$this->checkRule($user, $action_url)) {
 			$this->error('您没有访问权限');
 		}
@@ -35,13 +36,13 @@ class Admin extends Base {
 
     //验证权限
     public function checkRule($user, $action_url)
-	{
-		$node = Loader::model('Node');
+    {
+        $node = Loader::model('Node');
         if($node->isCheck($user,$action_url)) {
             return true;
-        }        
+        }   
         return false;
-	}
+    }
 
     //品牌
     public function getBrand() {

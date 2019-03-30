@@ -11,7 +11,16 @@ return [
             'adminx/index/main',
             'adminx/index/menu',
             'adminx/upload/index',
-            'adminx/editor/index'            
+            'adminx/bag/upload',
+            'adminx/order/image',
+            'adminx/user/password',
+            'adminx/editor/index',
+            'adminx/stock/getshop',
+            'adminx/stock/getweb',
+            'adminx/stock/getwebmonth',
+            'adminx/stock/getshopmonth',
+            'adminx/stock/getwebjson',
+            'adminx/stock/getshopjson',
         ]
     ],
 

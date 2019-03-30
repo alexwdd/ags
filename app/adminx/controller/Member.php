@@ -126,58 +126,5 @@ class Member extends Admin {
             $this->success('正在登陆...',url('WWW/Index/index'));
 		}
 	}
-
-	public function tongji(){		
-		$id = input('get.id');
-		if ($id=='' || !is_numeric($id)) {
-			$this->error('参数错误');
-		}
-		$map['id'] = $id;
-		$user = db('Member')->where($map)->find();
-		if ($user) {
-			$fina = $this->getUserMoney($user['id']);
-			$this->assign('fina',$fina);
-			$this->assign('user',$user);
-
-			unset($map);
-			$map['memberID'] = $user['id'];
-			$pai = db("Pai")->where($map)->select();
-			$totalPaiNumber = 0;
-			$totalPaiMoney = 0;
-			foreach ($pai as $key => $value) {
-				$totalPaiNumber++;
-				$totalPaiMoney = $totalPaiMoney + $value['money'];
-			}
-			$this->assign('totalPaiNumber',$totalPaiNumber);
-			$this->assign('totalPaiMoney',$totalPaiMoney);
-
-			unset($map);
-			$map['memberID'] = $user['id'];
-			$pai = db("Tixian")->where($map)->select();
-			$totalTxNumber = 0;
-			$totalTxMoney = 0;
-			foreach ($pai as $key => $value) {
-				$totalTxNumber++;
-				$totalTxMoney = $totalTxMoney + $value['money'];
-			}
-			$this->assign('totalTxNumber',$totalTxNumber);
-			$this->assign('totalTxMoney',$totalTxMoney);
-
-			unset($map);
-			$map['path'] = array('like',$user['path'].'%');
-			$arrID = db('Member')->where($map)->column('id');
-			$tuandui = 0;
-			if (count($arrID)>0) {
-				unset($map);
-				$map['memberID'] = array('in',$arrID);
-				$map['status'] = 3;
-				$tuandui = db('Pai')->where($map)->sum('money');
-			}
-			$this->assign('tuandui',$tuandui);
-			return view();
-		}else{
-			$this->error('参数错误');
-		}		
-	}
 }
 ?>
