@@ -42,7 +42,7 @@
 
 			<button class="layui-btn layui-btn-warm layui-btn-sm" function="toPrint">批量打印</button>
 
-			<button id="expBtn" type="button" class="layui-btn layui-btn-sm">导出
+			<button type="button" class="layui-btn layui-btn-sm" function="toExp">导出
 			</button>
 
 			<button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('bag/import')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="批量导入">批量导入</button>
@@ -70,12 +70,20 @@
 	    </script>
 
 		<script>
-	    $("#expBtn").click(function(){
-	    	type = $("#type").val();
+		layui.fsButton.toExp = function(elem,data,datagrid){
+			var postData='';
+			$.each(data,function(x,y){
+				if (x==0){
+					postData+=y.id;
+				}else{
+					postData+=','+y.id;
+				}				
+			})
+		    type = $("#type").val();
 	    	flag = $("#flag").val();
 	    	createDate = $("#createDate").val();
-			window.location.href = '{:url('bag/export')}?date='+createDate+'&flag='+flag+'&type='+type;
-		});
+			window.location.href = '{:url('bag/export')}?ids='+postData+'&date='+createDate+'&flag='+flag+'&type='+type;
+		}
 	    </script>
 
 
