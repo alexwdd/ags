@@ -9,7 +9,7 @@ class Zhongyou {
 	private $kuaidi;
 	private $baoguoArr = [];
 	private $province;
-	private $extendArea = ['内蒙古自治区','新疆维吾尔自治区','西藏自治区'];
+	private $extendArea = ['新疆维吾尔自治区'];
 	private $maxNumber = 8; //单个包裹中最多商品个数
 	private $maxType = 8; //单个包裹中不同该商品最多种类
 	private $maxWeight = 3.5; //单个包裹最大重量(kg)

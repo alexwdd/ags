@@ -6,7 +6,7 @@ use think\Db;
 
 class Base extends Controller {
 
-    private $extendArea = ['内蒙古自治区','新疆维吾尔自治区','西藏自治区'];
+    private $extendArea = ['新疆维吾尔自治区'];
 
     public function _initialize(){
     	$request= Request::instance();
