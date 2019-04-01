@@ -104,72 +104,6 @@ class Zhongyou {
 			$this->setHufupinBox();
 		}
 
-		//处理一个不混 
-    	foreach ($this->baojianpin as $key => $value) {
-    		//处理一个不混
-            if ($value['typeID']==15) {	            	
-            	for ($i=0; $i < $value['goodsNumber']; $i++) {
-            		$goods = $value;	            		
-            		$goods['goodsNumber'] = 1;
-	            	$baoguo = [
-						'type'=>$goods['type'], 				//类型
-			            'totalNumber'=>1, 		//总数量
-			            'totalWeight'=>$goods['weight'], 		//商品总重量
-			            'totalWuliuWeight'=>$goods['wuliuWeight'],	//包装后总重量
-			            'totalPrice'=>$goods['price'],  		//商品中金额
-			            'yunfei'=>0,	  		//运费
-			            'extend'=>0,
-			            'kuaidi'=>'',
-			            'status'=>1,
-			            'goods'=>$goods,
-			        ];
-			        array_push($this->baoguoArr,$baoguo);
-            	}
-            	$this->deleteBaojianpin($value,$value['goodsNumber']);
-            }
-        }
-
-        //处理两个可混 
-        $baoguo = [
-			'type'=>0, 				//类型
-            'totalNumber'=>0, 		//总数量
-            'totalWeight'=>0, 		//商品总重量
-            'totalWuliuWeight'=>0,	//包装后总重量
-            'totalPrice'=>0,  		//商品中金额
-            'yunfei'=>0,	  		//运费
-            'extend'=>0,
-            'kuaidi'=>'',
-            'goods'=>[],
-        ];
-    	foreach ($this->baojianpin as $key => $value) {            
-            if ($value['typeID']==11) {		            
-            	for ($i=0; $i < $value['goodsNumber']; $i++) {
-            		$goods = $value;
-            		$goods['goodsNumber'] = 1;
-            		$baoguo = $this->goodsInsertBaoguo($baoguo,$goods);            		
-            		if ($baoguo['totalNumber']==2) {
-            			array_push($this->baoguoArr,$baoguo);
-            			$baoguo = [
-							'type'=>0, 				//类型
-				            'totalNumber'=>0, 		//总数量
-				            'totalWeight'=>0, 		//商品总重量
-				            'totalWuliuWeight'=>0,	//包装后总重量
-				            'totalPrice'=>0,  		//商品中金额
-				            'yunfei'=>0,	  		//运费
-				            'extend'=>0,
-				            'kuaidi'=>'',
-				            'goods'=>[],
-				        ];
-            		}				        
-            	} 
-            	$this->deleteBaojianpin($value,$value['goodsNumber']);
-            }
-        }
-
-        if ($baoguo['totalNumber']>0) {
-        	array_push($this->baoguoArr,$baoguo);
-        }
-
 		for($i=0;$i<3;$i++){
 	        //处理剩余的保健品和日用品
 	        if (count($this->baojianpin)>0) {//如果有保健品的话
@@ -180,6 +114,13 @@ class Zhongyou {
 		        }
 		
 		        array_multisort($arr, SORT_ASC, $this->baoguoArr);
+		
+		        //将保健品重量从大往小排列
+				$arr = array();
+		        foreach ($this->baojianpin as $key => $row ){
+		            $arr[$key] = $row ['weight'];
+		        }
+		        array_multisort($arr, SORT_DESC, $this->baojianpin);
 
 		        $result = $this->getHybirdBaoguo($this->baoguoArr,$this->baojianpin);
 		        //将保健品分配到不同包裹中
@@ -192,38 +133,47 @@ class Zhongyou {
 		}
 
 		//全部分箱后是否还有保健品
-		for($i=0;$i<3;$i++){
-			if (count($this->baojianpin)>0) {
-	        	$goodsNumber = 0;
-				foreach ($this->baojianpin as $key => $value) {
-					$goodsNumber += $value['goodsNumber'];
-				}
-				$baoguoNumber = ceil($goodsNumber/8);
-				for ($i=0;$i<$baoguoNumber;$i++) {
-					$baoguo = [
-						'type'=>0, 				//类型
-			            'totalNumber'=>0, 		//总数量
-			            'totalWeight'=>0, 		//商品总重量
-			            'totalWuliuWeight'=>0,	//包装后总重量
-			            'totalPrice'=>0,  		//商品中金额
-			            'yunfei'=>0,	  		//运费
-			            'extend'=>0,
-			            'kuaidi'=>'',
-			            'goods'=>[],
-			        ];
-			        array_push($this->baoguoArr,$baoguo);
-				}			
-
-			    //将保健品分配到不同包裹中
-		        foreach ($this->baoguoArr as $key => $value) {
-		        	if ($value['status']==0) {	    
-						$this->baoguoArr[$key] = $this->insertBaoguo($value,8);
-					}
-		        }
+        if (count($this->baojianpin)>0) {
+        	//将保健品重量从大往小排列
+			$arr = array();
+	        foreach ($this->baojianpin as $key => $row ){
+	            $arr[$key] = $row ['weight'];
 	        }
+	        array_multisort($arr, SORT_ASC, $this->baojianpin);
+			while ($this->baojianpin) {
+				$baoguo = [
+					'type'=>4, 				//类型
+		            'totalNumber'=>0, 		//总数量
+		            'totalWeight'=>0, 		//商品总重量
+		            'totalWuliuWeight'=>0,	//包装后总重量
+		            'totalPrice'=>0,  		//商品中金额
+		            'yunfei'=>0,	  		//运费
+		            'extend'=>0,
+		            'kuaidi'=>'',
+		            'status'=>1,
+		            'goods'=>[],
+		        ];
+		        
+		        foreach ($this->baojianpin as $key => $value) {
+		            $number = $this->canInsert($baoguo,$value,false);
+		            if ($number) {
+		            	//可以放入包裹中商品的单品总数量
+		            	$number = $number>$value['goodsNumber'] ? $value['goodsNumber'] : $number;
+
+		            	$value['goodsNumber'] = $number;
+		            	$baoguo['totalNumber'] += $number;
+		            	$baoguo['totalWeight'] += $number*$value['weight'];
+		            	$baoguo['totalWuliuWeight'] += $number*$value['wuliuWeight'];
+		            	$baoguo['totalPrice'] += $number*$value['price'];
+		            	$baoguo['type'] = $value['typeID'];	            	
+
+		                array_push($baoguo['goods'],$value);	                
+		                $this->deleteBaojianpin($value,$number);
+		            }	          
+		        }
+		        array_push($this->baoguoArr,$baoguo);
+			}
         }
-
-
 
         //将所有包裹重量从大往小排列
 		/*$arr = array();
@@ -957,27 +907,17 @@ class Zhongyou {
 	}
 
 	//$aveNumber包裹商品数量平均数
-	private function insertBaoguo($baoguo,$aveNumber){		
+	private function insertBaoguo($baoguo,$aveNumber){
+		$index = 9999;
+		foreach ($this->baojianpin as $key => $value) {
+			if($this->canHybrid($baoguo,$value)){
+				$index = $key;
+				break;
+			}
+		}
 		$number = $aveNumber - $baoguo['totalNumber'];
 		for ($i=0; $i < $number; $i++) { 
-			//将保健品重量从大往小排列
-			$arr = array();
-	        foreach ($this->baojianpin as $key => $row ){
-	            $arr[$key] = $row ['weight'];
-	        }
-			if ($i%2==0) {
-		        array_multisort($arr, SORT_DESC, $this->baojianpin);
-			}else{
-		        array_multisort($arr, SORT_ASC, $this->baojianpin);
-			}
-			$index = 9999;
-			foreach ($this->baojianpin as $key => $value) {
-				if($this->canHybrid($baoguo,$value)){
-					$index = $key;
-					break;
-				}
-			}
-
+			
 			if ($this->baojianpin[$index]) {
 
 				$goods = $this->baojianpin[$index];	
