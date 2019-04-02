@@ -501,6 +501,7 @@ class Cart extends User
         $data['memberMobile'] = $this->user['mobile'];
         $order_no = getStoreOrderNo();
         $data['order_no'] = $order_no;
+        $data['total'] = $totalPrice+$totalYunfei;
         $data['goodsMoney'] = $totalPrice;
         $data['money'] = $money;
         $data['wallet'] = $wallet;

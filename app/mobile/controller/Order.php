@@ -326,7 +326,7 @@ class Order extends User
 
             unset($map);            
             $data = ['front'=>$front,'back'=>$back,'sn'=>$sn];
-            $map['id'] = $id;
+            //$map['id'] = $id;
             $map['addressID'] = $addressID;
             $map['memberID'] = $this->user['id'];
             $res = db('OrderPerson')->where($map)->update($data);

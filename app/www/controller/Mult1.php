@@ -6,12 +6,14 @@ use think\Db;
 class Mult extends User
 {    
     public function index(){
+        $heji = $this->getCartNumber($this->user);
+        $this->assign('heji',$heji); 
         $map['memberID'] = $this->user['id'];
         $map['del'] = 1;
         $map['orderID'] = 0;
         db("OrderBaoguo")->where($map)->delete();
         db("OrderPerson")->where($map)->delete();
-        db("OrderDetail")->where($map)->delete();        
+        db("OrderDetail")->where($map)->delete();
         return view();
     }
 
@@ -49,11 +51,11 @@ class Mult extends User
             $map['del'] = 1;
             $list = db('OrderPerson')->where($map)->find();
             db("OrderPerson")->where($map)->delete();
-
             unset($map);
-            $map['id'] = $list['addressID'];
+            $map['name'] = $list['name'];
+            $map['mobile'] = $list['mobile'];
             $map['memberID'] = $this->user['id'];
-            $address = db("Address")->where($map)->find();
+            $list['addressID'] = db("Address")->where($map)->value("id");
 
             unset($map);
             $map['personID'] = $personID;
@@ -63,7 +65,7 @@ class Mult extends User
 
             db("OrderBaoguo")->where($map)->delete();            
             db("OrderDetail")->where($map)->delete();
-            echo returnJson(1,'success',['data'=>$list,'address'=>$address]);
+            $this->success("操作成功","",$list);
         }        
     }
 
@@ -72,13 +74,13 @@ class Mult extends User
         $map['memberID'] = $this->user['id'];
         $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
         $total = 0;
+        $weight = 0;
+
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
             if ($this->user['group']==2 || $this->user['vip']==1) {
                 $goods['price'] = $goods['price1'];
             }
-
-            $total += $goods['price'] * $value['number'];
 
             if (!$value['extends']) {
                 $list[$key]['extends'] = '';
@@ -109,9 +111,9 @@ class Mult extends User
             $list[$key]['goods'] = $goods;
             $list[$key]['money'] = $money;
         }
-
-        $wuliu = db("Wuliu")->select();
-        returnJson(1,'success',['data'=>$list,'total'=>$total,'wuliu'=>$wuliu]);
+        $this->assign('list',$list);   
+        $this->assign('data',json_encode($list));
+        echo $this->fetch();
     }
 
     //创建订单
@@ -131,7 +133,7 @@ class Mult extends User
 
     public function selectaddress(){
         if (request()->isPost()) {
-            $pageSize = 10;
+            $pageSize = input('post.limit',20);
             $keyword = input('post.keyword');
             if ($keyword!='') {
                 $map['name|mobile'] = $keyword;
@@ -161,18 +163,20 @@ class Mult extends User
             }
        
             $result = array(
-                    'code'=>1,
+                    'code'=>0,
                     'msg'=>'',
                     'count'=>$total,
                     'data'=>$list
                 );
             echo json_encode($result);
+        }else{
+            return view();
         }
     }
 
     public function selectsender(){
         if (request()->isPost()) {
-            $pageSize = 10;
+            $pageSize = input('post.limit',20);
             $keyword = input('post.keyword');
             if ($keyword!='') {
                 $map['name|mobile'] = $keyword;
@@ -189,12 +193,14 @@ class Mult extends User
             }
        
             $result = array(
-                    'code'=>1,
+                    'code'=>0,
                     'msg'=>'',
                     'count'=>$total,
                     'data'=>$list
                 );
             echo json_encode($result);
+        }else{
+            return view();
         }
     }
 

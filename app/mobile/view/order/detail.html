@@ -32,7 +32,8 @@
             <p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
             <p>商品金额<span>￥{$list.goodsMoney}</span></p>
             <p>运费<span>￥{$list['payment']}</span></p>
-            <p>总金额<span>￥{$list.money}</span></p>
+            <p>余额支付<span>￥{$list.wallet}</span></p>
+            <p>订单总金额<span>￥{$list.total}</span></p>
             <p>支付方式<span>{$list.payType|getPayType}</span></p>
             <p>状态
             <span>

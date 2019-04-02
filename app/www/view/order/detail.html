@@ -83,10 +83,16 @@
 			                    <label>运费</label>
 			                    <p>(含打包材料，约{$weight}kg) ${$list.payment}</p>
 			                </li>
+			                {gt name="list.wallet" value="0"}
 			                <li>
-			                    <label>总金额</label>
-			                    <p>${$list.money}</p>
+			                    <label>余额支付</label>
+			                    <p>${$list.wallet}</p>
 			                </li>
+			                {/gt}		
+			                <li>
+			                    <label>订单总金额</label>
+			                    <p>${$list.total}</p>
+			                </li>			                
 			                <li>
 			                    <label>支付方式</label>
 			                    <p>{$list.payType|getPayType}</p>

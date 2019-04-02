@@ -5,11 +5,10 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		$orderID = 359;
-		db("Order")->where('id',$orderID)->delete();
-		db("OrderPerson")->where('orderID',$orderID)->delete();
-		db("OrderDetail")->where('orderID',$orderID)->delete();
-		db("OrderBaoguo")->where('orderID',$orderID)->delete();
+		$list = db("Order")->select();
+		foreach ($list as $key => $value) {
+			db('Order')->where('id',$value['id'])->setField("total",$value['payment']+$value['goodsMoney']);
+		}
 	}
 	
 	//创建运单

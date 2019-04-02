@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>购物车-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+.person{float: right;}
+.person li{display: block; float: left; height: 40px; line-height: 40px; padding: 0 10px; background:#39c4da; margin-right: 10px; margin-top: 10px; color: #fff;}
+.person li span{cursor: pointer;}
+.person li i{cursor: pointer; margin-left:5px; border-radius: 50%; background: #fff; color: #000; font-size: 12px}
+.person li i:hover{background: #f60; color: #fff}
+</style>
+</head>
+<body>
+{include file="public:header" /}
+
+<div class="main" style="margin-bottom: 100px">
+    <div class="layui-row">
+        <div class="layui-col-xs6"><a href="{:url('cart/index')}" class="tab">单收件人模式</a></div>
+        <div class="layui-col-xs6"><a href="{:url('mult/index')}" class="tab act">多收件人模式</a></div>
+    </div>
+
+    {eq name="heji" value="0"}
+    <div class="empty"><img src="/app/www/view/common/image/empty.png" /><p>空空如也~</p></div>
+    {else/}
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <div class="person" id="person"></div>
+        </div>
+    </div>    
+    <div class="layui-row">
+        <div class="layui-col-xs6" style="padding:10px">
+            <div class="layui-card">
+                <div class="layui-card-header">购物车</div>
+                <div class="layui-card-body">
+                    <div class="layui-row" id="cartResult"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6" style="padding: 10px">            
+            <div class="layui-card">
+                <div class="layui-card-header">订单</div>                
+                <div class="layui-card-body" id="orderBox"></div>
+            </div>
+        </div>
+    </div>
+    {/eq}
+</div>
+
+{neq name="heji" value="0"}
+<div class="payBox">
+    <div class="box">
+    账户预存款：${$user.money|number_format=###,2}&nbsp;&nbsp;&nbsp;&nbsp;
+    运费总计：$<span id="yunfei">0</span>&nbsp;&nbsp;&nbsp;&nbsp;
+    商品总计<span class="money" id="total">${$heji.total}</span>
+    <input type="hidden" id="orderTotalMoney" value="{$heji.total}">
+    <button class="layui-btn layui-btn-lg layui-btn-danger layui-btn-disabled" id="doJiesuan">去结算</button>
+    </div>
+</div>
+<script src="{:RES}/js/mult.js?v=1.01" type="text/javascript" charset="utf-8"></script>
+<script>
+var is_over = false;
+function alert_if_over() {
+    if (!is_over){
+        return '';
+    }
+}
+window.onbeforeunload = alert_if_over;
+
+$(function() {        
+    initWindow();
+    $(window).resize(function() {
+        initWindow();
+    })
+
+    function initWindow() {
+        wh = $(window).height(); //窗口高度
+        $(".layui-card-body").height(wh - 220);
+    }
+    createCart(); //初始化购物车
+    createOrder(); //初始化订单
+
+    $("#person").on("click",".personTag",function(){
+        if($("#goods").html()!=''){
+            layer.alert("请先删除已选中的商品")
+            return false;
+        }
+        var id = $(this).parent().attr("data-id");
+        $(this).parent().remove();
+
+        if (!$(this).hasClass("layui-btn-disabled")){
+            $("#doJiesuan").removeClass("layui-btn-disabled");
+        }
+
+        $.get('{:url("mult/create")}',function(res){
+            $("#orderBox").html(res);
+            cart.clear();
+            localStorage.removeItem("ShoppingCart");
+            $.post('{:url("mult/getinfo")}',{'id':id},function(res){
+                if (res.code==1){
+                    var data = res.data;
+                    $('#addressStr').html(data.name+" "+data.mobile+" "+data.province+" "+data.city+" "+data.area+" "+data.address);
+                    $('#addressID').val(data.addressID);
+                    $('#province').val(data.province);
+                    $('#senderStr').html(data.sender+" "+data.senderMobile);
+                    $('#sender').val(data.sender+","+data.senderMobile);
+                    $('#doSubmit').attr("data-id",data.id); 
+                    insertCart(data.goods);//填充到本地数据
+                    $("#doJiesuan").addClass("layui-btn-disabled");
+                }
+            },'json')
+        })       
+    })
+
+    $("#person").on("click",".delBtn",function(){
+        var id = $(this).parent().attr("data-id");
+        var that = $(this);
+        layer.confirm('确认要删除吗？',{
+            btn: ['确认','放弃'] //按钮
+            }, function(){                    
+                $.post('{:url("mult/delete")}',{'id':id},function(res){
+                    if (res.code==1){
+                        var data = res.data.list;
+                        for (var i = 0; i < data.length; i++) {
+                            itemID = data[i]['itemID'];
+                            num = parseInt(data[i]['number']);
+                            $(".checkNumber").each(function(){
+                                if ($(this).attr('item-id')==itemID){
+                                    num += parseInt($(this).html());
+                                    $(this).html(num);
+                                }
+                            });
+                        }
+                        $("#doJiesuan").addClass("layui-btn-disabled");
+                        $("#yunfei").html(res.data.yunfei);
+                        that.parent().remove();
+                        layer.alert("操作成功");
+                        if ($("#orderBox").html()==''){
+                            createOrder();
+                        }
+                    }
+                },'json')
+            });
+    })
+
+    $("#doJiesuan").click(function(){
+        if ($(this).hasClass("layui-btn-disabled")){ return false;}
+        var userMoney = {$user.money};
+        var orderMoney = $("#orderTotalMoney").val();
+        if(userMoney > orderMoney){
+            money = orderMoney >= userMoney ? userMoney : orderMoney;
+            _html = "订单共【$"+orderMoney+"元】，使用余额【$"+money+"元】";
+        }else{
+            _html="订单共计【$"+orderMoney+"元】";
+        }        
+        layer.confirm(
+            _html,
+            {btn: ['确定','取消']},
+            function(){
+                layer.closeAll();
+                var load = layer.load(0,{shade: [0.7, '#000000']});
+                $.post("{:url('mult/doSubmit')}",function(res){
+                    layer.close(load);
+                    if(res.code == 1){
+                        layer.open({
+                            type:0, 
+                            icon:1,
+                            content:res.msg,
+                            time:3000,
+                            end: function(){
+                                is_over=true;
+                                window.location.href = res.url;
+                            } 
+                        });
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                },"json")
+            }
+        )
+    })    
+})
+
+//老数据填充
+function insertCart(data){
+    for (var i = 0; i < data.length; i++) {
+        info = getGoodsInfo(data[i]['itemID']);
+        goods = {
+            'itemID':data[i]['itemID'],
+            'goodsID':info.goods.goodsID,
+            'server':info.goods.server,
+            'name':info.goods.name,
+            'short':info.goods.short,
+            'picname':info.goods.picname,
+            'number':data[i]['num'],
+            'goodsNumber':data[i]['num']*info.goods.number,
+            'typeID':info.typeID,
+            'exts':data[i]['extends'],
+            'flag':info.flag,
+        }
+        cart.addproduct(goods);
+    }
+    cart.render();  
+}
+
+function getGoodsInfo(itemID){
+    var goods;
+    for (var i = 0; i < dataJson.length; i++) {
+        if (dataJson[i].itemID==itemID){
+            goods = dataJson[i];
+            break;
+        }
+    }    
+    return goods;
+}
+
+function createOrder(){
+    $.get('{:url("mult/create")}',function(res){
+        $("#orderBox").html(res);
+        localStorage.removeItem("ShoppingCart");
+    })
+}
+
+function createCart(){
+    $.get('{:url("mult/cart")}',function(res){
+        $("#cartResult").html(res);        
+    })
+}
+</script>
+{/neq}
+</body>
+</html>
