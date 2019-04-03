@@ -115,7 +115,7 @@
                 <div class="doPay">
                     <li>订单金额：<span>${$total|number_format=###,2}</span></li>
                     <li>账户预存款：${$user.money|number_format=###,2}</li>
-                    <li><button class="layui-btn layui-btn-lg layui-btn-danger" lay-submit lay-filter="gogo" url="{:url('cart/doSubmit')}"><?php if($user['money'] >= $total){ echo '确认付款';}else{ echo '去支付 $'.number_format($payMoney,2);}?></button></li>
+                    <li><button class="layui-btn layui-btn-lg layui-btn-danger" lay-submit lay-filter="gogo" url="{:url('cart/doSubmit')}">马上下单</button></li>
                 </div>
             </div>
         </div>
@@ -145,13 +145,7 @@ $(function(){
     layui.use('form', function(){
         var form = layui.form; 
         form.on('submit(gogo)', function(data){
-            <?php
-            if($user['money'] > 0){
-                $money = $total >= $user['money'] ? $user['money'] : $total;
-                echo '_html = "订单共【$'.number_format($total,2).'元】，使用余额【$'.number_format($money,2).'元】";';
-            }else{
-                echo '_html="订单共计【$'.number_format($total,2).'元】";';
-            }?>
+            var _html = '订单共计【${$total|number_format=###,2}元】';
             layer.confirm(_html, {
                 btn: ['确定','取消']},
                 function(){

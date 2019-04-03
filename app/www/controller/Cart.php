@@ -482,7 +482,7 @@ class Cart extends User
 
         $sender = explode(",", $data['sender']);
         $money = $totalPrice+$totalYunfei;
-        if ($this->user['money']>=$money) {
+        /*if ($this->user['money']>=$money) {
             $payType = 2;
             $wallet = $money;
             $payStatus = 2;
@@ -494,7 +494,7 @@ class Cart extends User
             $money = $money - $this->user['money'];
             $wallet = $this->user['money'];
             $payStatus = 0;
-        }
+        }*/
         $data['sender'] = $sender[0];
         $data['senderMobile'] = $sender[1];
         $data['memberID'] = $this->user['id'];
@@ -502,13 +502,13 @@ class Cart extends User
         $order_no = getStoreOrderNo();
         $data['order_no'] = $order_no;
         $data['total'] = $totalPrice+$totalYunfei;
-        $data['goodsMoney'] = $totalPrice;
-        $data['money'] = $money;
-        $data['wallet'] = $wallet;
         $data['rmb'] = $rate * $data['money'];
+        $data['goodsMoney'] = $totalPrice;
+        $data['money'] = 0;
+        $data['wallet'] = 0;        
         $data['payment'] = $totalYunfei;
-        $data['payType'] = $payType;
-        $data['payStatus'] = $payStatus;
+        $data['payType'] = 0;
+        $data['payStatus'] = 0;
         $res = model('Order')->add($data);
         if (!$res['code']==1) {
             $this->error($res['msg']);
@@ -571,9 +571,9 @@ class Cart extends User
                     ];
 
                     db('OrderDetail')->insert($gData);      
-                    if ($payStatus==1) {  
+                    /*if ($payStatus==1) {  
                         db("Goods")->where('id',$val['goodsID'])->setDec("stock",$val['trueNumber']);
-                    }
+                    }*/
                 }
             }
             unset($detail);
@@ -583,7 +583,7 @@ class Cart extends User
         db("Cart")->where($map)->delete();
 
         //保存支付记录
-        if ($wallet>0) {
+        /*if ($wallet>0) {
             $fdata = array(
                 'type' => 2,
                 'money' => $wallet,
@@ -608,19 +608,18 @@ class Cart extends User
                 $url = url('member/index');
             }
             $this->success('支付成功，等待商家发货',$url);
-        }else{
+        }else{*/
             if (isMobile()) {
-                if ($payType==3) {
+                //if ($payType==3) {
                     $url = url('mobile/order/pay','order_no='.$order_no);
-                }else{
+                /*}else{
                     $url = url('mobile/order/cardpay','order_no='.$order_no);
-                }                
+                } */               
             }else{
-                $url = url('Order/pay','order_no='.$order_no);
+                $url = url('Order/payType','order_no='.$order_no);
             }
             $this->success('操作成功',$url);
-        }
-       
+        //}       
     }
 
     public function getYunfei(){

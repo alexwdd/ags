@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,address=no,email=no">
+    <meta name="mobileOptimized" content="width">
+    <meta name="handleldFriendly" content="true">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="dns-prefetch" href="//s.xiaohongshu.com">
+    <link rel="dns-prefetch" href="//ci.xiaohongshu.com">
+    <link rel="preconnect" href="//s.xiaohongshu.com" crossorigin>
+    <link rel="preconnect" href="//ci.xiaohongshu.com" crossorigin>
+    <title>打开小红书</title>
+    <meta name="description" content="在小红书，和最会生活的人做朋友">
+    <meta name="keywords" content="小红书，小红书购物笔记，境外时尚达人买手购物晒货社区，福利社">
+    <script type="text/javascript">
+    window.isResponsive = !0
+    </script>
+    <script type="text/javascript">
+    function setPixel() {
+        function e() { document.documentElement.style.fontSize = Math.min(60, document.documentElement.clientWidth / 375 * 50) + "px" } e(), window.addEventListener("orientationchange" in window ? "orientationchange" : "resize", e, !1) }
+    "undefined" != typeof window && setPixel()
+    </script>
+
+</head>
+
+<body>
+    <div class="container" id="weixin">
+        <div class="bg"></div>
+        <div class="indicate">
+            <p>点击右上角<span class="dot-icon"></span></p>
+            <p>选择在Safari打开</p>
+        </div>
+        <div class="indicator"></div>
+        <div class="main-bg">
+            <div class="card"></div>
+            <div class="safari"></div>
+        </div>
+        <div class="bottom-bar">
+            <div class="logo-sm"></div>
+            <div class="content"><h3>下载「小红书」客户端</h3>
+                <p>标记我的生活</p>
+            </div><button type="button" class="manual-download" id="manual_btn">立即下载</button>
+        </div>
+    </div>
+
+    <div class="container" id="others">
+        <div class="hints">
+            <div class="android-hint">
+                <p class="open-in-browser" id="open_in_browser">点击右上角在浏览器打开</p>
+                <div class="indicator" id="android-indicator"></div>
+            </div>
+            <div class="ios-hint">
+                <p class="open-in-safari" id="open_in_safari">已下载？请点击右上角用Safari打开</p>
+                <p class="pull-to-show" id="pull_to_show">已下载？下拉打开应用<span class="arrow-icon"></span></p>
+                <p class="deeplink-open" id="deeplink_open">下拉无反应？<a href="/" id="deeplink">点此打开应用</a></p>
+            </div>
+        </div>
+        <div class="logo"></div>
+        <div class="connect"><h2>全世界的好生活</h2>
+        </div>
+        <div class="download-container"><button id="download_btn" type="button">立即下载小红书</button></div>
+        <div class="decor bottom"></div>
+    </div>
+<script type="text/javascript">
+	
+function GetQueryString(n) {
+	var e, o = new RegExp("(^|&)" + n + "=([^&]*)(&|$)", "i"),
+		i = window.location.search.substr(1).match(o);
+	return null != i && (e = i[2]), (i = o = null) == e || "" == e || "undefined" == e ? "" : decodeURIComponent(e)
+}
+
+function show(n) {
+	document.querySelector(n).style.display = "block"
+}
+
+function hide(n) {
+	document.querySelector(n).style.display = "none"
+}
+
+function isIos() {
+	return 0 <= navigator.userAgent.toLowerCase().indexOf("iphone")
+}
+
+function isInWb() {
+	return 0 <= navigator.userAgent.toLowerCase().indexOf("weibo")
+}
+
+function isInWX() {
+	return 0 <= navigator.userAgent.toLowerCase().indexOf("micromessenger")
+}
+
+function isInQQ() {
+	var n = navigator.userAgent.toLowerCase();
+	return 0 <= n.indexOf("qq") && n.indexOf("mqqbrowser") < 0
+}
+
+function isInDoubtfulVersion() {
+	var n = navigator.userAgent.toLowerCase(),
+		i = !1;
+	return n.indexOf("iphone") < 0 || n.replace(/os\s((?:\d+_){1,2}\d)/g, function(n, e) {
+		var o = e.split("_");
+		return (9 == o[0] && 2 <= o[1] || 9 < o[0] && o[0] < 11) && (i = !0), n
+	}), i
+}
+
+function bindDownload(n, e, o, i) {
+	document.querySelector(n).addEventListener("click", function() {
+		isInWb() || isInWX() ? show("#android-indicator") : window.location = e
+	}, !1), o && setTimeout(function() {
+		window.location = e
+	}, i || 1e3)
+}
+
+function bindDeeplinkOpen(e) {
+	document.querySelector("#deeplink").addEventListener("click", function(n) {
+		n.preventDefault(), window.location = e
+	})
+}
+
+function bindSwipeDown(e) {
+	var o = 0,
+		i = 0,
+		t = 0;
+	window.addEventListener("touchstart", function(n) {
+		n.changedTouches[0].screenX, o = n.changedTouches[0].screenY
+	}, !1), window.addEventListener("touchend", function(n) {
+		n.changedTouches[0].screenX, i = n.changedTouches[0].screenY, o < i && (t < 2 ? t += 1 : e && e())
+	})
+}
+var downloadLink = GetQueryString("downloadLink") || (isIos() ? "//itunes.apple.com/us/app/xiao-hong-shu-quan-shi-jie/id741292507?l=zh&ls=1&mt=8" : "https://o3.xiaohongshu.com/d/xiaohongshu.apk"),
+	deepLink = GetQueryString("deeplink") || "xhsdiscover://home/explore";
+isIos() ? isInWX() || isInQQ() ? (show("#weixin"), bindDownload("#manual_btn", downloadLink)) : (show("#others"), hide(".android-hint"), bindDownload("#download_btn", downloadLink, !isInDoubtfulVersion() && !isInWb()), isInWb() ? show("#open_in_safari") : (show("#pull_to_show"), bindSwipeDown(function() {
+	hide("#pull_to_show"), show("#deeplink_open"), bindDeeplinkOpen(deepLink)
+}))) : (show("#others"), hide(".ios-hint"), isInWb() || isInWX() || hide(".android-hint"), bindDownload("#download_btn", downloadLink, !0))
+
+</script>
+</body>
+
+</html>

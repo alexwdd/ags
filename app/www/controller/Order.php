@@ -293,6 +293,108 @@ class Order extends User
         }
     }
 
+    public function payType(){
+        $order_no = input('param.order_no');
+        $map['order_no'] = $order_no;
+        
+        $map['memberID'] = $this->user['id'];
+        $list = db('Order')->where($map)->find();
+        if ($list){
+            if ($list['payStatus']==1) {
+                $this->error("该订单已支付完成，不要重复支付。");
+            }
+            if ($list['payType']==3) {
+                $this->redirect(url('mobile/order/pay','order_no='.$order_no));
+            }elseif($list['payType']==4) {
+                $this->redirect(url('mobile/order/cardpay','order_no='.$order_no));
+            }
+            $this->assign('list',$list);
+            return view();
+        }else{  
+            $this->error("没有该订单");
+        }        
+    }
+
+    public function confirm(){
+        if (request()->isPost()) {
+            $order_no = input('post.order_no');
+            $payType = input('post.payType');
+
+            if (!in_array($payType,[2,3,4])) {
+                $this->error("支付方式错误");
+            }
+
+            if ($payType==2 && $this->user['money']==0) {
+                $this->error("账户余额为0，不能使用余额支付");
+            }
+
+            $map['order_no'] = $order_no;            
+            $map['memberID'] = $this->user['id'];
+            $map['payStatus'] = 0;
+            $list = db('Order')->where($map)->find();
+            if ($list) {
+                if ($payType==2) {
+                    if ($this->user['money']>=$list['total']) {
+                        $data['wallet'] = $list['total'];
+                        $data['payType'] = 2;
+                        $data['payStatus'] = 2;
+                    }else{
+                        $data['money'] = $list['total'] - $this->user['money'];
+                        $data['wallet'] = $this->user['money'];
+                        $data['payType'] = 3;
+                    }
+
+                    $fdata = array(
+                        'type' => 2,
+                        'money' => $data['wallet'],
+                        'memberID' => $this->user['id'],
+                        'mobile' => $this->user['mobile'],
+                        'doID' => $this->user['id'],
+                        'doUser' => $this->user['mobile'],
+                        'oldMoney'=>$this->user['money'],
+                        'newMoney'=>$this->user['money']-$data['wallet'],
+                        'admin' => 2,
+                        'msg' => '购买商品，账户余额支付$'.$data['wallet'].'，订单号：'.$list['order_no'],
+                        'showTime' => time(),
+                        'createTime' => time()
+                    );
+                    db('Finance')->insert($fdata);
+                    $this->setUserGroup($this->user);//更改会员身份            
+                }else{
+                    $data['payType'] = $payType;
+                    $data['money'] = $list['total'];
+                }
+                db('Order')->where('id',$list['id'])->update($data);
+
+                if ($data['payStatus']==2) {
+                    if (isMobile()) {
+                        $url = url('mobile/order/index');
+                    }else{
+                        $url = url('member/index');
+                    }
+                    $this->success('支付成功，等待商家发货',$url);
+                }else{
+                    if (isMobile()) {
+                        if ($payType==3) {
+                            $url = url('mobile/order/pay','order_no='.$order_no);
+                        }else{
+                            $url = url('mobile/order/cardpay','order_no='.$order_no);
+                        }                
+                    }else{
+                        if ($payType==3) {
+                            $url = url('order/pay','order_no='.$order_no);
+                        }else{
+                            $url = url('order/cardpay','order_no='.$order_no);
+                        } 
+                    }
+                    $this->success('',$url);
+                }
+            }else{  
+                $this->error("没有该订单");
+            }
+        }
+    }
+
     public function pay(){
         $order_no = input('param.order_no');
         $map['order_no'] = $order_no;

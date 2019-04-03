@@ -45,7 +45,7 @@ class Order extends Admin {
             $sendTime = input('post.sendTime');
             $payStatus = input('post.payStatus');
 	        $remark = input('post.remark');
-	        $money = input('post.money/f');
+	        $total = input('post.total/f');
 
             /*for ($i=0; $i < count($id); $i++) { 
                 unset($map);
@@ -61,7 +61,9 @@ class Order extends Admin {
             }*/
             $order['payStatus'] = $payStatus;
 	        $order['remark'] = $remark;
-	        $order['money'] = $money;
+	        if ($total>0) {
+	        	$order['total'] = $total;
+	        }
             if ($sendTime!='') {
             	$order['sendTime'] = strtotime($sendTime);
             }else{

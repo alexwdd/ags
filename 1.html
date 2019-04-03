@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+<script type="text/javascript">
+function submitFn() {
+    var opapp = layer.open({
+        type: 2,
+        content: '唤起APP中...'
+    });
+    //判断浏览器
+    var url = '' //urlscheme码;
+    var appurl = '' //APP下载地址;
+    var u = navigator.userAgent;
+    if (/MicroMessenger/gi.test(u)) {
+        // 引导用户在浏览器中打开
+        layer.close(opapp);
+        $(".popdown").show();
+        return;
+    }
+    var d = new Date();
+    var t0 = d.getTime();
+    if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+        //Android 向安卓同事索要链接
+        if (openApp(url)) {
+            openApp(url);
+        } else {
+            //由于打开需要1～2秒，利用这个时间差来处理－－打开app后，返回h5页面会出现页面变成app下载页面，影响用户体验
+            var delay = setInterval(function() {
+                var d = new Date();
+                var t1 = d.getTime();
+                if (t1 - t0 < 3000 && t1 - t0 > 2000) {
+                    layer.close(opapp);
+                    //alert('检测到未安装，请下载APP');
+                    window.location.href = appurl;
+                }
+                if (t1 - t0 >= 3000) {
+                    clearInterval(delay);
+                    layer.close(opapp);
+                }
+            }, 1000);
+        }
+    } else if (u.indexOf('iPhone') > -1) {
+        //IOS  向IOS同事索要
+        if (openApp(url)) {
+            openApp(url);
+        } else {
+            var delay = setInterval(function() {
+                var d = new Date();
+                var t1 = d.getTime();
+                if (t1 - t0 < 3000 && t1 - t0 > 2000) {
+                    layer.close(opapp);
+                    //alert('检测到未安装，请下载APP');
+                    window.location.href = appurl;
+                }
+                if (t1 - t0 >= 3000) {
+                    clearInterval(delay);
+                    layer.close(opapp);
+                }
+            }, 1000);
+        }
+    }
+};
+
+
+function openApp(src) {
+    // 通过iframe的方式试图打开APP，如果能正常打开，会直接切换到APP，并自动阻止a标签的默认行为
+    // 否则打开a标签的href链接
+    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+    if (userAgent.indexOf("Safari") > -1) {
+        window.location.href = src;
+    } else {
+        var ifr = document.createElement('iframe');
+        ifr.src = src;
+        ifr.style.display = 'none';
+        document.body.appendChild(ifr);
+        window.setTimeout(function() {
+            document.body.removeChild(ifr);
+        }, 2000);
+    }
+
+}
+</script>
+</body>
+
+</html>

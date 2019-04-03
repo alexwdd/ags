@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>订单支付-{:config('site.name')}</title>
+<meta name="keywords" content="{:config('site.keyword')}">
+<meta name="description" content="{:config('site.content')}">
+{include file="public:cssjs" /}
+<style type="text/css">
+.order{background: #fff; width: 1000px; margin:100px auto; border:1px #dbdbdb solid; }
+.order .hd{text-align: center; font-size:24px; padding: 20px 0}
+.order .bd{clear: both; overflow: hidden;}
+.order .bd li{clear: both; padding:20px 0; font-size: 16px}
+.order .bd li label{float: left; width: 110px; text-align: right; color: #999; margin-right: 10px}
+.order .bd li p{margin: 0; float: left;}
+.order .bd li p .pay{display: block; height:40px; width: 100px; line-height:40px; border:1px #dbdbdb solid; float: left; margin-right: 20px; text-align: center; color: #666; cursor: pointer;}
+.order .bd li p .pay.active{border-color: #f60; color: #f60}
+.order .fd{padding:30px 0;padding-left: 120px; }
+</style>
+</head>
+<body>
+{include file="public:header" /}
+
+<div class="main">
+    <div class="order">
+        <div class="hd">下单成功</div>
+        
+        <div class="bd">
+            <li>
+                <label>订单号</label>
+                <p>{$list.order_no}</p>
+            </li>
+
+            <li>
+                <label>订单金额</label>
+                <p style="font-weight: bold;">{$list.total}</p>
+            </li> 
+
+            <li>
+                <label>账户余额</label>
+                <p>{$user.money}</p>
+            </li> 
+
+            <li>
+                <label>支付方式</label>
+                <p>
+                    {gt name="user.money" value="0"}
+                    <span class="pay" data-id="2">余额支付<i></i></span>
+                    {/gt}
+                    <span class="pay" data-id="3">在线支付<i></i></span>
+                    <span class="pay" data-id="4">银行转账<i></i></span>
+                </p>
+            </li>            
+        </div>
+        <div class="fd">
+            <button type="button" id="doPay" class="layui-btn layui-btn-lg">去支付</button>
+            <input type="hidden" id="payType" value="">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+    $(".pay").click(function(){
+        $(".pay").removeClass("active");
+        $(this).addClass("active");
+        $("#payType").val($(this).attr("data-id"))
+    });
+    $("#doPay").click(function(){
+        if($("#payType").val()==""){
+            layer.alert("请选择支付方式");
+            return false;
+        }else{
+            var load = layer.load(2);
+            $.post("{:url('order/confirm')}",{payType:$("#payType").val(),order_no:{$list.order_no}},function(res){
+                layer.close(load);
+                if(res.code == 1){
+                    if (res.msg!=''){
+                        layer.open({
+                            type:0, 
+                            icon:1,
+                            content:res.msg,
+                            time:3000,
+                            end: function(){
+                                is_over=true;
+                                window.location.href = res.url;
+                            } 
+                        });
+                    }else{
+                        window.location.href = res.url;
+                    }                    
+                }else{
+                    layer.alert(res.msg);
+                }
+            },"json")
+        }
+    })
+})
+</script>
+{include file="public:footer" /}
+</body>
+</html>

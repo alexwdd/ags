@@ -381,13 +381,13 @@ vm = new Vue({
             var that = this;
             if (type=='inc'){
                 that.cart[index]['number']++;
-                that.cart[index]['goodsNumber'] += that.cart[index]['goods']['number'];
+                that.cart[index]['goodsNumber'] = parseInt(that.cart[index]['goodsNumber']) + parseInt(that.cart[index]['goods']['number']);                
             }else{
                 if (that.cart[index]['number']<=1 || that.cart[index]['goodsNumber']<that.cart[index]['goods']['number']){
                     return false;
                 }
                 that.cart[index]['number']--;
-                that.cart[index]['goodsNumber'] -= that.cart[index]['goods']['number'];
+                that.cart[index]['goodsNumber'] = parseInt(that.cart[index]['goodsNumber'])- parseInt(that.cart[index]['goods']['number']);
             }
 
             var load = layer.load(2);
@@ -395,6 +395,7 @@ vm = new Vue({
                 layer.close(load);
                 that.total = res.total                
             },'json');
+            that.checkStatus();
         },
         //购物车中商品添加到商品中
         addGoods(info,number){
@@ -406,7 +407,7 @@ vm = new Vue({
             for(var i= 0; i<this.goods.length; i++){
                 if (info.itemID == this.goods[i]['itemID']){
                     this.goods[i]['number'] += number;
-                    this.goods[i]['goodsNumber'] += number * info.goods.step;
+                    this.goods[i]['goodsNumber'] += number * parseInt(info.goods.step);
                     flag = true;
                     break;
                 }
@@ -457,9 +458,9 @@ vm = new Vue({
             }
         },
         checkStatus(){
-            var total;
+            var total = 0;
             for(var i= 0; i<this.cart.length; i++){
-                total += this.cart[i]['goodsNumber'];
+                total = total + parseInt(this.cart[i]['goodsNumber']);
             }
             if (total>0){
                 this.disable = true;
@@ -474,9 +475,9 @@ vm = new Vue({
             for(var i= 0; i<this.cart.length; i++){
                 if (info.itemID == this.cart[i]['itemID']){
                     if (type=='inc'){ 
-                        this.cart[i]['goodsNumber'] += number * info.goods.step;
+                        this.cart[i]['goodsNumber'] += number * parseInt(info.goods.step);
                     }else{
-                        this.cart[i]['goodsNumber'] -= number * info.goods.step;
+                        this.cart[i]['goodsNumber'] -= number * parseInt(info.goods.step);
                     }                    
                 }
             }
@@ -607,18 +608,17 @@ vm = new Vue({
             )
         },
         editPerson(value){
-            var that = this;
+            var that = this; 
             that.disable = true;
-            for(var i= 0; i<this.goods.length; i++){
-                for(var j= 0; j<this.cart.length; j++){
-                    if (this.goods[i]['itemID'] == this.cart[j]['itemID']){
-                        var info = this.cart[j];
+            for(var i= 0; i<that.goods.length; i++){
+                for(var j= 0; j<that.cart.length; j++){
+                    if (that.goods[i]['itemID'] == that.cart[j]['itemID']){
+                        var info = that.cart[j];
                         break;
                     }
                 }
-                this.setCartGood(info,this.goods[i]['number'],'inc');
+                that.setCartGood(info,that.goods[i]['number'],'inc');
             }
- 
             $.post('{:url("mult/getinfo")}',{id:value.personID},function(res){
                 if (res.code==1){
                     that.address = res.body.address;
@@ -627,24 +627,24 @@ vm = new Vue({
 
                     that.goods = [];
                     for(var i= 0; i<goods.length; i++){     
-                        for(var j= 0; j<that.cart.length; j++){
+                        for(var j= 0; j<that.cart.length; j++){                            
                             if (goods[i]['itemID'] == that.cart[j]['itemID']){
-                                info = that.cart[j];
-                                number = goods[i]['num'];
-                                goods = {
-                                    'goodsID':info.goodsID,
-                                    'itemID':info.itemID,
-                                    'server':info.server,
-                                    'number':number/info.goods.step,
+                                cartInfo = that.cart[j];        
+                                number = parseInt(goods[i]['num']);
+                                tempGoods = {
+                                    'goodsID':cartInfo.goodsID,
+                                    'itemID':cartInfo.itemID,
+                                    'server':cartInfo.server,
+                                    'number':number/cartInfo.goods.step,
                                     'goodsNumber':number,
-                                    'name':info.goods.name,
-                                    'short':info.goods.short,
-                                    'picname':info.goods.picname,            
-                                    'typeID':info.typeID,
-                                    'exts':info.extends,
-                                    'flag':info.flag
-                                }
-                                that.goods.push(goods);
+                                    'name':cartInfo.goods.name,
+                                    'short':cartInfo.goods.short,
+                                    'picname':cartInfo.goods.picname,            
+                                    'typeID':cartInfo.typeID,
+                                    'exts':cartInfo.extends,
+                                    'flag':cartInfo.flag
+                                };    
+                                that.goods.push(tempGoods);
                             }
                         }
                     }
@@ -652,12 +652,12 @@ vm = new Vue({
             },'json')
 
             var temp = [];
-            for(var i= 0; i<this.person.length; i++){
-                if (this.person[i]['personID'] != value.personID){
-                    temp.push(this.person[i]);
+            for(var i= 0; i<that.person.length; i++){
+                if (that.person[i]['personID'] != value.personID){
+                    temp.push(that.person[i]);
                 }
             }
-            that.person = temp;            
+            that.person = temp;
         },
         delPerson(value){
             var that = this;

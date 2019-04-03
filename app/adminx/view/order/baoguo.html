@@ -49,11 +49,16 @@
 							<label class="layui-form-label">订单号</label>
 							<div class="layui-form-mid">{$list.order_no}</div>
 						</div>
+
+						<div class="layui-form-item">
+							<label class="layui-form-label">商品金额</label>
+							<div class="layui-form-mid">{$list.goodsMoney}</div>
+						</div>
 						
 						{gt name="list.payType" value="1"}
 						<div class="layui-form-item">
 							<label class="layui-form-label">运费</label>
-							<div class="layui-form-mid">￥{$list.payment}</div>
+							<div class="layui-form-mid">{$list.payment}</div>
 						</div>
 						{/gt}
 	
@@ -67,12 +72,33 @@
 							<div class="layui-form-mid">{$list.payType|getPayType}</div>
 						</div>
 						
+						{eq name="list.payType" value="0"}
 						<div class="layui-form-item">
-							<label class="layui-form-label">总金额</label>
+							<label class="layui-form-label">订单总金额</label>
 							<div class="layui-input-inline">
-						    	<input type="number" step="0.01" name="money" value="{$list.money}" lay-verType="tips" lay-verify="required" autocomplete="off" class="layui-input"/>
+						    	<input type="number" step="0.01" name="total" value="{$list.total}" lay-verType="tips" lay-verify="required" autocomplete="off" class="layui-input"/>
 						    </div>
 						</div>
+						{else/}
+						<div class="layui-form-item">
+							<label class="layui-form-label">订单总金额</label>
+							<div class="layui-form-mid">{$list.total}</div>
+						</div>
+						{/eq}
+
+						{gt name="list.wallet" value="0"}
+						<div class="layui-form-item">
+							<label class="layui-form-label">余额支付</label>
+							<div class="layui-form-mid">{$list.wallet}</div>
+						</div>
+						{/gt}
+						
+						{gt name="list.money" value="0"}
+						<div class="layui-form-item">
+							<label class="layui-form-label">在线支付</label>
+							<div class="layui-form-mid">{$list.money}</div>
+						</div>
+						{/gt}
 
 						<div class="layui-form-item">
 							<label class="layui-form-label">订单状态</label>
@@ -111,7 +137,7 @@
 			<fieldset class="layui-elem-field">
 				<legend>收件人</legend>
 				<div class="layui-field-box">	
-					{gt name="list.payType" value="1"}
+					{neq name="list.payType" value="1"}
 					{volist name="person" id="vo" key="j"}
 					<div class="layui-card my-card">
 				        <div class="layui-card-header">{$vo.name}，{$vo.mobile}，{$vo.province} {$vo.city} {$vo.area} {$vo.address}</div>
@@ -198,7 +224,7 @@
 				        </div>
 				    </div>
 					{/volist}
-		    		{/gt}
+		    		{/neq}
 				</div>
 			</fieldset>				
 		</div>
