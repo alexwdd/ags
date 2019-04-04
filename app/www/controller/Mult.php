@@ -467,7 +467,7 @@ class Mult extends User
         $totalYunfei = db("OrderPerson")->where($map)->sum("payment");
 
         $money = $totalPrice+$totalYunfei;
-        if ($this->user['money']>=$money) {
+        /*if ($this->user['money']>=$money) {
             $payType = 2;
             $wallet = $money;
             $payStatus = 2;
@@ -476,7 +476,7 @@ class Mult extends User
             $money = $money - $this->user['money'];
             $wallet = $this->user['money'];
             $payStatus = 0;
-        }
+        }*/
 
         $data['memberID'] = $this->user['id'];
         $data['memberMobile'] = $this->user['mobile'];
@@ -484,12 +484,12 @@ class Mult extends User
         $data['order_no'] = $order_no;
         $data['total'] = $totalPrice+$totalYunfei;
         $data['goodsMoney'] = $totalPrice;
-        $data['money'] = $money;
-        $data['wallet'] = $wallet;
+        $data['money'] = 0;
+        $data['wallet'] = 0;
         $data['rmb'] = $rate * $data['money'];
         $data['payment'] = $totalYunfei;
-        $data['payType'] = $payType;
-        $data['payStatus'] = $payStatus;
+        $data['payType'] = 0;
+        $data['payStatus'] = 0;
 
         $res = model('Order')->addMult($data);
         if (!$res['code']==1) {
@@ -500,15 +500,9 @@ class Mult extends User
         unset($map);
         $map['memberID'] = $this->user['id'];
         $map['del'] = 1;
-        db("OrderPerson")->where($map)->update(['orderID'=>$orderID,'del'=>0,'status'=>$payStatus]);
+        db("OrderPerson")->where($map)->update(['orderID'=>$orderID,'del'=>0]);
         db("OrderDetail")->where($map)->update(['orderID'=>$orderID,'del'=>0]);
-
-        if ($payStatus==2) {
-            $status = 1;
-        }else{
-            $status = 0;
-        } 
-        db("OrderBaoguo")->where($map)->update(['orderID'=>$orderID,'order_no'=>$data['order_no'],'del'=>0,'status'=>$status]);
+        db("OrderBaoguo")->where($map)->update(['orderID'=>$orderID,'order_no'=>$data['order_no'],'del'=>0]);
 
         unset($map);
         $map['memberID'] = $this->user['id'];
@@ -520,7 +514,7 @@ class Mult extends User
         db("CartLog")->where($map)->insert($log);
 
         //保存支付记录
-        if ($wallet>0) {
+        /*if ($wallet>0) {
             $fdata = array(
                 'type' => 2,
                 'money' => $wallet,
@@ -537,17 +531,13 @@ class Mult extends User
             );
             db('Finance')->insert($fdata);
             $this->setUserGroup($this->user);//更改会员身份
-        }
-        if ($payType==2) {
-            //减库存
-            $detail = db("OrderDetail")->where('orderID',$orderID)->select();
-            foreach ($detail as $key => $value) {                
-                db("Goods")->where('id',$value['goodsID'])->setDec("stock",$value['trueNumber']);
-            }
-            $this->success('支付成功，等待商家发货',url('member/index'));
+        }*/
+        if (isMobile()) {
+            $url = url('mobile/order/payType','order_no='.$order_no);
         }else{
-            $this->success('操作成功',url('Order/pay','order_no='.$order_no));
+            $url = url('Order/payType','order_no='.$order_no);
         }
+        $this->success('操作成功',$url);
        
     }
 }

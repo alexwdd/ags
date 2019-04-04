@@ -611,7 +611,7 @@ class Cart extends User
         }else{*/
             if (isMobile()) {
                 //if ($payType==3) {
-                    $url = url('mobile/order/pay','order_no='.$order_no);
+                    $url = url('mobile/order/payType','order_no='.$order_no);
                 /*}else{
                     $url = url('mobile/order/cardpay','order_no='.$order_no);
                 } */               

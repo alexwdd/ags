@@ -73,34 +73,7 @@
             {/eq}
         </div>
     </div>
-
-    <div class="infobox">
-        <div class="hd"><i class="mui-icon mui-icon-info"></i> 支付方式</div>
-        <div class="payType">
-            <li data-id=2 <?php if($user['money'] <= 0){ echo 'class="disable"';}else{echo 'class="do";';} ?>>
-                <div class="item">
-                    <img src="{:RES}/image/wallet.jpg">
-                    <span>余额支付</span>
-                    <i <?php if($user['money'] >= $total){ echo 'class="active"';} ?>></i>
-                </div>
-            </li>
-            <li data-id=3 <?php if($user['money'] >= $total){ echo 'class="disable"';}else{echo 'class="do";';} ?>>
-                <div class="item">
-                    <img src="{:RES}/image/omi.jpg">
-                    <span>OMI支付<br/>集成支付宝、微信支付</span>
-                    <i></i>
-                </div>
-            </li>
-            <li data-id=4 <?php if($user['money'] >= $total){ echo 'class="disable"';}else{echo 'class="do";';} ?>>
-                <div class="item">
-                    <img src="{:RES}/image/bank.jpg">
-                    <span>银行卡支付<br/>上传支付截图，人工审核</span>
-                    <i></i>
-                </div>
-            </li>
-        </div>
-    </div>
-
+    
     <div style="height:70px; clear:both;border: 0"></div>
 
     <div class="selectFooter">
@@ -108,24 +81,24 @@
             总金额 <span id="totalMoney" style="color:#f00">${$total}</span>
             预存款 <span id="yunfei" style="color:#f00">${$user.money}</span>
         </div> 
-        <div id="confirmBtn" action="{:url('www/cart/doSubmit')}" class="btn"><?php if($user['money'] >= $total){ echo '确认付款';}else{ echo '去支付 $'.$payMoney;}?></div>
+        <div id="confirmBtn" action="{:url('www/cart/doSubmit')}" class="btn">马上下单</div>
     </div>
-    <input type="hidden" name="kid" value="{$kid}">
-    <input type="hidden" name="payType" id="payType" value="<?php if($user['money'] >= $total){ echo 2;}else{ echo '';}?>" checkType="required" checkMsg="请选择支付方式">
+    <input type="hidden" name="kid" value="{$kid}">    
     </form>
 </div>
 <script>
 <?php
-if($user['money'] > 0){
+/*if($user['money'] > 0){
     $money = $total >= $user['money'] ? $user['money'] : $total;
     echo 'var _html = "订单共【$'.number_format($total,2).'元】，使用余额【$'.number_format($money,2).'元】";';
 }else{
     echo 'var _html="订单共计【$'.number_format($total,2).'元】";';
-}?>
+}*/?>
 $(function(){
     $("#confirmBtn").click(function(){
         var btnArray = ['确认', '取消'];
         var btn = $(this);
+        var _html = '订单共计【${$total|number_format=###,2}元】';
         mui.confirm(_html,function(e){
             if (e.index == 1) {
                 var res = muiFormCheck('#myForm');
@@ -161,11 +134,6 @@ $(function(){
                 }
             }
         })
-    })
-    $(".payType li.do").click(function(){
-        $(".payType li.do i").removeClass("active");
-        $(this).find('i').addClass("active");
-        $("#payType").val($(this).attr("data-id"))
-    });
+    })    
 })
 </script>

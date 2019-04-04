@@ -300,14 +300,16 @@ class Order extends User
         $map['memberID'] = $this->user['id'];
         $list = db('Order')->where($map)->find();
         if ($list){
-            if ($list['payStatus']==1) {
+            if ($list['payStatus']>0) {
                 $this->error("该订单已支付完成，不要重复支付。");
             }
+
             if ($list['payType']==3) {
-                $this->redirect(url('mobile/order/pay','order_no='.$order_no));
+            $this->redirect(url('order/pay','order_no='.$order_no));
             }elseif($list['payType']==4) {
-                $this->redirect(url('mobile/order/cardpay','order_no='.$order_no));
+                $this->redirect(url('order/cardpay','order_no='.$order_no));
             }
+         
             $this->assign('list',$list);
             return view();
         }else{  
@@ -367,6 +369,13 @@ class Order extends User
                 db('Order')->where('id',$list['id'])->update($data);
 
                 if ($data['payStatus']==2) {
+
+                    //减库存
+                    $detail = db("OrderDetail")->where('orderID',$list['id'])->select();
+                    foreach ($detail as $key => $value) {                
+                        db("Goods")->where('id',$value['goodsID'])->setDec("stock",$value['trueNumber']);
+                    }
+
                     if (isMobile()) {
                         $url = url('mobile/order/index');
                     }else{

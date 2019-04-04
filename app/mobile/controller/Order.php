@@ -186,6 +186,30 @@ class Order extends User
         }
     }
 
+    public function payType(){
+        $order_no = input('param.order_no');
+        $map['order_no'] = $order_no;
+        
+        $map['memberID'] = $this->user['id'];
+        $list = db('Order')->where($map)->find();
+        if ($list){
+            if ($list['payStatus']>0) {
+                $this->error("该订单已支付完成，不要重复支付。");
+            }
+
+            if ($list['payType']==3) {
+                $this->redirect(url('mobile/order/pay','order_no='.$order_no));
+            }elseif($list['payType']==4) {
+                $this->redirect(url('mobile/order/cardpay','order_no='.$order_no));
+            }
+        
+            $this->assign('list',$list);
+            return view();
+        }else{  
+            $this->error("没有该订单");
+        }        
+    }
+
     public function pay(){
         $order_no = input('param.order_no');
         $map['order_no'] = $order_no;
