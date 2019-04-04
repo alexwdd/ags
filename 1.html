@@ -7,6 +7,8 @@
 </head>
 
 <body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
 <script type="text/javascript">
 function submitFn() {
     var opapp = layer.open({
@@ -14,8 +16,8 @@ function submitFn() {
         content: '唤起APP中...'
     });
     //判断浏览器
-    var url = '' //urlscheme码;
-    var appurl = '' //APP下载地址;
+    var url = 'alipays://platformapi/startapp' //urlscheme码;
+    var appurl = 'http://www.baidu.com' //APP下载地址;
     var u = navigator.userAgent;
     if (/MicroMessenger/gi.test(u)) {
         // 引导用户在浏览器中打开
@@ -85,6 +87,8 @@ function openApp(src) {
     }
 
 }
+
+submitFn()
 </script>
 </body>
 

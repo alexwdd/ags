@@ -370,6 +370,9 @@ class Order extends User
 
                 if ($data['payStatus']==2) {
 
+                    db('OrderBaoguo')->where('orderID',$list['id'])->setField('status',1);
+                    db('OrderPerson')->where('orderID',$list['id'])->setField('status',1);
+
                     //减库存
                     $detail = db("OrderDetail")->where('orderID',$list['id'])->select();
                     foreach ($detail as $key => $value) {                

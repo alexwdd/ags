@@ -389,7 +389,6 @@ vm = new Vue({
                 that.cart[index]['number']--;
                 that.cart[index]['goodsNumber'] = parseInt(that.cart[index]['goodsNumber'])- parseInt(that.cart[index]['goods']['number']);
             }
-
             var load = layer.load(2);
             $.get("{:url('cart/setCartNum')}?number="+that.cart[index]['number']+"&cartID="+that.cart[index]['id']+"&temp="+new Date().getTime(),function(res){
                 layer.close(load);
@@ -399,7 +398,7 @@ vm = new Vue({
         },
         //购物车中商品添加到商品中
         addGoods(info,number){
-            if (info.goodsNumber < info.goods.step){
+            if (parseInt(info.goodsNumber) < parseInt(info.goods.step)){
                 return false;
             }
             this.setCartGood(info,number,'dec');
@@ -447,21 +446,24 @@ vm = new Vue({
             this.checkSign();
         },
         checkSign(){
+            var total = 0;
             for(var i= 0; i<this.goods.length; i++){
                 if(this.goods[i]['flag']==1){
-                    this.signShow = true;
-                    break;
-                }else{
-                    this.signShow = false;
-                    this.sign = '';
+                    total++;
                 }       
+            }
+            if (total>0){
+                this.signShow = true;
+            }else{
+                this.signShow = false;
+                this.sign = '';
             }
         },
         checkStatus(){
             var total = 0;
             for(var i= 0; i<this.cart.length; i++){
                 total = total + parseInt(this.cart[i]['goodsNumber']);
-            }
+            } 
             if (total>0){
                 this.disable = true;
             }else{
