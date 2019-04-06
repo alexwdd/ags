@@ -45,11 +45,12 @@
             <li>
                 <label>支付方式</label>
                 <p>
-                    {gt name="user.money" value="0"}
+                    {egt name="user.money" value="$list['total']"}
                     <span class="pay" data-id="2">余额支付<i></i></span>
-                    {/gt}
-                    <span class="pay" data-id="3">在线支付<i></i></span>
-                    <span class="pay" data-id="4">银行转账<i></i></span>
+                    {else/}
+                    <span class="pay" data-id="3">OMI支付<i></i></span>
+                    <span class="pay" data-id="4">银行卡支付<i></i></span>
+                    {/egt}
                 </p>
             </li>            
         </div>

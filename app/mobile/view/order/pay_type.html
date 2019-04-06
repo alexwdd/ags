@@ -26,6 +26,7 @@
 	<div class="infobox">
 		<div class="hd"><i class="mui-icon mui-icon-info"></i> 支付方式</div>
     <div class="payType">
+        {egt name="user.money" value="$list['total']"}
         <li data-id=2>
             <div class="item">
                 <img src="{:RES}/image/wallet.jpg">
@@ -33,6 +34,7 @@
                 <i></i>
             </div>
         </li>
+        {else/}
         <li data-id=3>
             <div class="item">
                 <img src="{:RES}/image/omi.jpg">
@@ -40,6 +42,7 @@
                 <i></i>
             </div>
         </li>
+
         <li data-id=4>
             <div class="item">
                 <img src="{:RES}/image/bank.jpg">
@@ -47,6 +50,7 @@
                 <i></i>
             </div>
         </li>
+        {/egt}
     </div>
     </div>
 

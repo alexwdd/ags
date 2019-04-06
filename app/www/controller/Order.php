@@ -335,17 +335,23 @@ class Order extends User
             $map['payStatus'] = 0;
             $list = db('Order')->where($map)->find();
             if ($list) {
-                if ($payType==2) {
-                    if ($this->user['money']>=$list['total']) {
-                        $data['wallet'] = $list['total'];
-                        $data['payType'] = 2;
-                        $data['payStatus'] = 2;
-                    }else{
-                        $data['money'] = $list['total'] - $this->user['money'];
-                        $data['wallet'] = $this->user['money'];
+                if ($this->user['money']>=$list['total']) {
+                    $data['payType'] = 2;
+                    $data['wallet'] = $list['total'];
+                    $data['payStatus'] = 2;
+                }else{
+                    if (!in_array($payType,[3,4])) {
                         $data['payType'] = 3;
+                    }else{
+                        $data['payType'] = $payType;
                     }
+                    $data['money'] = $list['total'] - $this->user['money'];
+                    $data['wallet'] = $this->user['money'];  
+                }
 
+                db('Order')->where('id',$list['id'])->update($data);
+
+                if ($data['wallet']>0) {
                     $fdata = array(
                         'type' => 2,
                         'money' => $data['wallet'],
@@ -361,18 +367,12 @@ class Order extends User
                         'createTime' => time()
                     );
                     db('Finance')->insert($fdata);
-                    $this->setUserGroup($this->user);//更改会员身份            
-                }else{
-                    $data['payType'] = $payType;
-                    $data['money'] = $list['total'];
+                    $this->setUserGroup($this->user);//更改会员身份
                 }
-                db('Order')->where('id',$list['id'])->update($data);
 
                 if ($data['payStatus']==2) {
-
                     db('OrderBaoguo')->where('orderID',$list['id'])->setField('status',1);
                     db('OrderPerson')->where('orderID',$list['id'])->setField('status',1);
-
                     //减库存
                     $detail = db("OrderDetail")->where('orderID',$list['id'])->select();
                     foreach ($detail as $key => $value) {                
