@@ -56,7 +56,7 @@ class Store extends Home
             $map['show'] = 1;
 
             //查询数据
-            $list = db('Goods')->field('id,name,picname,price,price1')->where($map)->order('sort asc,id desc')->select();
+            $list = db('GoodsIndex')->field('id,goodsID,typeID,name,picname,price,price1')->where($map)->order('sort asc,id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getThumb($value["picname"],350,350);
             }

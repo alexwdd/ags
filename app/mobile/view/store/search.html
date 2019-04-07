@@ -19,16 +19,22 @@
                 <a :href="'/mobile/store/detail/id/'+vo.id">
                 <img :src="vo.picname">    
                 <p class="mui-ellipsis">{{vo.name}}</p>
+                </a>
                 {gt name="user.id" value="0"}
                 <span>{{vo.price}}</span><span><i>/会员</i>{{vo.price1}}</span>
+
+                <div class="action canBuy" :data-id="vo.goodsID" :data-type="vo.typeID" :spec-id="vo.id">  
+                    <span class="set" data-action="dec">-</span>
+                    <i :id="'number'+vo.id">0</i>
+                    <span class="set" data-action="inc">+</span>
+                </div>
                 {/gt}
-                {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}
-                </a>
+                <div class="sold_out" v-if="vo.empty==1">售罄</div>
             </div>
         </li>
     </div>
 </div>
-
+<script type="text/javascript" src="{:RES}/js/fly.js"></script>
 <script>
 mui.init();
 vm = new Vue({

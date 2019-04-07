@@ -15,9 +15,13 @@
 <div class="mui-content" style="margin-top:0">
 
     <div class="indexHeader">
-        <div class="logo"><img src="{:RES}/image/logo.png"></div>
+        <div class="logo"><img src="{:RES}/image/logo.png"></div>        
         <div class="search" onclick="window.location.href='{:url('store/search')}'">
             <i class="mui-icon mui-icon-search" id="searchBtn"></i>
+        </div>
+
+        <div class="search" onclick="window.location.href='{:url('about/index')}'">
+            用户须知
         </div>
     </div>
     
@@ -36,11 +40,16 @@
                 <a href="{$vo.url}">
                 <img src="{$vo.picname|getThumb=280,280}">    
                 <p class="mui-ellipsis">{$vo.name}</p>
+                </a>
                 {gt name="user.id" value="0"}
                 <span>${$vo.price}</span><span><i>/会员</i>${$vo.price1}</span>
+                <div class="action {eq name="vo.empty" value="0"}canBuy{/eq}" data-id="{$vo.goodsID}" data-type="{$vo.typeID}" spec-id="{$vo.id}">  
+                    <span class="set" data-action="dec">-</span>
+                    <i id="number{$vo.id}">0</i>
+                    <span class="set" data-action="inc">+</span>
+                </div>
                 {/gt}
-                {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}
-                </a>
+                {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}                
             </div>
         </li>
         {/volist}
@@ -61,9 +70,9 @@
 </div> 
 
 <input type="hidden" id="activeIndex" value="index" />
+<script type="text/javascript" src="{:RES}/js/fly.js"></script>
 <script>
 mui.init();
-
 if(!getCookie('first')){
     mui('.mui-scroll-wrapper').scroll();
     mui('#topPopover').popover('toggle');
@@ -73,14 +82,12 @@ if(!getCookie('first')){
     })
     setCookie('first','1',0);
 }
-
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue;
 }
-
 //获取cookie
 function getCookie(cname) {
     var arr, reg = new RegExp("(^| )" + cname + "=([^;]*)(;|$)");

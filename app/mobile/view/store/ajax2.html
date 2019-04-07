@@ -7,11 +7,16 @@
             <a href="{$vo.url}">
             <img src="{$vo.picname|getThumb=280,280}">    
             <p class="mui-ellipsis">{$vo.name}</p>
+            </a>
             {gt name="user.id" value="0"}
             <span>${$vo.price}</span><span><i>/会员</i>${$vo.price1}</span>
+            <div class="action {eq name="vo.empty" value="0"}canBuy{/eq}" data-id="{$vo.goodsID}" data-type="{$vo.typeID}" spec-id="{$vo.id}">  
+                <span class="set" data-action="dec">-</span>
+                <i id="number{$vo.id}">0</i>
+                <span class="set" data-action="inc">+</span>
+            </div>
             {/gt}
-            {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}
-            </a>
+            {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}            
         </div>
     </li>
     {/volist}
