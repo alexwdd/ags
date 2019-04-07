@@ -247,6 +247,7 @@ class Api extends Home
             $list[$key]['danjia'] = 0;
             $list[$key]['money'] = 0;
         	$list[$key]['itemType'] = 1; //商品
+            $list[$key]['stock'] = db("Goods")->where('id',$value['goodsID'])->value("stock1");
         	/*if ($value['gst']==1) {
         		$list[$key]['name'] = $value['name'].'(含税)';
         	}*/
@@ -363,12 +364,30 @@ class Api extends Home
             }            
             $list = db("ShouyinOrder")->where($map)->order('id desc')->select();
             foreach ($list as $key => $value) {
-                $detail = db("ShouyinOrderDetail")->field('itemID,number')->where("orderID",$value['id'])->select();
+                $detail = db("ShouyinOrderDetail")->field('itemID,number,type')->where("orderID",$value['id'])->select();
                 foreach ($detail as $k => $val) {
-                    $goods = db("GoodsIndex")->field('id,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find(); 
-                    $goods['number'] = $val['number'];
-                    $goods['money'] = 0;
-                    $goods['itemType'] = 1; //商品
+                    if ($val['type']==2) {
+                        $goods = db("ShouyinYunfei")->field('id,name,price')->where('id',($val['itemID']-10000))->find();   
+                        $goods['id'] = $val['itemID'];
+                        $goods['number'] = $val['number'];
+                        $goods['keyword'] = $goods['name'];
+                        $goods['goodsID'] = 0;
+                        $goods['goodsNumber'] = 1;
+                        $goods['short'] = $goods['name'];
+                        $goods['price'] = $goods['price'];
+                        $goods['price1'] = $goods['price'];    
+                        $goods['gst'] = 0;
+                        $goods['danjia'] = 0;
+                        $goods['money'] = 0;           
+                        $goods['wuliuWeight'] = 0;           
+                        $goods['itemType'] = 2; //商品
+                    }else{
+                        $goods = db("GoodsIndex")->field('id,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find(); 
+                        $goods['number'] = $val['number'];
+                        $goods['money'] = 0;
+                        $goods['itemType'] = 1; //商品
+                    }
+                    
                     $detail[$k] = $goods;
                 }
                 $list[$key]['goods'] = $detail;
@@ -514,7 +533,7 @@ class Api extends Home
                     $price = $jsonData['vip']==1?$value['price1']:$value['price'];
                     $temp = [
                         'orderID'=>$res,
-                        'type'=>1,
+                        'type'=>$value['itemType'],
                         'goodsID'=>$value['goodsID'],                        
                         'itemID'=>$value['id'],                        
                         'name'=>$value['name'],                        
@@ -523,7 +542,7 @@ class Api extends Home
                         'gst'=>$value['gst'],
                         'money'=>$price*$value['number'],
                         'createTime'=>time()
-                    ];
+                    ];                    
                     if ($jsonData['stock']=='web') {
                         db('Goods')->where('id',$value['goodsID'])->setDec("stock",$value['number']*$value['goodsNumber']);
                     }else{
@@ -531,23 +550,6 @@ class Api extends Home
                     }                    
                     array_push($detail,$temp);
                 }
-
-                foreach ($kuaidi as $key => $value) {
-                    if ($value['weight']>0) {         
-                        $temp = [
-                            'orderID'=>$res,
-                            'type'=>2,
-                            'name'=>$value['name'],                        
-                            'number'=>$value['weight'],
-                            'price'=>$value['price'],
-                            'gst'=>0,
-                            'money'=>$value['price']*$value['weight'],
-                            'createTime'=>time()
-                        ];
-                        array_push($detail,$temp);
-                    }
-                }
-
                 db("ShouyinOrderDetail")->insertAll($detail);
                 returnJson(1,'操作成功');
             }
