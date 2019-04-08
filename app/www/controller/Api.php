@@ -253,7 +253,7 @@ class Api extends Home
         	}*/
         }
 
-        $yunfei = db("ShouyinYunfei")->cache(true)->field('id,name,price')->select();
+        $yunfei = db("ShouyinYunfei")->cache(true)->field('id,name,price,inprice')->select();
         foreach ($yunfei as $key => $value) {
             $data = [
                 'id'=>10000+$value['id'],
