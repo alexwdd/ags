@@ -14,6 +14,14 @@ class Member extends Admin {
 			}	
 			echo $this->return_json($result);
     	}else{
+    		$total = db("Finance")->where('type',1)->sum('money');
+    		$pay = db("Finance")->where('type',2)->sum('money');
+    		$tui = db("Finance")->where('type',3)->sum('money');
+    		$buy = $pay - $tui;
+    		$yue = $total - $buy;
+    		$this->assign("total",$total);
+    		$this->assign("buy",$buy);
+    		$this->assign("yue",$yue);
 	    	return view();
     	}
 	}

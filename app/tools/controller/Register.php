@@ -49,6 +49,7 @@ class Register extends Base
 	            	];
 	            	$res = db('Member')->insertGetId($data);
 	            	$list['id'] = $res; 
+                    $list['group'] = 1;
 	            	$list['password'] = $password; 
 	            }else{
                     $list['password'] = think_decrypt($list['password'],config('DATA_CRYPT_KEY'));

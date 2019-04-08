@@ -179,7 +179,7 @@ function login(){
                     <button class="layui-btn layui-btn-danger layui-btn-fluid" lay-submit lay-filter="go" url="/www/login/loginDo">登录</button>
                 </div>
 
-                <div class="shuoming">微信扫码左侧二维码，关注我们的公众号，点击【商城菜单】获取登录口令</div>
+                <div class="shuoming">微信扫码左侧二维码，关注我们的公众号，点击【商城账号】获取登录账号密码</div>
             </form>
             </div>
         </div>

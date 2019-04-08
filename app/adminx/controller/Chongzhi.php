@@ -66,7 +66,7 @@ class Chongzhi extends Admin {
 				        $data['doUser'] = $this->admin['name'];
 				        $data['oldMoney'] = $fina['money'];
 	        			$data['newMoney'] = $fina['money']+$txinfo['money'];
-				        $data['admin'] = 1;
+				        $data['admin'] = 2;
 				        $data['msg'] = '充值申请审核通过，余额账户增加 $'.$txinfo['money'];
 				        $data['createTime'] = time();
 				        $data['showTime'] = time();				        

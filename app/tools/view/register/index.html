@@ -1,7 +1,11 @@
 <div class="card">
+	{eq name="list.group" value="1"}
+	<img src="{:RES}/image/card1.jpg">
+	{else/}
 	<img src="{:RES}/image/card.jpg">
+	{/eq}
 	<div class="userInfo">
-		<li>会员账号：{$list.id}</li>
+		<li>账号：{$list.id}</li>
 		<li>账号密钥：{$list.password}</li>
 	</div>
 </div>
