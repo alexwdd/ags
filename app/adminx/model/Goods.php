@@ -189,6 +189,7 @@ class Goods extends Admin
         // 商品规格价钱处理
         $spec_id = input("post.spec_id/a");
         $spec_name = input("post.spec_name/a");
+        $spec_en = input("post.spec_en/a");
         $spec_short = input("post.spec_short/a");
         $spec_cid = input("post.spec_cid/a");
         $spec_cid1 = input("post.spec_cid1/a");
@@ -215,6 +216,7 @@ class Goods extends Admin
             'base' => 1,
             'goodsID' => $data['id'],
             'name' => $data['name'],
+            'en' => $data['en'],
             'short' => $data['short'],
             'say' => $data['say'],
             'price' => $data['price'],
@@ -245,6 +247,7 @@ class Goods extends Admin
                 $temp['cid1'] = $scid1[0];
                 $temp['path1'] = $scid1[1];
                 $temp['name'] = $spec_name[$i];
+                $temp['en'] = $spec_en[$i];
                 $temp['short'] = $spec_short[$i];
                 $temp['price'] = $spec_price[$i];
                 $temp['price1'] = $spec_price1[$i];
@@ -305,6 +308,7 @@ class Goods extends Admin
         $spec_cid = input("post.spec_cid/a");
         $spec_cid1 = input("post.spec_cid1/a");
         $spec_name = input("post.spec_name/a");
+        $spec_en = input("post.spec_en/a");
         $spec_short = input("post.spec_short/a");
         $spec_price = input("post.spec_price/a");
         $spec_price1 = input("post.spec_price1/a");
@@ -326,6 +330,7 @@ class Goods extends Admin
             'comm' => $data['comm'],
             'sort' => $data['sort'],
             'name' => $data['name'],
+            'en' => $data['en'],
             'short' => $data['short'],
             'say' => $data['say'],
             'price' => $data['price'],
@@ -356,6 +361,7 @@ class Goods extends Admin
                 $temp['cid1'] = $scid1[0];
                 $temp['path1'] = $scid1[1];
                 $temp['name'] = $spec_name[$i];
+                $temp['en'] = $spec_en[$i];
                 $temp['short'] = $spec_short[$i];
                 $temp['price'] = $spec_price[$i];
                 $temp['price1'] = $spec_price1[$i];

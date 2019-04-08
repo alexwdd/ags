@@ -257,6 +257,7 @@ class Goods extends Admin
                     $data['inprice'] = trim($sheet->getCellByColumnAndRow(21, $i)->getValue());
                     $data['say'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
                     $data['wuliu'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
+                    $data['en'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
                     $obj->where('id',$goodsID)->update($data);
 
                     unset($map);
@@ -318,6 +319,7 @@ class Goods extends Admin
                     $data['inprice'] = trim($sheet->getCellByColumnAndRow(21, $i)->getValue());
                     $data['say'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
                     $data['wuliu'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
+                    $data['en'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
                     $data['sort'] = 50;
                     $data['updateTime'] = time();
                     $data['createTime'] = time();
@@ -366,7 +368,8 @@ class Goods extends Admin
             ->setCellValue('U1', '关键词')
             ->setCellValue('V1', '进货价')
             ->setCellValue('W1', '特色描述')
-            ->setCellValue('X1', '快递');
+            ->setCellValue('X1', '快递')
+            ->setCellValue('Y1', '英文');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
@@ -393,7 +396,8 @@ class Goods extends Admin
                 ->setCellValue('U'.$num, $v['keyword'])
                 ->setCellValue('V'.$num, $v['inprice'])
                 ->setCellValue('W'.$num, $v['say'])
-                ->setCellValue('X'.$num, $v['wuliu']);
+                ->setCellValue('X'.$num, $v['wuliu'])
+                ->setCellValue('Y'.$num, $v['en']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('商品');

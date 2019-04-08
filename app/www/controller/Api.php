@@ -247,7 +247,10 @@ class Api extends Home
             $list[$key]['danjia'] = 0;
             $list[$key]['money'] = 0;
         	$list[$key]['itemType'] = 1; //商品
-            $list[$key]['stock'] = db("Goods")->where('id',$value['goodsID'])->value("stock1");
+            $goods = db("Goods")->field('inprice,stock,stock1')->where('id',$value['goodsID'])->find();
+            $list[$key]['stock'] =$goods['stock'];
+            $list[$key]['stock1'] =$goods['stock1'];
+            $list[$key]['inprice'] =$goods['inprice'];
         	/*if ($value['gst']==1) {
         		$list[$key]['name'] = $value['name'].'(含税)';
         	}*/
@@ -265,6 +268,7 @@ class Api extends Home
                 'wuliuWeight'=>0,
                 'price'=>$value['price'],
                 'price1'=>$value['price'],
+                'inprice'=>$value['inprice'],
                 'gst'=>0,
                 'danjia'=>0,
                 'money'=>0,
@@ -364,10 +368,10 @@ class Api extends Home
             }            
             $list = db("ShouyinOrder")->where($map)->order('id desc')->select();
             foreach ($list as $key => $value) {
-                $detail = db("ShouyinOrderDetail")->field('itemID,number,type')->where("orderID",$value['id'])->select();
+                $detail = db("ShouyinOrderDetail")->field('itemID,goodsID,number,type')->where("orderID",$value['id'])->select();
                 foreach ($detail as $k => $val) {
                     if ($val['type']==2) {
-                        $goods = db("ShouyinYunfei")->field('id,name,price')->where('id',($val['itemID']-10000))->find();   
+                        $goods = db("ShouyinYunfei")->field('id,name,price,inprice')->where('id',($val['itemID']-10000))->find();   
                         $goods['id'] = $val['itemID'];
                         $goods['number'] = $val['number'];
                         $goods['keyword'] = $goods['name'];
@@ -376,6 +380,7 @@ class Api extends Home
                         $goods['short'] = $goods['name'];
                         $goods['price'] = $goods['price'];
                         $goods['price1'] = $goods['price'];    
+                        $goods['inprice'] = $goods['inprice'];
                         $goods['gst'] = 0;
                         $goods['danjia'] = 0;
                         $goods['money'] = 0;           
@@ -383,6 +388,7 @@ class Api extends Home
                         $goods['itemType'] = 2; //商品
                     }else{
                         $goods = db("GoodsIndex")->field('id,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find(); 
+                        $goods['inprice'] = db("Goods")->where('id',$val['goodsID'])->value('inprice');
                         $goods['number'] = $val['number'];
                         $goods['money'] = 0;
                         $goods['itemType'] = 1; //商品
@@ -467,6 +473,12 @@ class Api extends Home
             }
             
             $totalMoney = $jsonData['total'];
+            $goods = $jsonData['goods'];
+            $chengben = 0;
+            foreach ($goods as $key => $value) {
+                $chengben += $value['inprice'] * $value['goodsNumber']*$value['number'];
+            }
+            $lirun = $totalMoney - $chengben;
             $data = [
                 'adminID'=>$this->user['id'],
                 'order_no'=>getOrderNo("SY"),
@@ -477,6 +489,8 @@ class Api extends Home
                 'mobile'=>$member['mobile'],
                 'payType'=>$jsonData['payType'],
                 'total'=>$totalMoney,
+                'chengben'=>$chengben,
+                'lirun'=>$lirun,
                 'yunfei'=>$jsonData['yunfei'],
                 'goodsMoney'=>$jsonData['goodsMoney'],
                 'gstMoney'=>$jsonData['gst'],
@@ -527,10 +541,12 @@ class Api extends Home
             if ($res) {
                 //保存商品和快递
                 $goods = $jsonData['goods'];
-                $kuaidi = $jsonData['kuaidi'];
                 $detail = [];
                 foreach ($goods as $key => $value) {
                     $price = $jsonData['vip']==1?$value['price1']:$value['price'];
+                    $money = $price*$value['number'];
+                    $chengben = $value['inprice']*$value['goodsNumber']*$value['number'];
+                    $lirun = $money-$chengben;
                     $temp = [
                         'orderID'=>$res,
                         'type'=>$value['itemType'],
@@ -540,6 +556,9 @@ class Api extends Home
                         'number'=>$value['number'],
                         'price'=>$price,
                         'gst'=>$value['gst'],
+                        'money'=>$money,
+                        'lirun'=>$lirun,
+                        'chengben'=>$chengben,
                         'money'=>$price*$value['number'],
                         'createTime'=>time()
                     ];                    

@@ -18,6 +18,13 @@
 				</div>
 
 				<div class="layui-form-item">
+					<label class="layui-form-label">英文名称</label>
+					<div class="layui-input-block">
+						<input type="text" name="en" value="{$list.en}" lay-verify="required" placeholder="请输入英文名称" class="layui-input">
+					</div>
+				</div>
+
+				<div class="layui-form-item">
 					<label class="layui-form-label">短名称</label>
 					<div class="layui-input-inline">
 						<input type="text" name="short" value="{$list.short}" lay-verify="required" placeholder="10个字内" maxlength="10" class="layui-input">
@@ -259,6 +266,7 @@
 				    		<td style="width: 150px"><b>分类二</b></td>
 				    		<td><b>状态</b></td>
 				    		<td><b>名称</b></td>
+				    		<td><b>英文</b></td>
 				    		<td><b>短名称</b></td>
 				    		<td style="width: 80px"><b>价格</b></td>
 			               	<td style="width: 80px"><b>会员价</b></td>
@@ -294,6 +302,7 @@
 					        <option value="0">隐藏</option>
 					    </select></td>
 					    <td><input type="hidden" name="spec_id[]" value="{$vo.id}"><input type="text" name="spec_name[]" value="{$vo.name}" lay-verify="required" class="layui-input"></td>
+					    <td><input type="text" name="spec_en[]" value="{$vo.en}" lay-verify="required" class="layui-input"></td>
 					    <td><input type="text" name="spec_short[]" value="{$vo.short}" lay-verify="required" class="layui-input"></td>
 					    <td><input type="text" name="spec_price[]" value="{$vo.price}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
 					    <td><input type="text" name="spec_price1[]" value="{$vo.price1}" lay-verify="required" class="layui-input" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')"></td>
