@@ -1,6 +1,7 @@
 <header class="mui-bar mui-bar-nav">
     <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-    <h1 class="mui-title"><div class="cateTab"><span><a href="{:url('store/category')}">按分类</a></span><span class="active"><a href="{:url('store/brand')}">按品牌</a></span></div></h1>
+    <a class="mui-action-menu mui-icon mui-icon-search mui-pull-right" onclick="window.location.href='{:url('store/search')}'"></a>
+    <h1 class="mui-title"><div class="cateTab"><span><a href="{:url('store/category')}">按分类</a></span><span class="active"><a href="{:url('store/brand')}">按品牌</a></span><span><a href="{:url('store/brandlist')}">所有品牌</a></span></div></h1>
 </header>
 
 <div class="mui-content">
@@ -43,7 +44,18 @@ $(function(){
 			$(".cateRight").html(res);			
 		})
 	})
-	$(".cateLeft li").eq(0).click();
+	var idx = 0;
+	var bid = {$bid};
+	if(bid>0){
+		$(".cateLeft li").each(function(index,o){
+			if($(o).attr("data-id")==bid){
+				idx = index;
+				return;
+			}
+		});
+	}
+
+	$(".cateLeft li").eq(idx).click();
 
 	$.get("/www/cart/ajaxCartNumber?temp="+new Date().getTime(),function(res){
         if (res.number >0){

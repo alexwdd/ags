@@ -51,11 +51,22 @@ class Member extends User
             $qq = input('post.qq');
             $weixin = input('post.weixin');
             $name = input('post.name');
-            $face = input('post.face');
+            $mobile = input('post.mobile');
+            if($mobile!=''){
+                if (!check_mobile($mobile)) {
+                    $this->error('手机号码格式错误');
+                }
+                $where['mobile'] = $mobile;
+                $where['id'] = array('neq',$this->user['id']);
+                $res = db("Member")->where($where)->find();
+                if ($res) {
+                    $this->error('手机号码已被占用');
+                }
+            }
             $data = [
-                'face'=>$face,
                 'qq'=>$qq,
                 'weixin'=>$weixin,
+                'mobile'=>$mobile,
                 'name'=>$name
             ];
             $map['id'] = $this->user['id'];

@@ -77,6 +77,7 @@ class Store extends Home
     public function brand(){
         $list = db("Brand")->field('id,logo,name')->order('py asc')->select();
         $this->assign('list',$list);
+        $this->assign('bid',input('param.bid',0));
         return view();
     }
 
@@ -142,6 +143,20 @@ class Store extends Home
             $this->assign('list',$list);
             echo $this->fetch();
         }
+    }
+
+    public function brandlist(){
+        $comm = db("Brand")->field('id,logo,name')->where('comm',1)->order('sort asc , id asc')->select();
+        $this->assign("comm",$comm);
+        
+        $list = db("Brand")->field('py')->group('py')->order('py asc')->select();
+        foreach ($list as $key => $value) {
+            $map['py'] = $value['py'];
+            $brand = db("Brand")->field('id,logo,name')->where($map)->order('sort asc , id asc')->select();
+            $list[$key]['small'] = $brand;
+        }
+        $this->assign('list',$list);
+        return view();
     }
 
     public function detail(){     

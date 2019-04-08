@@ -101,6 +101,12 @@
 			                    <label>支付截图</label>
 			                    <p><a href="{$list.image}" target="_blank"><img src="{$list.image}" style="height: 100px"/></a></p>
 			                </li>
+			                {eq name="list.cancel" value="1"}
+			                <li>
+			                    <label>备注</label>
+				            	<p>{$list.remark}</p>
+				            </li>
+				            {/eq}
 			                <!-- <li>
 			                    <label>状态</label>
 			                    <p>
@@ -113,10 +119,7 @@
 			                		                            ?>
 			                                        		</p>
 			                </li>
-			                <li>
-			                    <label>备注</label>
-			                    <p>{$list.intr}</p>
-			                </li> -->
+			                -->
 			            </div>
 			        </div>
 			        {eq name="list.payType" value="3"}

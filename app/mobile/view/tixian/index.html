@@ -15,7 +15,7 @@
             <div class="status">{$vo.status|getStatus=###}</div>
         </div>
         <div class="bd">
-            <div class="maxWeight">提现金额：<span>￥{$vo.money}</span></div>   
+            <div class="maxWeight">提现金额：<span>${$vo.money}</span></div>   
             <div class="date">{$vo.bankInfo}</div>
             <div class="date">提交时间：{$vo.createTime|date="Y-m-d H:i:s",###}</div>
             {notempty name="vo.back"}

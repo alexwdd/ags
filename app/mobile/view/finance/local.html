@@ -15,12 +15,12 @@
 			{volist name="order" id="vo"}
 			<tr>
 				<td style="text-align: left;">{$vo.order_no}</td>
-				<td>￥{$vo.jiangjin}</td>
+				<td>${$vo.jiangjin}</td>
 			</tr>
 			{/volist}
 			<tr>
 				<td style="text-align: right;">合计</td>
-				<td>￥{$total}</td>
+				<td>${$total}</td>
 			</tr>
 		</tbody>
 	</table>

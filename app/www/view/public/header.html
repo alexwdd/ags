@@ -90,7 +90,7 @@ $(function(){
                         $.each(res.data,function(){
                             _html += '<div class="item"><a href="javascript:void(0)" onclick="openModel(\''+this.url+'\',\'商品详情\',\'1100px\',\'80%\')"><img src="'+this.picname+'" alt=""><div class="info"><div class="title">'+this.name+'</div>';
                             {gt name="user.id" value="0"} 
-                            _html += '<div class="price">价格：￥'+this.price+'</div><div class="price">会员价：￥'+this.price1+'</div>';             
+                            _html += '<div class="price">价格：$'+this.price+'</div><div class="price">会员价：$'+this.price1+'</div>';             
                             {/gt}
                             _html += '</div></a></div>';
                         })

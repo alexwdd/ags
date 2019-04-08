@@ -14,8 +14,8 @@
                 <img src="{$f.picname}">
                 <li>
                     <p>{$f.pname}</p>
-                    <p>单价：￥{$f.price} x {$f.number}</p>
-                    <p>盈利：￥{$f.jiangjin*$f.number}</p>
+                    <p>单价：${$f.price} x {$f.number}</p>
+                    <p>盈利：${$f.jiangjin*$f.number}</p>
                 </li>
             </div>
             {/volist}
@@ -28,7 +28,7 @@
 			<p>单号<span>{$list.order_no}</span></p>
             <p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
 			<p>发货时间<span>{eq name="list.sendTime" value="0"}未发货{else/}{$list.sendTime|date="Y-m-d H:i:s",###}{/eq}</span></p>
-			<p>商品金额<span>￥{$list.goodsMoney}</span></p>
+			<p>商品金额<span>${$list.goodsMoney}</span></p>
 			<p>状态<span>{$list.payStatus|getPayStatus}</span></p>
 			<p>客服备注<span>{$list.remark}</span></p>
 		</div>

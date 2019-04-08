@@ -369,3 +369,7 @@
 .cardInfo{display: none; background: #fff; padding: 0 10px}
 
 .serverLi{font-size: 12px; border: 1px #dbdbdb solid; padding: 5px; margin-bottom: 5px; background: #f7f7f7; color: #999}
+
+.pinyin{height: 40px; line-height: 40px;clear: both; padding-left: 10px;}
+.pinpai{clear: both; overflow: hidden; background-color: #fff}
+.pinpai li{float: left; width: 33.333%; border-right: 1px #dbdbdb solid; border-bottom: 1px #dbdbdb solid; text-align: center;}

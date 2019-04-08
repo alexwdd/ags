@@ -30,7 +30,7 @@
             {notempty name="vo.pram"}
             <p>{$vo.pram}</p>
             {/notempty}
-            <p>重量{$vo.weight}kg&nbsp;&nbsp;{eq name="vo.isBaoyou" value="0"}运费￥{$vo.yunfei}/kg{else/}包邮{/eq}</p>
+            <p>重量{$vo.weight}kg&nbsp;&nbsp;{eq name="vo.isBaoyou" value="0"}运费${$vo.yunfei}/kg{else/}包邮{/eq}</p>
             <p class="m">{$vo.price} x {$vo.number}</p>            
         </div>
     </div>

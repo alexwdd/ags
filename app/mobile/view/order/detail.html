@@ -30,10 +30,10 @@
         <div class="fd">
             <p>单号<span>{$list.order_no}</span></p>
             <p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
-            <p>商品金额<span>￥{$list.goodsMoney}</span></p>
-            <p>运费<span>￥{$list['payment']}</span></p>
-            <p>余额支付<span>￥{$list.wallet}</span></p>
-            <p>订单总金额<span>￥{$list.total}</span></p>
+            <p>商品金额<span>${$list.goodsMoney}</span></p>
+            <p>运费<span>${$list['payment']}</span></p>
+            <p>余额支付<span>${$list.wallet}</span></p>
+            <p>订单总金额<span>${$list.total}</span></p>
             <p>支付方式<span>{$list.payType|getPayType}</span></p>
             <p>状态
             <span>
@@ -46,7 +46,9 @@
                 {case value="99"}<span class="my-badge mui-badge mui-badge-danger">取消订单</span>{/case}
             {/switch}
             </span></p>
-            <!-- <p>备注：{$list.intr}</p>   -->
+            {eq name="list.cancel" value="1"}
+            <p>备注：{$list.remark}</p>
+            {/eq}
         </div>
     </div>    
 

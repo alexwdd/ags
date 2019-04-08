@@ -12,7 +12,7 @@
 		{volist name="list" id="vo" empty="$empty"}
         <li onclick="window.location.href='{:url('finance/info','id='.$vo['id'])}'">
         	<div class="hd">
-        		￥{$vo.jiangjin|number_format=###,2}
+        		${$vo.jiangjin|number_format=###,2}
         		<?php
         		if ($user['group']==2 && $vo['js1']==0) {
         			echo '<span style="color:#f00">状态:未结算</span>';
