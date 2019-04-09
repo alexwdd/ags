@@ -241,7 +241,7 @@ class Api extends Home
     {
         $this->checkToken();
         $map['show'] = 1;
-        $list = db("GoodsIndex")->field('id,name,keyword,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where($map)->select();
+        $list = db("GoodsIndex")->field('id,name,en,keyword,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where($map)->select();
         foreach ($list as $key => $value) {
             $list[$key]['number'] = 1;
             $list[$key]['danjia'] = 0;
@@ -256,11 +256,12 @@ class Api extends Home
         	}*/
         }
 
-        $yunfei = db("ShouyinYunfei")->cache(true)->field('id,name,price,inprice')->select();
+        $yunfei = db("ShouyinYunfei")->cache(true)->field('id,en,name,price,inprice')->select();
         foreach ($yunfei as $key => $value) {
             $data = [
                 'id'=>10000+$value['id'],
                 'name'=>$value['name'],
+                'en'=>$value['en'],
                 'keyword'=>$value['name'],
                 'goodsID'=>0,
                 'goodsNumber'=>1,
