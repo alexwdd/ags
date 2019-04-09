@@ -475,6 +475,7 @@ class Cart extends User
             }
             $baoguo = $result['data'];
             $totalYunfei = $baoguo['totalPrice']+$baoguo['totalExtend'];
+            $totalInprice = $baoguo['totalInprice'];
         }else{
             //$totalYunfei = 0;
             $this->error("请选择快递");
@@ -507,6 +508,7 @@ class Cart extends User
         $data['money'] = 0;
         $data['wallet'] = 0;        
         $data['payment'] = $totalYunfei;
+        $data['wuliuInprice'] = $totalInprice;
         $data['payType'] = 0;
         $data['payStatus'] = 0;
         $res = model('Order')->add($data);
@@ -526,6 +528,7 @@ class Cart extends User
             $detail['order_no'] = $data['order_no'];
             $detail['memberID'] = $this->user['id'];  
             $detail['payment'] = $value['yunfei'];
+            $detail['wuliuInprice'] = $value['inprice'];//物流成本
             $detail['type'] = $value['type'];
             $detail['weight'] = $value['totalWeight'];
             $detail['kuaidi'] = $value['kuaidi'];

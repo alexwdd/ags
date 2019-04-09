@@ -17,10 +17,12 @@
 
 <div class="selectFooter">
     <div class="cartInfo">
+    	<a href="{:url('cart/index')}">
     	<div class="cart" id="topCart">
     		<i class="icon icon-cart"></i>
     		<em id="cartNumber">0</em>
     	</div>
+    	</a>
     </div>             
 	{eq name="user.id" value="0"}
 	<div  action="{:url('order/dopay')}" class="btn">马上下单</div>

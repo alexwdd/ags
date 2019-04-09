@@ -5,7 +5,7 @@ class Setting extends Admin {
 
     public function index(){
 		/*配置列表*/
-		$group_list = array('basic'=>'基本设置','member'=>'会员设置','sms'=>'短信设置','email'=>'邮箱设置');		
+		$group_list = array('basic'=>'基本设置','member'=>'会员设置','sms'=>'短信设置','kuaidi'=>'快递设置');		
 		$this->assign('group_list',$group_list);
 		$inc_type =  input('inc_type','basic');
 		$this->assign('inc_type',$inc_type);

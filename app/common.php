@@ -125,9 +125,25 @@ function getBrandName($type){
         return '中邮';
     }
     if (in_array($type,[12,13,14])) {
-        return config('site.kuaidi'.$type);
+        $config = tpCache('kuaidi');
+        return $config['kuaidi'.$type];
     }
     return '中环';
+}
+
+//物流单价
+function getDanjia($type){
+    $config = tpCache("kuaidi");
+    if ($type==1 || $type==2 || $type==3) {//澳邮
+        return ['price'=>$config['price1'],'inprice'=>$config['inprice1'],'otherPrice'=>$config['otherPrice1']];
+    }
+    if ($type==5) {//中邮
+        return ['price'=>$config['price2'],'inprice'=>$config['inprice2'],'otherPrice'=>$config['otherPrice2']];
+    }
+    if (in_array($type,[12,13,14])) {
+        return ['price'=>$config['price'.$type],'inprice'=>$config['inprice'.$type],'otherPrice'=>$config['otherPrice'.$type]];
+    }
+    return ['price'=>$config['price3'],'inprice'=>$config['inprice3'],'otherPrice'=>$config['otherPrice3']];//中环
 }
 
 //短信宝发短信验证码

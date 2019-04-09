@@ -255,13 +255,16 @@ class Zhongyou {
 			}
 			$this->baoguoArr[$key]['totalWuliuWeight'] = number_format($this->baoguoArr[$key]['totalWuliuWeight'],1);
 			$brandName = getBrandName($value['type']);
-	        $danjia = $this->getDanjia($value['type']);
-	        if (in_array($value['type'],[1,2,3])){
+	        $danjia = getDanjia($value['type']);	        
+	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
 	        	$this->baoguoArr[$key]['kuaidi'] = $brandName;
 	        	$this->baoguoArr[$key]['yunfei'] = $this->getNaifen($value['type'],$value['totalNumber']);
+	        	$config = tpCache('kuaidi');
+	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
 	        }else{
 	        	$this->baoguoArr[$key]['kuaidi'] = $brandName.'($'.$danjia['price'].'/kg)';
 	        	$this->baoguoArr[$key]['yunfei'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['price'];
+	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['inprice'];
 	        }
 	        
 	        if ($this->inExtendArea()) {
@@ -920,20 +923,6 @@ class Zhongyou {
 		}else{
 			return false;
 		}
-	}
-
-	//物流单价
-	private function getDanjia($type){
-		if ($type==1 || $type==2 || $type==3) {//澳邮
-	        return ['price'=>4.3,'otherPrice'=>$this->kuaidi['otherPrice']];
-	    }
-	    if ($type==5) {//中邮
-	        return ['price'=>10,'otherPrice'=>$this->kuaidi['otherPrice']];
-	    }
-	    if (in_array($type,[12,13,14])) {
-	        return ['price'=>config('site.price'.$type),'otherPrice'=>config('site.otherPrice'.$type)];
-	    }
-	    return ['price'=>$this->kuaidi['price'],'otherPrice'=>$this->kuaidi['otherPrice']];//中环
 	}
 
 	private function getNaifen($goodsType,$number){

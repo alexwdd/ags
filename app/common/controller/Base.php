@@ -75,9 +75,10 @@ class Base extends Controller {
                     $brandName = getBrandName($goods['typeID']);
                     $list[$key]['goodsNumber'] = $goods['number'];
 
-                    if ($this->inExtendArea($province)) {
-                        $danjia = $this->getDanjia($goods['typeID'],$kuaidi);
-                        $extend = $goods['wuliuWeight']*$goods['number']*$danjia['otherPrice'];     
+                    $danjia = getDanjia($goods['typeID']);
+
+                    if ($this->inExtendArea($province)) {                        
+                        $extend = $goods['wuliuWeight']*$goods['number']*$danjia['otherPrice'];
                     }else{
                         $extend = 0;
                     }
@@ -93,6 +94,7 @@ class Base extends Controller {
                         'totalWeight'=>$goods['weight']*$goods['number'],
                         'totalWuliuWeight'=>$goods['wuliuWeight']*$goods['number'],
                         'yunfei'=>0,
+                        'inprice'=>$goods['wuliuWeight']*$goods['number']*$danjia['inprice'],
                         'extend'=>$extend,
                         'sign'=>$sign,
                         'kuaidi'=>$brandName.'(包邮)',
@@ -114,17 +116,20 @@ class Base extends Controller {
         $totalWuliuWeight = 0;
         $totalPrice = 0;
         $totalExtend = 0;
+        $totalInprice = 0;
         foreach ($baoguoArr as $key => $value) {
             $totalWeight += $value['totalWeight'];
             $totalWuliuWeight += $value['totalWuliuWeight'];
             $totalPrice += $value['yunfei'];
             $totalExtend += $value['extend'];
+            $totalInprice += $value['inprice'];
         }
         $data = [
             'totalWeight'=>fix_number_precision($totalWeight,2),
             'totalWuliuWeight'=>fix_number_precision($totalWuliuWeight,2),
             'totalPrice'=>fix_number_precision($totalPrice,2),
             'totalExtend'=>fix_number_precision($totalExtend,2),
+            'totalInprice'=>fix_number_precision($totalInprice,2),
             'baoguo'=>$baoguoArr
         ];     
 
@@ -158,8 +163,9 @@ class Base extends Controller {
                     $brandName = getBrandName($goods['typeID']);
                     $list[$key]['goodsNumber'] = $goods['number'];
 
-                    if ($this->inExtendArea($province)) {
-                        $danjia = $this->getDanjia($goods['typeID'],$kuaidi);
+                    $danjia = getDanjia($goods['typeID']);
+
+                    if ($this->inExtendArea($province)) {                        
                         $extend = $goods['wuliuWeight']*$goods['number']*$danjia['otherPrice'];
                     }else{
                         $extend = 0;
@@ -177,6 +183,7 @@ class Base extends Controller {
                         'totalWeight'=>$goods['weight']*$goods['number'],
                         'totalWuliuWeight'=>$goods['wuliuWeight']*$goods['number'],
                         'yunfei'=>0,
+                        'inprice'=>$goods['wuliuWeight']*$goods['number']*$danjia['inprice'],
                         'extend'=>$extend,
                         'sign'=>$sign,
                         'kuaidi'=>$brandName.'(包邮)',
@@ -199,11 +206,13 @@ class Base extends Controller {
         $totalWuliuWeight = 0;
         $totalPrice = 0;
         $totalExtend = 0;
+        $totalInprice = 0;
         foreach ($baoguoArr as $key => $value) {
             $totalWeight += $value['totalWeight'];
             $totalWuliuWeight += $value['totalWuliuWeight'];
             $totalPrice += $value['yunfei'];
             $totalExtend += $value['extend'];
+            $totalInprice += $value['inprice'];
         }
         $data = [
             /*'totalWeight'=>fix_number_precision($totalWeight,2),
@@ -216,6 +225,7 @@ class Base extends Controller {
             'totalWuliuWeight'=>fix_number_precision($totalWuliuWeight,2),
             'totalPrice'=>fix_number_precision($totalPrice,2),
             'totalExtend'=>fix_number_precision($totalExtend,2),
+            'totalInprice'=>fix_number_precision($totalInprice,2),
             'baoguo'=>$baoguoArr
         ];      
 
@@ -265,20 +275,6 @@ class Base extends Controller {
         }else{
             return false;
         }
-    }
-
-    //物流单价
-    private function getDanjia($type,$kuaidi){
-        if ($type==1 || $type==2 || $type==3) {//澳邮
-            return ['price'=>4.3,'otherPrice'=>$kuaidi['otherPrice']];
-        }
-        if ($type==5) {//中邮
-            return ['price'=>10,'otherPrice'=>$kuaidi['otherPrice']];
-        }
-        if (in_array($type,[12,13,14])) {
-            return ['price'=>config('site.price'.$type),'otherPrice'=>config('site.otherPrice'.$type)];
-        }
-        return ['price'=>$kuaidi['price'],'otherPrice'=>$kuaidi['otherPrice']];//中环
     }
     
     public function getRate(){
