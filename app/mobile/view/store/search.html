@@ -41,7 +41,7 @@ vm = new Vue({
     el : "#app",
     data : {
         loadShow : false,
-        keyword : '',
+        keyword : '{$keyword}',
         lists:[]
     },
     watch : {
@@ -67,7 +67,11 @@ vm = new Vue({
             },'json')
         }
     },
-    created : function(){       
+    created : function(){ 
+        if(this.keyword!=''){
+            this.loadShow = true;
+            this.search(this.keyword);
+        }      
     }
 });
 </script>

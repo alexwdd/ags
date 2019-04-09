@@ -62,6 +62,7 @@ class Store extends Home
             }
             echo json_encode($list);
         }else{
+            $this->assign('keyword',input('param.keyword'));
             return view();
         }
     }
