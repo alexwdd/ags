@@ -107,7 +107,7 @@ function diffBetweenTwoDays ($second1, $second2){
 
 //获取中邮快递ID
 function getBrandID($type){
-    if ($type==1 || $type==2) {
+    if ($type==1 || $type==2 || $type==3) {
         return 1;
     }
     if ($type==7) {
