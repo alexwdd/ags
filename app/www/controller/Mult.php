@@ -349,7 +349,7 @@ class Mult extends User
             $detail['payment'] = $value['yunfei'];
             $detail['wuliuInprice'] = $value['inprice'];//物流成本
             $detail['type'] = $value['type'];
-            $detail['weight'] = $value['totalWeight'];
+            $detail['weight'] = $value['totalWuliuWeight'];
             $detail['kuaidi'] = $value['kuaidi'];
             $detail['kdNo'] = '';
             $detail['name'] = $data['name'];

@@ -145,9 +145,6 @@ class Order extends User
                     if($val['eimg']){
                         $baoguo[$k]['eimg'] = explode(",", $val['eimg']);
                     }   
-                    if ($val['weight']<1) {
-                        $val['weight']=1;
-                    }
                     $weight += $val['weight'];
                 }
                 $person[$key]['baoguo'] = $baoguo;
