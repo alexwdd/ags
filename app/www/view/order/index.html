@@ -97,7 +97,7 @@
             <thead>
             <tr style="background: #fff">
               <th>收件人</th>
-              <th>金额</th>
+              <th>订单金额</th>
               <th>订单操作</th>
             </tr> 
             </thead>            
@@ -163,7 +163,7 @@
                             {/eq}
                         </td>
                         <td>
-                            <p class="money text-center">${$vo.money}</p>
+                            <p class="money text-center">${$vo.total}</p>
                             {eq name="vo.payType" value="3"}
                             {eq name="vo.payStatus" value="0"}<p class="text-center"><a href="{:url('order/pay','order_no='.$vo['order_no'])}" class="layui-btn layui-btn-danger layui-btn-xs">去支付</a></p>{/eq}
                             {/eq} 
