@@ -84,9 +84,9 @@ class Order extends User
                 $baoguo = db('OrderBaoguo')->where(array('personID'=>$value['id']))->select();
                 foreach ($baoguo as $k => $val) {
                     $baoguo[$k]['goods'] = db('OrderDetail')->where(array('baoguoID'=>$val['id']))->select();
-                    if($val['kdNo']){
+                    /*if($val['kdNo']){
                         $baoguo[$k]['kdNo'] = explode(",", $val['kdNo']);
-                    }
+                    }*/
                     if($val['eimg']){
                         $baoguo[$k]['eimg'] = explode(",", $val['eimg']);
                     }

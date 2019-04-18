@@ -144,7 +144,7 @@ class Order extends User
                     }
                     if($val['eimg']){
                         $baoguo[$k]['eimg'] = explode(",", $val['eimg']);
-                    }   
+                    }
                     $weight += $val['weight'];
                 }
                 $person[$key]['baoguo'] = $baoguo;
