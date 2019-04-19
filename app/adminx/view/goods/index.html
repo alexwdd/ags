@@ -35,11 +35,19 @@
 			<button class="layui-btn layui-btn-sm" function="refresh">
 			  <i class="layui-icon">&#xe669;</i>刷新
 			</button>
-			<button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('goods/import')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="批量导入">
-			  <i class="layui-icon">&#xe654;</i>批量导入
+			<button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('goods/import')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="商品导入">
+			  <i class="layui-icon">&#xe654;</i>商品导入
 			</button>
 
-			<button id="expBtn" type="button" class="layui-btn layui-btn-sm">导出
+			<button id="expBtn" type="button" class="layui-btn layui-btn-sm">商品导出
+			</button>
+
+
+			<button class="layui-btn layui-btn-sm" function="top" topUrl="{:url('goods/import1')}" topWidth="80%" isMaximize="0" topHeight="80%" topTitle="套餐导入">
+			  <i class="layui-icon">&#xe654;</i>套餐导入
+			</button>
+
+			<button id="expBtn1" type="button" class="layui-btn layui-btn-sm">套餐导出
 			</button>
 
 			<button class="layui-btn layui-btn-sm" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>
@@ -47,6 +55,9 @@
 	    <script>
 		$("#expBtn").click(function(){
 			window.location.href = '{:url('goods/export')}';
+		});
+		$("#expBtn1").click(function(){
+			window.location.href = '{:url('goods/export1')}';
 		});
 	    </script>
 
