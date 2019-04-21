@@ -54,6 +54,11 @@ class Order extends User
         foreach ($list as $key => $value) {
             $orderID = $value["id"]; //获取数据集中的id            
             $goods = db("OrderDetail")->field('*,sum(number) as num')->where("orderID='$orderID'")->group('itemID')->select(); 
+            foreach ($goods as $k => $val) {
+                $item = db('GoodsIndex')->where('id='.$val['itemID'])->find(); 
+                $goods[$k]['goodsNumber'] = $val['num'] / $item['number'];
+            }
+
             $list[$key]['goods'] = $goods; //给数据集追加字段num并赋值
 
             $where['orderID'] = $orderID;
@@ -111,7 +116,7 @@ class Order extends User
                 }else{
                     $goods[$key]['server'] = null;
                 }  
-                //$goods[$key]['number'] = $value['num'] / $item['number'];
+                $goods[$key]['goodsNumber'] = $value['num'] / $item['number'];
                 $goods[$key]['goods'] = $item;
                 //$goods[$key]['money'] = $value['price']*($value['num']/$item['number']);
                 $goods[$key]['money'] = $value['price']*$value['num'];

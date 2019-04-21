@@ -14,7 +14,7 @@
         <div class="mui-col-xs-9" style="padding-left:10px" id="cart{$vo.id}">
             <p>{notempty name="vo.goods.wuliu"}【{$vo.goods.wuliu}】{/notempty}{$vo.goods.name}{$vo.extends}</p>            
             <p>{$vo.goods.weight}kg</p>
-            <p class="m">${$vo.price} X {$vo.num}</p> 
+            <p class="m">${$vo.price} X {$vo.goodsNumber}</p> 
             <p>${$vo.money}</p>
             {volist name="vo.server" id="s"}
             <div class="serverLi">
