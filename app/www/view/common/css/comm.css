@@ -18,8 +18,8 @@ img{max-width: 100%}
 .header .topMenu li #cartNumber{background: #f00; color: #fff; padding: 0 5px; border-radius:5px; font-size: 12px;display: none;}
 
 .header .topMenu li.kefu{position: relative;}
-.kefu-qr{position: absolute; background:#39c4da; top:74px; right: 0; width:540px; display: none; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;}
-.kefu-qr p{float: left; width: 180px; margin: 0; padding: 10px; box-sizing:border-box; text-align: center; line-height: 100%;}
+.kefu-qr{position: fixed; background:#39c4da; top:74px; right: 0; width:100%; display: none; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px; text-align: right;}
+.kefu-qr p{display: inline-block; width: 180px; margin: 0; padding: 10px; box-sizing:border-box; text-align: center; line-height: 100%;}
 .kefu-qr p span{color: #fff; font-size: 12px; padding-top: 5px; display: block; text-align: center;}
 
 .header .topSearch{ margin-top: 17px; width: 580px; float: left; margin-left:200px;}

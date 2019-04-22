@@ -34,7 +34,7 @@
 
         <li class="kefu">
             <a href="javascript:void(0)"><i class="layui-icon layui-icon-dialogue"></i> 客服</a>
-            <div class="kefu-qr" style="width: <?php echo count($kefu)*180;?>px">
+            <div class="kefu-qr">
                 {volist name="kefu" id="vo"}
                 <p><img src="{$vo.logo}"><span>{$vo.name}</span></p>
                 {/volist}

@@ -11,7 +11,7 @@
 @media (max-width:1400px){
 	.header .topSearch{width: 300px; margin-left:0px;}
 	.header .topSearch input{width: 220px}
-
+	.kefu-qr p{width: 150px}
 }
 @media (max-width:1200px){
 	.header .topSearch{width: 200px;}
