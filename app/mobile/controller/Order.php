@@ -118,8 +118,8 @@ class Order extends User
                 }  
                 $goods[$key]['goodsNumber'] = $value['num'] / $item['number'];
                 $goods[$key]['goods'] = $item;
-                //$goods[$key]['money'] = $value['price']*($value['num']/$item['number']);
-                $goods[$key]['money'] = $value['price']*$value['num'];
+                $goods[$key]['money'] = $value['price']*($value['num']/$item['number']);
+                //$goods[$key]['money'] = $value['price']*$value['num'];
             }  
             $this->assign('goods',$goods);
             

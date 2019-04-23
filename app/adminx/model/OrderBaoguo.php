@@ -48,7 +48,17 @@ class OrderBaoguo extends Admin
             $map['sign'] = array('neq','');
         }
         if ($image==1) {
-            $map['image'] = array('neq','');
+            $sql = "SELECT `id` FROM `pm_order_baoguo` WHERE (`sign` <> '' AND `type` IN (1,2,3) AND ( `image` = '' )) OR (`image` = '' and `type` NOT IN (1,2,3))";
+            $idArr = db()->query($sql);
+            if ($idArr) {
+                $ids = [];
+                foreach ($idArr as $key => $value) {
+                    array_push($ids,$value['id']);
+                }
+                $map['id'] = array('in',$ids);
+            }else{
+                $map['id'] = 0;
+            }
         }
         if ($createDate!='') {
             $date = explode(" - ", $createDate);
