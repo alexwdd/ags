@@ -26,6 +26,8 @@ class OrderBaoguo extends Admin
         $keyword = input('post.keyword');
         $order_no = input('post.order_no');
         $createDate = input('post.createDate');
+        $sign = input('post.sign');
+        $image = input('post.image');
         
         if ($flag!='') {
             $map['flag'] = $flag;
@@ -41,6 +43,12 @@ class OrderBaoguo extends Admin
         }
         if ($order_no!='') {
             $map['order_no|kdNo'] = $order_no;
+        }
+        if ($sign==1) {
+            $map['sign'] = array('neq','');
+        }
+        if ($image==1) {
+            $map['image'] = array('neq','');
         }
         if ($createDate!='') {
             $date = explode(" - ", $createDate);

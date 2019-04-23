@@ -1,6 +1,7 @@
 <div class="layui-col-md12">
 	<div class="layui-row grid-demo">
 		<form class="layui-form" style="margin-bottom:10px">
+			<div class="layui-form-item">
 			<div class="layui-input-inline">
 				<input type="text" name="order_no" placeholder="订单号/快递单号" class="layui-input layui-btn-small">
 			</div>
@@ -30,6 +31,13 @@
 				<div class="layui-input-inline">
 					<input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
 				</div>
+			</div>
+			<div class="layui-inline">
+				<input type="checkbox" name="sign" value="1" title="有签名" lay-skin="primary">
+			</div>
+			<div class="layui-inline">
+				<input type="checkbox" name="image" value="1" title="发货图片" lay-skin="primary">
+			</div>
 			</div>
 		</form>
 

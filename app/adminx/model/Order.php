@@ -149,7 +149,10 @@ class Order extends Admin
     
     //删除
     public function del($id){
-        $map['id'] = array('in',$id);
+        $map['orderID'] = array('in',$id);
+        db("OrderBaoguo")->where($map)->delete();
+        db("OrderPerson")->where($map)->delete();
+        db("OrderDetail")->where($map)->delete();
         return $this->destroy($id);
     }
 
