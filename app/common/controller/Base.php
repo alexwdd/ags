@@ -14,6 +14,18 @@ class Base extends Controller {
         $THEME_PATH = '/app/'.$module.'/view/';
         define('RES', $THEME_PATH . 'common');
 
+        //删除12小时内未付款的订单
+        $map['createTime'] = array('lt',(time()-3600*24));
+        $map['payStatus'] = 0;
+        $map['image'] = array('eq','');
+        $list = db("Order")->where($map)->select();
+        foreach ($list as $key => $value) {
+            db("Order")->where('id',$value['id'])->delete();
+            db("OrderBaoguo")->where('orderID',$value['id'])->delete();
+            db("OrderPerson")->where('orderID',$value['id'])->delete();
+            db("OrderDetail")->where('orderID',$value['id'])->delete();
+        }
+
         $config = tpCache('basic');
         config('site',$config);        
     }

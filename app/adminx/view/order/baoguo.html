@@ -26,14 +26,25 @@
 		                  <th>名称</th>
 		                  <th>数量</th>
 		                  <th>金额</th>
+		                  <th>服务</th>
 		                </tr> 
 		                </thead>
 		                <tbody>
 		                    {volist name="goods" id="vo"}
 		                    <tr>
-		                        <td>{$vo.name}{$vo.extends}</td>
+		                        <td>
+		                        	{$vo.name}{$vo.extends}									
+		                        </td>
 		                        <td>{$vo.num}</td>
 		                        <td>{$vo.price}</td>
+		                        <td>
+		                        	{volist name="vo.server" id="s"}
+				                    <p style="font-size: 12px">
+				                    	{$s.name}(${$s.price}x{$vo.num})
+				                        
+				                    </p>
+				                    {/volist}
+		                        </td>
 		                    </tr>
 		                    {/volist}
 		                </tbody>

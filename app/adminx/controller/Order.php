@@ -91,6 +91,18 @@ class Order extends Admin {
 				$this->error('信息不存在');
 			}else{
 				$goods = db("OrderDetail")->field('*,sum(number) as num')->where("orderID",$list['id'])->group('itemID')->select(); 
+				foreach ($goods as $key => $value) {
+	                $item = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
+	                if ($value['server']!='') {
+	                    $serverID = explode(",",$value['server']);
+	                    unset($map);
+	                    $map['id'] = array('in',$serverID);
+	                    $server = db("server")->field('name,price')->where($map)->select();
+	                    $goods[$key]['server'] = $server;
+	                }else{
+	                    $goods[$key]['server'] = null;
+	                }  
+	            }
             	$this->assign('goods',$goods);
 
 				$person = db("OrderPerson")->where(array('orderID'=>$list['id']))->select();

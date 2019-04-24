@@ -212,14 +212,22 @@ class Zhongyou {
 			            'goods'=>[],
 			        ];
 			        array_push($this->baoguoArr,$baoguo);
-				}			
+				}	
 
-			    //将保健品分配到不同包裹中
+				//将保健品分配到不同包裹中，这个是做了均分的处理
+				$result = $this->getHybirdBaoguo($this->baoguoArr,$this->baojianpin);
 		        foreach ($this->baoguoArr as $key => $value) {
+		        	if ($value['status']==0) {	    
+						$this->baoguoArr[$key] = $this->insertBaoguo($value,$result['aveNumber']);
+					}
+		        }		
+
+			    //将保健品分配到不同包裹中，这个是没有均分的处理
+		        /*foreach ($this->baoguoArr as $key => $value) {
 		        	if ($value['status']==0) {	    
 						$this->baoguoArr[$key] = $this->insertBaoguo($value,8);
 					}
-		        }
+		        }*/
 	        }
         }
 

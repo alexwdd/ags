@@ -122,9 +122,8 @@
 			                -->
 			            </div>
 			        </div>
-			        {eq name="list.payType" value="3"}
-                    {eq name="list.payStatus" value="0"}<p class="text-center" style="padding: 15px 0"><a href="{:url('order/pay','order_no='.$list['order_no'])}" class="layui-btn layui-btn-danger">去支付</a></p>{/eq}  
-                    {/eq}   	
+                    {eq name="list.payStatus" value="0"}<p class="text-center" style="padding: 15px 0"><a href="{:url('order/payType','order_no='.$list['order_no'])}" class="layui-btn layui-btn-danger">去支付</a></p>{/eq}  
+
 			    </div>
         	</div>
 

@@ -583,7 +583,8 @@ vm = new Vue({
             }else{
                 _html="订单共计【$"+orderMoney+"元】";
             }*/
-            _html="订单共计【$"+this.total+"元】";      
+            let money = parseFloat(this.total)+parseFloat(this.yunfei);
+            _html="订单共计【$"+money+"元】";      
             layer.confirm(
                 _html,
                 {btn: ['确定','取消']},

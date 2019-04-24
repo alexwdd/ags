@@ -105,9 +105,8 @@
                         </td>
                         <td>
                             <p class="money text-center">${$vo.total}</p>
-                            {gt name="vo.payType" value="1"}
-                            {eq name="vo.payStatus" value="0"}<p class="text-center"><a href="{:url('order/pay','order_no='.$vo['order_no'])}" class="layui-btn layui-btn-danger layui-btn-xs">去支付</a></p>{/eq}
-                            {/gt} 
+                            {eq name="vo.payStatus" value="0"}<p class="text-center"><a href="{:url('order/payType','order_no='.$vo['order_no'])}" class="layui-btn layui-btn-danger layui-btn-xs">去支付</a></p>
+                            {/eq} 
                         </td>                      
                         <td class="actd">        
                             <p class="text-center"><a href="{:url('order/detail',array('id'=>$vo['id']))}" class="layui-btn layui-btn-primary layui-btn-xs layui-btn-fluid">订单详情</a></p>   
