@@ -16,14 +16,14 @@
         </div> 
         <li v-for="vo in lists">
             <div class="item">
-                <a :href="'/mobile/store/detail/id/'+vo.id">
+                <a :href="vo.url">
                 <img :src="vo.picname">    
                 <p class="mui-ellipsis">{{vo.name}}</p>
                 </a>
                 {gt name="user.id" value="0"}
                 <span>{{vo.price}}</span><span><i>/会员</i>{{vo.price1}}</span>
 
-                <div class="action canBuy" :data-id="vo.goodsID" :data-type="vo.typeID" :spec-id="vo.id">  
+                <div class="action" :class="{'canBuy':vo.empty==0}" :data-id="vo.goodsID" :data-type="vo.typeID" :spec-id="vo.id">
                     <span class="set" data-action="dec">-</span>
                     <i :id="'number'+vo.id">0</i>
                     <span class="set" data-action="inc">+</span>

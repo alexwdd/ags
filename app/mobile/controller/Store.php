@@ -52,13 +52,14 @@ class Store extends Home
             if ($keyword=='') {
                 $this->error('请输入关键词');
             }
-            $map['name'] = array('like','%'.$keyword.'%');
+            $map['name|short|keyword'] = array('like','%'.$keyword.'%');
             $map['show'] = 1;
 
             //查询数据
-            $list = db('GoodsIndex')->field('id,goodsID,typeID,name,picname,price,price1')->where($map)->order('sort asc,id desc')->select();
+            $list = db('GoodsIndex')->field('id,goodsID,typeID,name,picname,price,price1,empty')->where($map)->order('sort asc,id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getThumb($value["picname"],350,350);
+                $list[$key]['url'] = getGoodsUrl($value);
             }
             echo json_encode($list);
         }else{
