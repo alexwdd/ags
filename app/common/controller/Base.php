@@ -411,7 +411,7 @@ class Base extends Controller {
             $server = db("Server")->field('id,short')->where($where)->select();
             foreach ($server as $k => $val) {
                 if ($val['id']==2 && $order['sign']) {
-                    $note .='['.$val['short'].':'.$order['sign'].']';
+                    $note .='['.$order['sign'].']';
                 }else{
                     $note .= '['.$val['short'].']';
                 }                   
