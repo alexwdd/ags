@@ -25,61 +25,8 @@ class Auto extends Base
 		$map['kuaidi'] = array('neq','');
 		$map['type'] = array('not in',[12,13,14]);
 		$list = db("OrderBaoguo")->where($map)->select();
-		$config = config("aue");
-		$token = $this->getAueToken();
 		foreach ($list as $key => $value) {
-			$goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
-			$content = '';
-			foreach ($goods as $k => $val) {
-				if ($val['extends']!='') {
-					$goodsName = $val['short'].'['.$val['extends'].']';
-				}else{
-					$goodsName = $val['short'];
-				}
-				if ($k==0) {
-					$content .= $goodsName.'*'.$val['trueNumber'];
-				}else{
-					$content .= ";".$goodsName.'*'.$val['trueNumber'];
-				}				
-			}
-
-			$brandID = getBrandID($value['type']);
-			$data = [
-				'MemberId'=>$config['MemberId'],
-				'BrandId'=>$brandID,
-				'SenderName'=>$value['sender'],
-				'SenderPhone'=>$value['senderMobile'],
-				'ReceiverName'=>$value['name'],
-				'ReceiverPhone'=>$value['mobile'],
-				'ReceiverProvince'=>$value['province'],
-				'ReceiverCity'=>$value['city'],
-				'ReceiverAddr1'=>$value['area'].$value['address'],
-				'ChargeWeight'=>0,
-				'Value'=>0,
-				'ShipmentContent'=>$content
-			];
-			if ($value['sign']) {
-				$data['Notes'] = $value['sign'];
-			}			
-			$url = 'http://aueapi.auexpress.com/api/AgentShipmentOrder/Create';
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_POSTFIELDS,'['.json_encode($data).']');
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization: Bearer '.$token));
-			$result = curl_exec($ch);
-			$result = json_decode($result,true);	
-
-			if ($result['Message']=='Authentication failed, invalid token.') {
-				Cache::rm('aueToken');	
-			}
-
-			if ($result['Code']==0 && $result['Message']!='' && $result['Message']!='Authentication failed, invalid' && $result['Message']!='Authentication failed, invalid token.') {
-				$update = [
-					'kdNo'=>$result['Message']
-				];
-				db("OrderBaoguo")->where('id',$value['id'])->update($update);
-			}
+			$this->createSingleOrder($value);
 		}
 	}
 

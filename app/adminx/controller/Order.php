@@ -97,7 +97,7 @@ class Order extends Admin {
 	                    $serverID = explode(",",$value['server']);
 	                    unset($map);
 	                    $map['id'] = array('in',$serverID);
-	                    $server = db("server")->field('name,price')->where($map)->select();
+	                    $server = db("server")->field('short,price')->where($map)->select();
 	                    $goods[$key]['server'] = $server;
 	                }else{
 	                    $goods[$key]['server'] = null;
@@ -222,64 +222,11 @@ class Order extends Admin {
 			if (!$list) {
 				$this->error("信息不存在");
 			}
-			$goods = db("OrderDetail")->where("baoguoID",$list['id'])->select();
-			foreach ($goods as $k => $val) {
-				if ($val['extends']!='') {
-					$goodsName = $val['short'].'['.$val['extends'].']';
-				}else{
-					$goodsName = $val['short'];
-				}
-				if ($k==0) {
-					$content .= $goodsName.'*'.$val['trueNumber'];
-				}else{
-					$content .= ";".$goodsName.'*'.$val['trueNumber'];
-				}				
-			}
-			$order = db('Order')->where('id',$list['orderID'])->find();
-
-			$config = config("aue");
-			$token = $this->getAueToken();
-			$brandID = getBrandID($list['type']);
-			$data = [
-				'MemberId'=>$config['MemberId'],
-				'BrandId'=>$brandID,
-				'SenderName'=>$list['sender'],
-				'SenderPhone'=>$list['senderMobile'],
-				'ReceiverName'=>$list['name'],
-				'ReceiverPhone'=>$list['mobile'],
-				'ReceiverProvince'=>$list['province'],
-				'ReceiverCity'=>$list['city'],
-				'ReceiverAddr1'=>$list['area'].$list['address'],
-				'ChargeWeight'=>0,
-				'Value'=>0,
-				'ShipmentContent'=>$content
-			];
-			if ($list['sign']) {
-				$data['Notes'] = $list['sign'];
-			}	
-			$url = 'http://aueapi.auexpress.com/api/AgentShipmentOrder/Create';
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_POSTFIELDS,'['.json_encode($data).']');
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization: Bearer '.$token));
-			$result = curl_exec($ch);
-			$result = json_decode($result,true);
-			if ($result['Message']=='Authentication failed, invalid token.') {
-				Cache::rm('aueToken');
-				$this->error($result['Message']);
-			}
-			if ($result['Code']==0 && $result['Message']!='') {
-				sleep(10);
-				$eimg = $this->saveAuePng($result['Message']);				
-				$update = [
-					'kdNo'=>$result['Message'],
-					'eimg'=>$eimg
-				];
-				db("OrderBaoguo")->where($map)->update($update);
-				$this->success("操作成功，运单号：".$result['Message']);
+			$res = $this->createSingleOrder($list);
+			if ($res['code']==1) {
+				$this->success("操作成功，运单号：".$res['msg']);
 			}else{
-				$this->error($result['Errors'][0]['Message']);
+				$this->error($res['msg']);
 			}
 		}
 	}

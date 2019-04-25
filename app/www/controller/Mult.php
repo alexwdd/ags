@@ -78,8 +78,6 @@ class Mult extends User
                 $goods['price'] = $goods['price1'];
             }
 
-            $total += $goods['price'] * $value['number'];
-
             if (!$value['extends']) {
                 $list[$key]['extends'] = '';
             }
@@ -94,8 +92,11 @@ class Mult extends User
                 $serverID = explode(",",$value['server']);
                 unset($map);
                 $map['id'] = array('in',$serverID);
-                $server = db("server")->where($map)->select();
+                $server = db("server")->field('id,name,price')->where($map)->select();
+                $serverMoney = db("server")->where($map)->sum('price');
                 $list[$key]['server'] = $server;
+            }else{
+                $serverMoney = 0;
             }
 
             $list[$key]['flag'] = 0;//商品是否需要签名
@@ -103,11 +104,11 @@ class Mult extends User
                 if (strstr($value['server'], '2')) {
                     $list[$key]['flag'] = 1;
                 }
-            }     
-
-            $money = $value['number'] * $goods['price'];
+            } 
+            $money =  $goods['price'] * $value['number'];
             $list[$key]['goods'] = $goods;
-            $list[$key]['money'] = $money;
+            $list[$key]['money'] = $money+$serverMoney;
+            $total += $money+$serverMoney;
         }
 
         $wuliu = db("Wuliu")->select();
@@ -227,11 +228,16 @@ class Mult extends User
             $goods[$key]['memberID'] = $this->user['id'];
             $goods[$key]['extends'] = $value['exts'];
             unset($goods[$key]['exts']);
-            if ($value['flag']==1) {
+            $server = [];
+            foreach ($value['server'] as $k => $val) {
+                array_push($server,$val['id']);
+            }
+            $goods[$key]['server'] = implode(",",$server);
+            /*if ($value['flag']==1) {
                 $goods[$key]['server'] = 2;
             }else{
                 $goods[$key]['server'] = '';
-            }
+            }*/
         }
         echo $this->getMultYunfeiJson($this->user,$kid,$goods,$province);
     }
@@ -298,6 +304,12 @@ class Mult extends User
             }else{
                 $this->error('商品【'.$goods['name'].'】已经下架');
             }
+
+            $server = [];
+            foreach ($value['server'] as $k => $val) {
+                array_push($server,$val['id']);
+            }
+            $list[$key]['server'] = implode(",",$server);
         }
 
         //创建订单
@@ -351,6 +363,7 @@ class Mult extends User
             $detail['type'] = $value['type'];
             $detail['weight'] = $value['totalWuliuWeight'];
             $detail['kuaidi'] = $value['kuaidi'];
+            $detail['serverIds'] = $value['serverIds'];
             $detail['kdNo'] = '';
             $detail['name'] = $data['name'];
             $detail['mobile'] = $data['mobile'];
@@ -462,6 +475,7 @@ class Mult extends User
 
         $cart = $this->getCartNumber($this->user);
         $totalPrice = $cart['total'];
+        $serverMoney = $cart['serverMoney'];
 
         unset($map);
         $map['memberID'] = $this->user['id'];
@@ -486,6 +500,7 @@ class Mult extends User
         $order_no = getStoreOrderNo();
         $data['order_no'] = $order_no;
         $data['total'] = $totalPrice+$totalYunfei;
+        $data['serverMoney'] = $serverMoney;
         $data['goodsMoney'] = $totalPrice;
         $data['money'] = 0;
         $data['wallet'] = 0;

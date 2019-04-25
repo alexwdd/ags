@@ -220,8 +220,8 @@ class Cart extends User
         //包裹信息
         $kid = input('param.kid');
         if ($kid>0) {
-            $result = $this->getYunfeiJson($this->user,$kid,$address['province']);
-            $result = json_decode($result,true);
+            $result = $this->getYunfeiJson($this->user,$kid,$address['province']);            
+            $result = json_decode($result,true);            
             if ($result['code']==0) {
                 $this->error($result['msg']);
             }          
@@ -231,7 +231,7 @@ class Cart extends User
         }else{
             $this->error("请选择快递");
         }
-        $money = $this->getCartNumber($this->user);
+        $money = $this->getCartNumber($this->user);        
         $this->assign("money",$money);
         $this->assign("kid",$kid);
 
@@ -466,6 +466,7 @@ class Cart extends User
 
         $cart = $this->getCartNumber($this->user);
         $totalPrice = $cart['total'];
+        $serverMoney = $cart['serverMoney'];
 
         if ($data['kid']>0) { 
             $result = $this->getYunfeiJson($this->user,$data['kid'],$data['province']);
@@ -503,6 +504,7 @@ class Cart extends User
         $order_no = getStoreOrderNo();
         $data['order_no'] = $order_no;
         $data['total'] = $totalPrice+$totalYunfei;
+        $data['serverMoney'] = $serverMoney;
         $data['rmb'] = $rate * $data['money'];
         $data['goodsMoney'] = $totalPrice;
         $data['money'] = 0;
@@ -532,6 +534,7 @@ class Cart extends User
             $detail['type'] = $value['type'];
             $detail['weight'] = $value['totalWuliuWeight'];
             $detail['kuaidi'] = $value['kuaidi'];
+            $detail['serverIds'] = $value['serverIds'];
             $detail['kdNo'] = '';
             $detail['name'] = $data['name'];
             $detail['mobile'] = $data['mobile'];

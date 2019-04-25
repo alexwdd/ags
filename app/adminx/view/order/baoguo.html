@@ -40,7 +40,7 @@
 		                        <td>
 		                        	{volist name="vo.server" id="s"}
 				                    <p style="font-size: 12px">
-				                    	{$s.name}(${$s.price}x{$vo.num})
+				                    	{$s.short}(${$s.price}x{$vo.num})
 				                        
 				                    </p>
 				                    {/volist}
@@ -64,6 +64,11 @@
 						<div class="layui-form-item">
 							<label class="layui-form-label">商品金额</label>
 							<div class="layui-form-mid">{$list.goodsMoney}</div>
+						</div>
+
+						<div class="layui-form-item">
+							<label class="layui-form-label">服务费</label>
+							<div class="layui-form-mid">{$list.serverMoney}</div>
 						</div>
 						
 						{gt name="list.payType" value="1"}

@@ -130,6 +130,16 @@ class Base extends Controller {
         $totalExtend = 0;
         $totalInprice = 0;
         foreach ($baoguoArr as $key => $value) {
+            $server = [];
+            foreach ($value['goods'] as $k => $val) {
+                if ($val['server']) {
+                    $val['server'] = explode(",", $val['server']);
+                    $server = array_merge($server,$val['server']);
+                    $server = array_unique($server);
+                }
+            }
+            $baoguoArr[$key]['serverIds'] = implode(",",$server);
+
             $totalWeight += $value['totalWeight'];
             $totalWuliuWeight += $value['totalWuliuWeight'];
             $totalPrice += $value['yunfei'];
@@ -220,6 +230,16 @@ class Base extends Controller {
         $totalExtend = 0;
         $totalInprice = 0;
         foreach ($baoguoArr as $key => $value) {
+            $server = [];
+            foreach ($value['goods'] as $k => $val) {
+                if ($val['server']) {
+                    $val['server'] = explode(",", $val['server']);
+                    $server = array_merge($server,$val['server']);
+                    $server = array_unique($server);
+                }
+            }
+            $baoguoArr[$key]['serverIds'] = implode(",",$server);
+            
             $totalWeight += $value['totalWeight'];
             $totalWuliuWeight += $value['totalWuliuWeight'];
             $totalPrice += $value['yunfei'];
@@ -349,6 +369,79 @@ class Base extends Controller {
             fwrite($fp,$res);
             return $path;
         }        
+    }
+
+    public function createSingleOrder($order){
+        $goods = db("OrderDetail")->where("baoguoID",$order['id'])->select();
+        $content = '';
+        foreach ($goods as $k => $val) {
+            if ($val['extends']!='') {
+                $goodsName = $val['short'].'['.$val['extends'].']';
+            }else{
+                $goodsName = $val['short'];
+            }
+            if ($k==0) {
+                $content .= $goodsName.'*'.$val['trueNumber'];
+            }else{
+                $content .= ";".$goodsName.'*'.$val['trueNumber'];
+            }
+        }
+
+        $brandID = getBrandID($order['type']);
+        $config = config("aue");
+        $data = [
+            'MemberId'=>$config['MemberId'],
+            'BrandId'=>$brandID,
+            'SenderName'=>$order['sender'],
+            'SenderPhone'=>$order['senderMobile'],
+            'ReceiverName'=>$order['name'],
+            'ReceiverPhone'=>$order['mobile'],
+            'ReceiverProvince'=>$order['province'],
+            'ReceiverCity'=>$order['city'],
+            'ReceiverAddr1'=>$order['area'].$order['address'],
+            'ChargeWeight'=>0,
+            'Value'=>0,
+            'ShipmentContent'=>$content
+        ];
+
+        $note = '';
+        if ($order['serverIds']) {
+            $ids = explode(",",$order['serverIds']);
+            $where['id'] = array('in',$ids);
+            $server = db("Server")->field('id,short')->where($where)->select();
+            foreach ($server as $k => $val) {
+                if ($val['id']==2 && $order['sign']) {
+                    $note .='['.$val['short'].':'.$order['sign'].']';
+                }else{
+                    $note .= '['.$val['short'].']';
+                }                   
+            }
+        }
+        $data['Notes'] = $note;
+
+        $token = $this->getAueToken();
+        $url = 'http://aueapi.auexpress.com/api/AgentShipmentOrder/Create';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS,'['.json_encode($data).']');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization: Bearer '.$token));
+        $result = curl_exec($ch);
+        $result = json_decode($result,true);    
+
+        if ($result['Message']=='Authentication failed, invalid token.') {
+            Cache::rm('aueToken');  
+        }
+
+        if ($result['Code']==0 && $result['Message']!='' && $result['Message']!='Authentication failed, invalid' && $result['Message']!='Authentication failed, invalid token.') {
+            $update = [
+                'kdNo'=>$result['Message']
+            ];
+            db("OrderBaoguo")->where('id',$order['id'])->update($update);
+            return ['code'=>1,'msg'=>$result['Message']];
+        }else{
+            return ['code'=>0,'msg'=>$result['Errors'][0]['Message']];
+        }
     }
 
     public function createDir($path){ 
