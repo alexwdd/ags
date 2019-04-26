@@ -1,0 +1,32 @@
+{include file="public/nav" /}
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">充值记录</h1>
+    <a href="{:url('member/pay')}" class="mui-pull-right header-nav">充值</a>
+</header>
+
+<div class="mui-content">
+    {volist name="list" id="vo" empty="$empty"}
+    <div class="pinyou">
+        <div class="hd">
+            <div class="code">{$vo.order_no}</div>
+            <div class="status">
+            {switch name="vo.status" }
+                {case value="0"}<span style="color: #666">未处理</span>{/case}
+                {case value="1"}<span>已付款</span>{/case}
+                {case value="99"}<span style="color: #f00">驳回</span>{/case}
+            {/switch}
+            </div>
+        </div>
+        <div class="bd">
+            <div class="maxWeight">充值金额：<span>${$vo.money}</span></div>   
+            <div class="date">提交时间：{$vo.createTime|date="Y-m-d H:i:s",###}</div>
+            {notempty name="vo.back"}
+            <div style="color:#f00">{$vo.back}</div>
+            {/notempty}
+        </div>
+    </div>
+    {/volist}
+</div>
+<input type="hidden" id="activeIndex" value="member" />

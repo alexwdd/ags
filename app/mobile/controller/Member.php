@@ -457,25 +457,33 @@ class Member extends User
     }
 
     public function finance(){
-        $type = input('param.type');
-        if ($type!='') {
-            $map['type'] = $type;
-        }            
-        $map['memberID'] = $this->user['id'];
-        if ($createDate!='') {
-            $date = explode(" - ", $createDate);
-            $startDate = $date[0];
-            $endDate = $date[1];
-            $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
-        } 
-        $list = db('Finance')->select($map);
-        $this->assign('list',$list);
-        if ($type==1) {
-            $name = '充值记录';
+        return view();
+    }
+
+    public function ajaxFinance(){  
+        $page = input('post.page/d',1);
+        $map['memberID'] = $this->user['id'];   
+        $pagesize = 10;
+        $firstRow = $pagesize*($page-1); 
+
+        $obj = db('Finance');
+        $count = $obj->where($map)->count();
+        $totalPage = ceil($count/$pagesize);
+        if ($page < $totalPage) {
+            $next = 1;
         }else{
-            $name = '消费记录';
+            $next = 0;
         }
-        $this->assign('name',$name);
+        $list = $obj->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
+        $this->assign('list',$list);  
+        $res = $this->fetch();
+        echo json_encode(['next'=>$next,'data'=>$res]);
+    }
+
+    public function history(){   
+        $map['memberID'] = $this->user['id'];
+        $list = db('Pay')->where($map)->order('id desc')->select();
+        $this->assign('list',$list);
         return view();
     }
 

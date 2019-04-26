@@ -1,0 +1,9 @@
+{volist name="list" id="vo" empty="$empty"}
+<li>
+	<div class="hd">
+		${$vo.money}
+		<span>{$vo.createTime|date="Y-m-d",###}</span>
+	</div>
+	<div class="bd">{$vo.msg}</div>
+</li>
+{/volist}

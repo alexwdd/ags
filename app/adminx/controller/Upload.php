@@ -41,6 +41,10 @@ class Upload extends Admin{
 			}else{
 				$fname = config('UPLOAD_PATH').$dir.'/'.$fname;
 			}
+
+			$image = \think\Image::open('.'.$fname);
+            // 按照原图的比例生成一个最大为150*150的缩略图并保存为thumb.png
+            $image->thumb(600, 1000)->save('.'.$fname);
 			
 			$result = array(
 				'url' => $fname,   //保存后的文件路径

@@ -151,16 +151,30 @@ class Bag extends Admin {
             $fileName = $fileName[0]; //文件原名
             $fname=str_replace('\\','/',$info->getSaveName());
             $fname = config('UPLOAD_PATH').$fname;
+
+            $image = \think\Image::open('.'.$fname);
+            // 按照原图的比例生成一个最大为150*150的缩略图并保存为thumb.png
+            $image->thumb(600, 1000)->save('.'.$fname);
             
             $map['kdNo'] = strtoupper(trim($fileName));
             $list = db("OrderBaoguo")->where($map)->find();
             if ($list) {
                 if ($list['image']=='') {
-                    $data = $fname;
+                    $data['image'] = $fname;
                 }else{
-                    $data = $list['image'].','.$fname;
+                    $data['image'] = $list['image'].','.$fname;
                 }
-                db("OrderBaoguo")->where($map)->setField('image',$data);
+                $data['flag'] = 1;
+                $res = db("OrderBaoguo")->where($map)->update($data);
+                if ($res) {
+                    $orderID = db("OrderBaoguo")->where($map)->value('orderID');
+                    $where['orderID'] = $orderID;
+                    $where['flag'] = 0;
+                    $count = db("OrderBaoguo")->where($where)->count();
+                    if ($count==0) {
+                        db("Order")->where('id',$orderID)->setField("payStatus",4);
+                    }
+                }
             }
             return array('code'=>0,'msg'=>$fname);
         }else{
