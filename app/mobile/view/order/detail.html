@@ -18,7 +18,7 @@
             <p>${$vo.money}</p>
             {volist name="vo.server" id="s"}
             <div class="serverLi">
-                {$s.name}${$s.price}/件，数量{$vo.trueNumber*$vo.num}，合计${$s.price *  $vo.trueNumber*$vo.num}
+                {$s.name}${$s.price}/件，数量{$vo.num}，合计${$s.price*$vo.num}
             </div>
             {/volist}            
             
@@ -85,7 +85,7 @@
         {volist name="vo.baoguo" id="f"}
         <div class="baoguo">
             <div class="hd">
-                <p style="float: left;margin: 0">{$f.kuaidi}</p>
+                <p style="float: left;margin: 0">{$f.kuaidi},运费${$f.payment},重量{$f.weight}kg</p>
                 <p style="float: right;;margin: 0">
                 {notempty name="$f.kdNo"}
                 <?php if(in_array($f['type'],[12,13,14])){ ?>

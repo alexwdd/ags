@@ -109,11 +109,11 @@
             订单号：<a href="{:url('order/detail',array('id'=>$vo['id']))}"><span class="money">{$vo.order_no}</span></a>
             <?php
             if($vo['payType']!=1 && $vo['upload']==0){
-                if(count($vo['person'])==1){
+                /*if(count($vo['person'])==1){
                     echo '<a href="javascript:void(0)" onclick="openModel (\''.url('order/person',array('id'=>$vo['person'][0]['id'])).'\',\'上传身份证\',\'1000px\',\'80%\')"><span class="layui-badge">未上传身份证，请点击上传</span></a>&nbsp;';
                 }else{
                     echo '<span class="layui-badge">未上传身份证，请点击订单详情上传</span>&nbsp;';
-                }
+                }*/
             }else{
             ?>
             <span class="layui-badge layui-bg-green">已上传身份证</span>

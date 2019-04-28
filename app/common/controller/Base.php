@@ -87,7 +87,7 @@ class Base extends Controller {
                     $brandName = getBrandName($goods['typeID']);
                     $list[$key]['goodsNumber'] = $goods['number'];
 
-                    $danjia = getDanjia($goods['typeID']);
+                    $danjia = getDanjia($goods['typeID'],$user);
 
                     if ($this->inExtendArea($province)) {                        
                         $extend = $goods['wuliuWeight']*$goods['number']*$danjia['otherPrice'];
@@ -118,7 +118,7 @@ class Base extends Controller {
             }
         } 
         if ($list) {
-            $cart = new \cart\Zhongyou($list,$kuaidi,$province);
+            $cart = new \cart\Zhongyou($list,$kuaidi,$province,$user);
             $baoguoArr2 = $cart->getBaoguo();
             $baoguoArr = array_merge($baoguoArr1,$baoguoArr2);
         }else{
@@ -185,7 +185,7 @@ class Base extends Controller {
                     $brandName = getBrandName($goods['typeID']);
                     $list[$key]['goodsNumber'] = $goods['number'];
 
-                    $danjia = getDanjia($goods['typeID']);
+                    $danjia = getDanjia($goods['typeID'],$user);
 
                     if ($this->inExtendArea($province)) {                        
                         $extend = $goods['wuliuWeight']*$goods['number']*$danjia['otherPrice'];
@@ -218,7 +218,7 @@ class Base extends Controller {
         } 
     
         if ($list) {
-            $cart = new \cart\Zhongyou($list,$kuaidi,$province);
+            $cart = new \cart\Zhongyou($list,$kuaidi,$province,$user);
             $baoguoArr2 = $cart->getBaoguo();
             $baoguoArr = array_merge($baoguoArr1,$baoguoArr2);
         }else{

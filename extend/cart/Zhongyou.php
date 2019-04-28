@@ -4,6 +4,7 @@ namespace cart;
 class Zhongyou {
 
 	private $cart;
+	private $user;
 	private $baojianpin;
 	private $hufupin;
 	private $kuaidi;
@@ -18,7 +19,7 @@ class Zhongyou {
 	/*
 	$cart中的goodsNumber是实际单品数量，比如商品A单品数量是3个，如果购物车中有2个，单品数量总数是6，这里的goodsNumber不是数据库中单个商品的goodsNumber！！！
 	*/
-	public function __construct($cart,$kuaidi,$province) {
+	public function __construct($cart,$kuaidi,$province,$user) {
 		$baojianpin = [];
 		$hufupin = [];
 		foreach ($cart as $key => $value) {
@@ -38,6 +39,7 @@ class Zhongyou {
 		}
 
 		$cart = array_values($cart);//创建索引
+		$this->user = $user;
 		$this->cart = $cart;
 		$this->hufupin = $hufupin;
 		$this->baojianpin = $baojianpin;
@@ -266,7 +268,7 @@ class Zhongyou {
 			$this->baoguoArr[$key]['totalWuliuWeight'] = number_format($wuliuWeight/10,1);
 	
 			$brandName = getBrandName($value['type']);
-	        $danjia = getDanjia($value['type']);	        
+	        $danjia = getDanjia($value['type'],$this->user);	        
 	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
 	        	$this->baoguoArr[$key]['kuaidi'] = $brandName;
 	        	$this->baoguoArr[$key]['yunfei'] = $this->getNaifen($value['type'],$value['totalNumber']);
