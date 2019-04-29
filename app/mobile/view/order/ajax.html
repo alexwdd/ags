@@ -2,7 +2,7 @@
 <div class="orderList">
     <div class="hd">{$vo.order_no}<?php
     if($vo['payType']!=1 && $vo['upload']==0){
-        echo '<font style="color:#f00">(未传身份证)</font>';
+        #echo '<font style="color:#f00">(未传身份证)</font>';
     }else{
         echo '<font style="color:green">(已传身份证)</font>';
     }
@@ -21,7 +21,7 @@
         {switch name="vo.payStatus" }
             {case value="0"}
             <span class="my-badge mui-badge mui-badge-danger">待付款</span>
-            <a href="{:url('order/pay','order_no='.$vo['order_no'])}" class="mui-btn my-btn">去支付</a>
+            <a href="{:url('order/payType','order_no='.$vo['order_no'])}" class="mui-btn my-btn">去支付</a>
             {/case}
             {case value="1"}<span class="my-badge mui-badge mui-badge-warning">待审核</span>{/case}
             {case value="2"}<span class="my-badge mui-badge mui-badge-purple">待配货</span>{/case}

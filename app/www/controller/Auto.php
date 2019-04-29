@@ -5,8 +5,7 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		$ids = [381,383,384,386];
-		$map['id'] = array('in',$ids);
+		$map['payStatus'] = array('in',[1,2,3,4]);
 		$list = db("Order")->where($map)->select();
 		foreach ($list as $key => $value) {
 			db('OrderBaoguo')->where('orderID',$value['id'])->setField('status',1);

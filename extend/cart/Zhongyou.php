@@ -286,10 +286,11 @@ class Zhongyou {
 
 	        $this->baoguoArr[$key]['sign']=0;
 	        foreach ($value['goods'] as $k => $val) {
-				if (strpos($val['server'],'2')===0){//包含签名
-					$this->baoguoArr[$key]['sign']=1;
-					break;
-				}
+	        	$ids = explode(",", $val['server']);
+	            if (in_array(2,$ids)) {
+	                $this->baoguoArr[$key]['sign']=1;
+	                break;
+	            }
 			}
 		}	
 		return $this->baoguoArr;

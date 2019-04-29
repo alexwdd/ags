@@ -172,7 +172,10 @@ class Bag extends Admin {
                     $where['flag'] = 0;
                     $count = db("OrderBaoguo")->where($where)->count();
                     if ($count==0) {
-                        db("Order")->where('id',$orderID)->setField("payStatus",4);
+                        unset($map);
+                        $map['id'] = $orderID;
+                        $map['payStatus'] = array('in',[2,3]);
+                        db("Order")->where($map)->setField("payStatus",4);
                     }
                 }
             }

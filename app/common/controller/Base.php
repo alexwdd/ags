@@ -68,7 +68,7 @@ class Base extends Controller {
         }
         $baoguoArr1 = [];
         $map['memberID'] = $user['id']; 
-        $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();         
+        $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
             if ($user['group']==2 || $user['vip']==1) {
@@ -81,7 +81,7 @@ class Base extends Controller {
             $list[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $list[$key]['weight'] = $goods['weight'];            
             $list[$key]['price'] = $goods['price'];            
-            $list[$key]['singleNumber'] = $goods['number']; 
+            $list[$key]['singleNumber'] = $goods['number'];             
             if ($goods['wuliu']!='') { //套餐类的先处理掉
                 for ($i=0; $i < $value['number']; $i++) { 
                     $brandName = getBrandName($goods['typeID']);
@@ -94,11 +94,12 @@ class Base extends Controller {
                     }else{
                         $extend = 0;
                     }
-
-                    if (strpos($value['server'],'2')===0){//包含签名
-                        $sign=1;      
-                    }else{
-                        $sign=0;
+                    $sign=0;
+                    if ($value['server']!=''){//包含签名
+                        $ids = explode(",", $value['server']);
+                        if (in_array(2,$ids)) {
+                            $sign=1; 
+                        }                           
                     }
                     $baoguo = [
                         'type'=>$goods['typeID'],
@@ -410,11 +411,13 @@ class Base extends Controller {
             $where['id'] = array('in',$ids);
             $server = db("Server")->field('id,short')->where($where)->select();
             foreach ($server as $k => $val) {
-                if ($val['id']==2 && $order['sign']) {
-                    $note .='['.$order['sign'].']';
-                }else{
-                    $note .= '['.$val['short'].']';
-                }                   
+                if ($val['short']!="") {
+                    if ($val['id']==2 && $order['sign']) {
+                        $note .='['.$order['sign'].']';
+                    }else{
+                        $note .= '['.$val['short'].']';
+                    }
+                }                                   
             }
         }
         $data['Notes'] = $note;

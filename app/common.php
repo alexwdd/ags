@@ -110,7 +110,7 @@ function getBrandID($type){
     if ($type==1 || $type==2 || $type==3) {
         return 1;
     }
-    if ($type==7) {
+    if ($type==5) {
         return 2;
     }
     return 3;

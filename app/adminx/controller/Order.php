@@ -156,7 +156,10 @@ class Order extends Admin {
 		        	$where['flag'] = 0;
 		        	$count = db("OrderBaoguo")->where($where)->count();
 		        	if ($count==0) {
-		        		db("Order")->where('id',$orderID)->setField("payStatus",4);
+		        		unset($map);
+		        		$map['id'] = $orderID;
+		        		$map['payStatus'] = array('in',[2,3]);
+		        		db("Order")->where($map)->setField("payStatus",4);
 		        	}
 	        	}	        	
 	        	$this->success("操作成功");
@@ -224,6 +227,7 @@ class Order extends Admin {
 			}
 			$res = $this->createSingleOrder($list);
 			if ($res['code']==1) {
+				db("OrderBaoguo")->where($map)->setField('kdNo',$res['msg']);
 				$this->success("操作成功，运单号：".$res['msg']);
 			}else{
 				$this->error($res['msg']);
@@ -309,10 +313,15 @@ class Order extends Admin {
 			$where['orderID'] = $value['orderID'];
         	$where['flag'] = 0;
         	$flagNumber = db("OrderBaoguo")->where($where)->count();//未发货总数
+
+
+        	unset($map);
+    		$map['id'] = $value['orderID'];
+    		$map['payStatus'] = array('in',[2,3]);
         	if ($flagNumber==0 && $printNumber==0) {
-        		db("Order")->where('id',$value['orderID'])->setField("payStatus",4);
+        		db("Order")->where($map)->setField("payStatus",4);
         	}elseif($printNumber==0){
-	        	db("Order")->where('id',$value['orderID'])->setField("payStatus",3);
+	        	db("Order")->where($map)->setField("payStatus",3);
         	}
 		}
 		return view();

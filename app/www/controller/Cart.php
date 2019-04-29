@@ -482,6 +482,19 @@ class Cart extends User
             $this->error("请选择快递");
         }
 
+        $flag = 0;
+        foreach ($baoguo['baoguo'] as $key => $value) {
+            $ids = explode(",", $value['serverIds']);
+            if (in_array(2,$ids)) {
+                $flag = 1;
+                break;
+            }
+        }
+
+        if ($flag==1 && $data['sign']=='') {
+            $this->error("请输入签名");
+        }
+
         $sender = explode(",", $data['sender']);
         $money = $totalPrice+$totalYunfei;
         /*if ($this->user['money']>=$money) {
@@ -554,7 +567,7 @@ class Cart extends User
                 $detail['status'] = 1;
             }else{
                 $detail['status'] = 0;
-            }            
+            }
             $detail['snStatus'] = 0;
             $detail['del'] = 0;
             $baoguoID = db('OrderBaoguo')->insertGetId($detail);
