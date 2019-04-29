@@ -28,7 +28,7 @@ class Index extends Admin {
         $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y')); 
         $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
         $map['createTime'] = array('between',array($beginToday,$endToday));
-        $order1 = db('Order')->where($map)->sum('money');
+        $order1 = db('Order')->where($map)->sum('total');
 
         unset($map);
         $beginDate = date("Y-m-01");
@@ -36,7 +36,8 @@ class Index extends Admin {
         $beginDate=strtotime($beginDate);
         $endDate=strtotime($endDate);
         $map['createTime'] = array('between',array($beginDate,$endDate));
-        $order2 = db('Order')->where($map)->sum('money'); 
+        $map['payStatus'] = array('in',[2,3,4]);
+        $order2 = db('Order')->where($map)->sum('total'); 
         
         $count = [
             'totalMember'=>$totalMember,
@@ -56,7 +57,8 @@ class Index extends Admin {
             $start=strtotime($start);
             $end=strtotime($end);
             $map['createTime'] = array('between',array($start,$end));
-            $money = db('Order')->where($map)->sum('money');
+            $map['payStatus'] = array('in',[2,3,4]);
+            $money = db('Order')->where($map)->sum('total');
             array_push($dateArr, '"'.date("m-d",$start).'"');
             array_push($moneyArr, $money);
         } 
@@ -77,7 +79,8 @@ class Index extends Admin {
             $start=strtotime($start);
             $end=strtotime($end);            
             $map['createTime'] = array('between',array($start,$end));
-            $money = db('Order')->where($map)->sum('money');
+            $map['payStatus'] = array('in',[2,3,4]);
+            $money = db('Order')->where($map)->sum('total');
             array_push($dateArr, '"'.date("m月",$start).'"');
             array_push($moneyArr, $money);
         } 

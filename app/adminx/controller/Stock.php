@@ -17,9 +17,9 @@ class Stock extends Admin {
         $this->assign('shopNumber',$shopNumber);
         $this->assign('shopMoney',$shopMoney);
 
-        $map['payStatus'] = 2;
+        $map['payStatus'] = array('in',[2,3,4]);
         $webNumber = db("Order")->where($map)->count();
-        $webMoney = db("Order")->where($map)->sum('money');
+        $webMoney = db("Order")->where($map)->sum('total');
         $this->assign('webNumber',$webNumber);
         $this->assign('webMoney',$webMoney);
 	    return view();
@@ -206,6 +206,7 @@ class Stock extends Admin {
             $start=strtotime($start);
             $end=strtotime($end);            
             $map['createTime'] = array('between',array($start,$end));
+            $map['payStatus'] = array('in',[2,3,4]);
             $money = db('Order')->where($map)->sum('money');
             $total += $money;
             array_push($moneyArr, $money);
@@ -224,6 +225,7 @@ class Stock extends Admin {
             $end=strtotime($end);            
             $map['createTime'] = array('between',array($start,$end));
             $map['payType'] = $value['id'];
+            $map['payStatus'] = array('in',[2,3,4]);
             $list[$key]['value'] = db("Order")->where($map)->sum('money');
             array_push($type,$value['name']);
         }
@@ -244,6 +246,7 @@ class Stock extends Admin {
         $start=strtotime($start);
         $end=strtotime($end);            
         $map['createTime'] = array('between',array($start,$end));
+        $map['payStatus'] = array('in',[2,3,4]);
         $data = db('Order')->where($map)->select();
 
         $money1 = 0;
