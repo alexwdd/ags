@@ -9,7 +9,7 @@
 <div class="mui-content">
     <div class="myaddress">
         {volist name="list" id="vo"}
-            <p>{$vo.name}, {$vo.mobile} <span><a href="{:url('cart/order',array('kid'=>$kid,'aid'=>$aid,'senderID'=>$vo['id']))}">选择</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:url('Address/editsender',array('kid'=>$kid,'aid'=>$aid,'id'=>$vo['id']))}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-url="{:url('Address/delsender',array('id'=>$vo['id']))}" class="delBtn">删除</a></span>
+            <p>{$vo.name}, {$vo.mobile} <span><a href="{:url('cart/order',array('kid'=>$kid,'aid'=>$aid,'sid'=>$vo['id']))}">选择</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:url('Address/editsender',array('kid'=>$kid,'aid'=>$aid,'id'=>$vo['id']))}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-url="{:url('Address/delsender',array('id'=>$vo['id']))}" class="delBtn">删除</a></span>
             </p>
         {/volist}
     </div>

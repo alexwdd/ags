@@ -24,7 +24,7 @@
 
 			<button class="layui-btn layui-btn-normal" function="submit" method="post" url="{:url("Order5/confirm")}" isMutiDml="1" isConfirm="1" confirmMsg="确认这些订单都支付了吗？" inputs="id:">通过审核</button>
 		</div>
-
+		<div class="tj">总金额:<span id="total">0</span></div>
 		<div class="layui-col-md12">
 	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Order5/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-60"></table>
 

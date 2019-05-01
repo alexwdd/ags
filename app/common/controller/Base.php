@@ -421,7 +421,6 @@ class Base extends Controller {
             }
         }
         $data['Notes'] = $note;
-
         $token = $this->getAueToken();
         $url = 'http://aueapi.auexpress.com/api/AgentShipmentOrder/Create';
         $ch = curl_init($url);

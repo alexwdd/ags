@@ -1,0 +1,44 @@
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<div style="clear:both;margin-bottom:10px">
+			<form action="{:url('day/index')}" method="post" style="float: left; margin-right: 10px">
+				<div class="layui-inline">
+					<label class="layui-form-mid">日期</label>
+					<div class="layui-input-inline">
+						<input type="text" name="date" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder=" - "/>
+					</div>
+				</div>
+
+				<button class="layui-btn" type="submit"><i class="layui-icon">&#xe615;</i>查询</button>
+
+				日期：{$beginDate} 至 {$endDate}
+			</form>
+		</div>
+
+		<div class="layui-col-md12">
+	        <table class="layui-table">
+				<colgroup>
+					<col width="150">
+				    <col width="200">
+				    <col>
+				</colgroup>
+				<thead>
+			    <tr>
+				    <th>余额支付</th>
+				    <th>OMI支付</th>
+				    <th>银行刷卡</th>
+					<th>累计收款</th>
+			    </tr> 
+				</thead>
+			  	<tbody>
+					<tr>
+						<td>{$type.pay1}</td>
+						<td>{$type.pay2}</td>
+						<td>{$type.pay3}</td>
+						<td>{$type.money}</td>
+					</tr>		
+				</tbody>
+			</table>		
+	    </div>
+	</div>
+</div>

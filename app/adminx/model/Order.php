@@ -47,6 +47,7 @@ class Order extends Admin
         }
 
         $total = $this->where($map)->count();
+        $totalMoney = $this->where($map)->sum('total');
         $pageSize = input('post.pageSize',20);
         $pages = ceil($total/$pageSize);
         $pageNum = input('post.pageNum',1);
@@ -66,7 +67,8 @@ class Order extends Admin
                 "pageNum"=>$pageNum,
                 "pageSize"=>$pageSize,
                 "pages"=>$pageSize,
-                "total"=>$total
+                "total"=>$total,
+                "totalMoney"=>$totalMoney,
             )
         );
         return $result;        

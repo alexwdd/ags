@@ -172,8 +172,13 @@ layui.define(["fsCommon", "table", 'laypage', 'fsConfig', 'form', 'fsButtonCommo
                   "code": !res.code, //解析接口状态
                   "msg": res.msg, //解析提示文本
                   "count": res.results.data.total, //解析数据长度
+                  "totalMoney":res.results.data.totalMoney,
                   "data": isPage == "1" ? res.results.data.list : res.results.data//解析数据列表
                 };
+            },
+            done: function(res){
+                console.log(res);
+                $("#total").html(res.totalMoney);
             }
             /*response: {
                 statusName: statusName //数据状态的字段名称，默认：errorNo

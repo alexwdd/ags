@@ -5,12 +5,8 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		$map['payStatus'] = array('in',[1,2,3,4]);
-		$list = db("Order")->where($map)->select();
-		foreach ($list as $key => $value) {
-			db('OrderBaoguo')->where('orderID',$value['id'])->setField('status',1);
-            db('OrderPerson')->where('orderID',$value['id'])->setField('status',1);
-		}
+		$value = db("OrderBaoguo")->where('kdNo','ZA02818059968')->find();
+		$this->createSingleOrder($value);
 	}
 	
 	//创建运单
