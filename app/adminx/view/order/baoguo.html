@@ -221,10 +221,10 @@
 						        <div class="fd">  
 						        	<div class="wuliu">
 						        		{volist name="f.eimg" id="img"}
-						        		<a href="{$img}" target="_blank"><img src="{$img}"></a>
+						        		<a href="javascript:void(0)" class="photo" data-url="{$img}"><img src="{$img}"></a>
 						        		{/volist}
 						        		{volist name="f.image" id="img"}
-						        		<a href="{$img}" target="_blank"><img src="{$img}"></a>
+						        		<a href="javascript:void(0)" class="photo" data-url="{$img}"><img src="{$img}"></a>
 						        		{/volist}
 						        	</div>
 						        	{eq name="list.cancel" value="0"}
@@ -259,6 +259,17 @@ $(function(){
 			shade: 0.8,
 			area: ["80%", "80%"],
 			content: url //iframe的url
+		});
+	})
+
+	$(".photo").click(function(){
+		url = $(this).attr("data-url");
+		layer.open({
+			type: 1,
+			shadeClose: true,
+			shade: 0.8,
+			area: ["80%", "80%"],
+			content: '<img src="'+url+'"/>'
 		});
 	})
 
