@@ -1,11 +1,10 @@
 <?php
 namespace app\tools\controller;
-use app\common\controller\Base;
 use think\Request;
 use think\Session;
 use think\Cookie;
 
-class Register extends Base
+class Register extends Common
 {
 	public function index()
 	{
@@ -69,20 +68,4 @@ class Register extends Base
             }            
         }
 	}
-
-	public function getToken(){
-        if (cache('AccessToken')) {
-            return cache('AccessToken');
-        }else{
-            $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.config('weixin.appID').'&secret='.config('weixin.appsecret');
-            $result = $this->https_post($url);
-            $result = json_decode($result,true);
-            cache('AccessToken',$result['access_token'],1200);
-            return cache('AccessToken');
-        }
-    }
-
-    public function getUserName(){
-
-    }
 }
