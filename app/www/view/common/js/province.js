@@ -30,6 +30,10 @@ function treeSelect(config) {
         });
     });
 
+    form.on('select(' + config.s2 + ')', function (data) {
+        areaEvent(data);
+    });
+
     function cityEvent(data) {
         $form.find('select[id=' + config.s2 + ']').html("");
         config.v1 = data.value ? data.value : config.v1;

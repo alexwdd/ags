@@ -19,8 +19,7 @@ class Member extends Admin
     }
     
     //获取列表
-    public function getList(){
-        $total = $this->count();
+    public function getList(){        
         $pageSize = input('post.pageSize',20);
 
         $field = input('post.field','id');
@@ -31,12 +30,11 @@ class Member extends Admin
         $disable  = input('disable');
         $createDate  = input('createDate');
 
-        $map['id'] = array('gt',0);
         if($group!=''){
             $map['group'] = $group;
         }
         if($mobile!=''){
-            $map['username|mobile'] = $mobile;
+            $map['id|username|mobile'] = $mobile;
         }
         if($disable!=''){
             $map['disable'] = $disable;
@@ -51,7 +49,7 @@ class Member extends Admin
             $endDate = $date[1];
             $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
         }
-
+        $total = $this->where($map)->count();
         $pages = ceil($total/$pageSize);
         $pageNum = input('post.pageNum',1);
         $firstRow = $pageSize*($pageNum-1); 
