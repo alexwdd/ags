@@ -388,7 +388,7 @@ class Api extends Home
                         $goods['wuliuWeight'] = 0;           
                         $goods['itemType'] = 2; //商品
                     }else{
-                        $goods = db("GoodsIndex")->field('id,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find(); 
+                        $goods = db("GoodsIndex")->field('id,en,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find(); 
                         $goods['inprice'] = db("Goods")->where('id',$val['goodsID'])->value('inprice');
                         $goods['number'] = $val['number'];
                         $goods['money'] = 0;
