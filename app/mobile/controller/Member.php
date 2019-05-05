@@ -488,6 +488,7 @@ class Member extends User
     }
 
     public function pay(){
+        $config = tpCache("member");
         if (request()->isPost()) {
             $data['image'] = input("post.image");
             $data['cardID'] = input("post.cardID");
@@ -498,9 +499,9 @@ class Member extends User
             $map['status'] = 1;
             $count = db("Pay")->where($map)->count();
             if ($count > 0) {
-                $money = 2000;
+                $money = $config['money1'];
             }else{
-                $money = 3000;
+                $money = $config['money'];
             }
 
             if ($data['order_no']=='') {
@@ -543,11 +544,12 @@ class Member extends User
             $map['status'] = 1;
             $count = db("Pay")->where($map)->count();
             if ($count > 0) {
-                $money = 2000;
+                $money = $config['money1'];
             }else{
-                $money = 3000;
+                $money = $config['money'];
             }
             $this->assign('money',$money);
+            $this->assign('config',$config);
 
             $list = db("Card")->field('id as value,name as text')->select();
             $this->assign('list',json_encode($list));
