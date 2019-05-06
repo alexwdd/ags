@@ -38,6 +38,19 @@ function getGoodsUrl($data) {
     //}
 }
 
+function getGoodsEmpty($goods){
+    if ($goods['empty']==0) {
+        return 0;
+    }else{
+        $stock = db("Goods")->where('id',$goods['goodsID'])->value("stock");
+        if ($stock<=0) {
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+}
+
 function getPayType($v){
     if ($v==1) {
         $name = '到店支付';

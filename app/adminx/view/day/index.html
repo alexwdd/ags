@@ -28,6 +28,9 @@
 				    <th>OMI支付</th>
 				    <th>银行刷卡</th>
 					<th>累计收款</th>
+					<th>商品成本</th>
+					<th>物流成本</th>
+					<th>盈利</th>
 			    </tr> 
 				</thead>
 			  	<tbody>
@@ -36,6 +39,9 @@
 						<td>{$type.pay2}</td>
 						<td>{$type.pay3}</td>
 						<td>{$type.money}</td>
+						<td>{$type.goodsMoney}</td>
+						<td>{$type.wuliu}</td>
+						<td>{$type.money - $type.wuliu - $type.goodsMoney}</td>
 					</tr>		
 				</tbody>
 			</table>		

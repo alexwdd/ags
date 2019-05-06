@@ -61,7 +61,13 @@ class Cart extends User
         $goods = db("GoodsIndex")->where('id',$spec_id)->find();
         if (!$goods) {
             $this->error('商品不存在');
-        } 
+        }
+
+        $empty = getGoodsEmpty($goods);
+        if ($empty==1) {
+            $this->error('该商品已售罄');
+        }
+
         $db = db("Cart");
         $map['memberID'] = $this->user['id'];
         $map['itemID'] = $spec_id;
@@ -445,8 +451,9 @@ class Cart extends User
         $hongjiu = 0;
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();            
-            if ($goods) { 
-                if ($list[$key]['empty']==1) {
+            if ($goods) {
+                $goods['empty'] = getGoodsEmpty($goods);
+                if ($goods['empty']==1) {
                     $this->error('商品【'.$goods['name'].'】库存不足');
                 }
             }else{

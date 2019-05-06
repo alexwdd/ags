@@ -119,13 +119,8 @@
             <span class="layui-badge layui-bg-green">已上传身份证</span>
             <?php
             }
-            ?>
-            
-            <?php
-            if($vo['cardID']>0 && $vo['payStatus']==0){
-                echo '<span class="layui-badge layui-bg-red">待审核</span>';
-            }else{
-            ?>
+            ?>            
+
             {switch name="vo.payStatus" }
                 {case value="0"}<span class="layui-badge layui-bg-red">待付款</span>{/case}
                 {case value="1"}<span class="layui-badge layui-bg-orange">待审核</span>{/case}
@@ -133,8 +128,7 @@
                 {case value="3"}<span class="layui-badge">配货中</span>{/case}
                 {case value="4"}<span class="layui-badge layui-bg-green">已发货</span>{/case}
                 {case value="99"}<span class="layui-badge layui-bg-red">取消订单</span>{/case}
-            {/switch}
-            <?php } ?>
+            {/switch}            
 
             {eq name="vo.image" value="1"}
             <span class="layui-badge layui-bg-blue">配货图片已上传</span>

@@ -23,6 +23,11 @@ class Order5 extends Admin {
             if(model('Order')->confirm($id)){
                 $map['orderID'] = array('in',$id);
                 db("OrderBaoguo")->where($map)->setField('status',1);
+
+                $detail = db("OrderDetail")->where($map)->select();
+                foreach ($detail as $key => $value) {
+                    db("Goods")->where('id',$value['goodsID'])->setDec("stock",$value['trueNumber']);
+                }
                 $this->success("操作成功");
             }else{
                 $this->error('操作失败');

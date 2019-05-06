@@ -23,16 +23,14 @@
     <div class="fd">                    
         <div style="float:left">
         {switch name="vo.payStatus" }
-            {case value="0"}
-            <span class="my-badge mui-badge mui-badge-danger">待付款</span>
-            <a href="{:url('order/payType','order_no='.$vo['order_no'])}" class="mui-btn my-btn">去支付</a>
-            {/case}
+            {case value="0"}<span class="my-badge mui-badge mui-badge-danger">待付款</span>
+            <a href="{:url('order/payType','order_no='.$vo['order_no'])}" class="mui-btn my-btn">去支付</a>{/case}
             {case value="1"}<span class="my-badge mui-badge mui-badge-warning">待审核</span>{/case}
             {case value="2"}<span class="my-badge mui-badge mui-badge-purple">待配货</span>{/case}
             {case value="3"}<span class="my-badge mui-badge mui-badge-primary">配货中</span>{/case}
             {case value="4"}<span class="my-badge mui-badge mui-badge-success">已发货</span>{/case}
             {case value="99"}<span class="my-badge mui-badge mui-badge-danger">取消订单</span>{/case}
-        {/switch}    
+        {/switch}  
         </div> 
         
         {eq name="vo.payStatus" value="0"}

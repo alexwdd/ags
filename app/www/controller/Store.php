@@ -31,6 +31,7 @@ class Store extends Home
                 $goods = db('GoodsIndex')->where($map)->order('sort asc,id desc')->select();
                 foreach ($goods as $k => $v) {
                     $goods[$k]['url'] = getGoodsUrl($v);
+                    $goods[$k]['empty'] = getGoodsEmpty($v);
                 }
                 $cate[$key]['goods'] = $goods;
             }
@@ -41,6 +42,7 @@ class Store extends Home
             $goods = db('GoodsIndex')->where($map)->order('sort asc,id desc')->select();
             foreach ($goods as $key => $value) {
                 $goods[$key]['url'] = getGoodsUrl($value);
+                $goods[$key]['empty'] = getGoodsEmpty($value);
             }
             $this->assign('goods',$goods); 
         }
@@ -98,6 +100,7 @@ class Store extends Home
         //查询数据
         $list = db('GoodsIndex')->where($map)->order('sort asc,id desc')->paginate(24,false,['query'=>request()->param()])->each(function($item, $key){
             $item['url'] = getGoodsUrl($item);
+            $item['empty'] = getGoodsEmpty($item);
             return $item;
         });
         $page = $list->render();
@@ -119,6 +122,7 @@ class Store extends Home
         //查询数据
         $list = db('GoodsIndex')->where($map)->order('sort asc,id desc')->paginate(24,false,['query'=>request()->param()])->each(function($item, $key){
             $item['url'] = getGoodsUrl($item);
+            $item['empty'] = getGoodsEmpty($item);
             return $item;
         });
         $page = $list->render();
@@ -212,6 +216,8 @@ class Store extends Home
             $thisSpec = db("GoodsIndex")->where("id",$specid)->find();
             $this->assign('thisSpec',$thisSpec);
         }
+
+        $list['empty'] = getGoodsEmpty($list);
 
         $this->assign('image',$image);
         $this->assign('list',$list);

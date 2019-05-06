@@ -23,6 +23,7 @@ class Index extends Home
 			$goods = db("GoodsIndex")->where($map)->order('sort asc,id desc')->select();
 			foreach ($goods as $k => $val) {
 				$goods[$k]['url'] = getGoodsUrl($val);
+				$goods[$k]['empty'] = getGoodsEmpty($val);
 			}
 			$indexCate[$key]['goods'] = $goods;
     	}

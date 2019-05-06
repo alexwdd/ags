@@ -13,6 +13,8 @@ $(function() {
 		    $.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&number=1&act=inc&temp="+new Date().getTime(),function(res){
 			        if (res.code==1){
 			            $("#cartNumber").show().html(res.msg);
+			        }else{
+			        	layer.alert(res.msg);
 			        }
 			    },'json'); 
 
@@ -52,6 +54,8 @@ $(function() {
 	    		$.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&number=1&act=dec&temp="+new Date().getTime(),function(res){
 			        if (res.code==1){
 			            $("#cartNumber").show().html(res.msg);
+			        }else{
+			        	layer.alert(res.msg);
 			        }
 			    },'json'); 
 	    	}	    	
@@ -94,6 +98,8 @@ $(function() {
             $.get("/www/cart/addcart?goodsID="+goodsID+"&typeID="+typeID+"&spec_id="+spec_id+"&number="+number+"&temp="+new Date().getTime(),function(res){
 		        if (res.code==1){
 		            $("#cartNumber").show().html(res.msg);
+		        }else{
+		        	layer.alert(res.msg);
 		        }
 		    },'json');
 

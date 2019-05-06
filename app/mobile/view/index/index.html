@@ -64,7 +64,10 @@
                     <span class="set" data-action="inc">+</span>
                 </div>
                 {/gt}
-                {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}                
+                {eq name="vo.empty" value="1"}<div class="sold_out">售罄</div>{/eq}
+                {gt name="vo.tag" value="0"}
+                <div class="baoyou_tag b_tag{$user.id}"><img src="/app/www/view/common/image/tag{$vo.tag}.png"></div>
+                {/gt}
             </div>
         </li>
         {/volist}

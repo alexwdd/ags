@@ -29,6 +29,7 @@ class Store extends Home
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getThumb($value['picname'],280,280);
                 $list[$key]['url'] = getGoodsUrl($value);
+                $list[$key]['empty'] = getGoodsEmpty($value);
             }
             $this->assign('list',$list);  
             $res = $this->fetch('ajax2');
@@ -56,10 +57,11 @@ class Store extends Home
             $map['show'] = 1;
 
             //查询数据
-            $list = db('GoodsIndex')->field('id,goodsID,typeID,name,picname,price,price1,empty')->where($map)->order('sort asc,id desc')->select();
+            $list = db('GoodsIndex')->field('id,goodsID,tag,typeID,name,picname,price,price1,empty')->where($map)->order('sort asc,id desc')->select();
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getThumb($value["picname"],350,350);
                 $list[$key]['url'] = getGoodsUrl($value);
+                $list[$key]['empty'] = getGoodsEmpty($value);
             }
             echo json_encode($list);
         }else{
@@ -104,6 +106,7 @@ class Store extends Home
                     $goods = db('GoodsIndex')->where($map)->order('sort asc,id desc')->select();
                     foreach ($goods as $k => $v) {
                         $goods[$k]['url'] = getGoodsUrl($v);
+                        $goods[$k]['empty'] = getGoodsEmpty($v);
                         $goods[$k]['picname'] = getThumb($v['picname'],280,280);
                     }
                     array_push($list, ['cate'=>$value,'goods'=>$goods]);
@@ -116,14 +119,13 @@ class Store extends Home
                 foreach ($goods as $key => $value) {
                     $goods[$key]['picname'] = getThumb($value['picname'],280,280);
                     $goods[$key]['url'] = getGoodsUrl($value);
+                    $goods[$key]['empty'] = getGoodsEmpty($value);
                 }
                 array_push($list, ['cate'=>$thisCate,'goods'=>$goods]);                
             }  
             $this->assign('list',$list);
-            echo $this->fetch();
-            
+            echo $this->fetch();            
         }
-
     }
 
     public function ajax1(){
@@ -141,6 +143,7 @@ class Store extends Home
             foreach ($list as $key => $value) {
                 $list[$key]['picname'] = getThumb($value['picname'],280,280);
                 $list[$key]['url'] = getGoodsUrl($value);
+                $list[$key]['empty'] = getGoodsEmpty($value);
             }
             $this->assign('list',$list);
             echo $this->fetch();
@@ -191,6 +194,8 @@ class Store extends Home
             $thisSpec = db("GoodsIndex")->where("id",$specid)->find();
             $this->assign('thisSpec',$thisSpec);
         }
+
+        $list['empty'] = getGoodsEmpty($list);
 
         $this->assign('image',$image);
         $this->assign('list',$list);

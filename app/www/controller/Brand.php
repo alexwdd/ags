@@ -42,6 +42,7 @@ class Brand extends Home
         $map['show'] = 1;
         $list = db('GoodsIndex')->where($map)->order('sort asc,id desc')->paginate(24,false,['query'=>request()->param()])->each(function($item, $key){
             $item['url'] = getGoodsUrl($item);
+            $item['empty'] = getGoodsEmpty($item);
             return $item;
         });
         $page = $list->render();
