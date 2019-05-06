@@ -41,7 +41,7 @@ class Api extends Home
                 $token = sha1($str);
                 $userData = array(
                     'token' => $token,
-                    'token_out' => time()+3600
+                    'token_out' => time()+14400
                 );
                 $r = db('User')->where(array("id" => $user['id']))->update($userData);
                 if ($r) {
@@ -588,7 +588,7 @@ class Api extends Home
         $list = db('User')->where($map)->find();
         if ($list) {
             $this->user = $list;
-            $data['token_out'] = time()+3600; 
+            $data['token_out'] = time()+14400; 
             $r = db('User')->where($map)->update($data);
         }else{
             returnJson(9001,'账户超时请重新登录！');
