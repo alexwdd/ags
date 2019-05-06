@@ -83,6 +83,13 @@ class Stock extends Admin {
                 die;
             }
             db('Goods')->where($map)->update($data);
+
+            unset($map);
+            $map['goodsID'] = $id;
+            $map['base'] = 1;
+            $update['price'] = $price;
+            $update['price1'] = $price1;
+            db('GoodsIndex')->where($map)->update($update);
             echo $this->success("操作成功");
         }
     }

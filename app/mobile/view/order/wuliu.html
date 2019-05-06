@@ -4,12 +4,11 @@
 </header>
 <div class="mui-content">
     <div class="wuliu">
-        <li>
-            <p>阿德莱德处理中心-Australia {eq name="list.status" value="0"}待审核付款{else/}准备配货{/eq}</p>
-        </li>
         {notempty name="list.image"}
         <li>
-            <p>阿德莱德处理中心-Australia 货物打板装车，正运往悉尼</p>
+            <p>{eq name="list.updateTime" value="0"}-{else/}{$list.updateTime|date="Y-m-d H:i:s",###}{/eq}</p>
+            <p>阿德莱德处理中心-Australia</p>
+            <p>货物打板装车，正运往悉尼，途中需三个工作日</p>
         </li>
         {/notempty}
         {volist name="result.TrackList" id="vo"}

@@ -61,6 +61,7 @@ class Order extends User
 
             $list[$key]['goods'] = $goods; //给数据集追加字段num并赋值
 
+            unset($where);
             $where['orderID'] = $orderID;
             $where['front'] = array('eq','');
             $where['back'] = array('eq','');
@@ -70,6 +71,18 @@ class Order extends User
                 $list[$key]['upload'] = 0;
             }else{
                 $list[$key]['upload'] = 1;
+            }
+
+            if ($value['payType']>1) {
+                unset($where);
+                $where['image'] = array('eq','');
+                $where['orderID'] = $value["id"];
+                $num = db("OrderBaoguo")->where($where)->count();
+                if ($num>0) {
+                    $list[$key]['image'] = 0;
+                }else{
+                    $list[$key]['image'] = 1;
+                }
             }
         }
         $this->assign('list',$list);  

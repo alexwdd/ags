@@ -6,7 +6,11 @@
     }else{
         echo '<font style="color:green">(已传身份证)</font>';
     }
-    ?><span>${$vo.total}</span></div>
+    ?>
+    {eq name="vo.image" value="0"}
+    <font style="color:blue">配货图片已上传</font>
+    {/eq}
+    <span>${$vo.total}</span></div>
     <div class="bd">
         <div class="orderDetail">
             <li>

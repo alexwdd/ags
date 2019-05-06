@@ -132,7 +132,7 @@ class Zhongyou {
         }
 
         //处理两个可混 
-        $baoguo = [
+        /*$baoguo = [
 			'type'=>0, 				//类型
             'totalNumber'=>0, 		//总数量
             'totalWeight'=>0, 		//商品总重量
@@ -147,7 +147,7 @@ class Zhongyou {
             if ($value['typeID']==11) {		            
             	for ($i=0; $i < $value['goodsNumber']; $i++) {
             		$goods = $value;
-            		$goods['goodsNumber'] = 1;
+            		$goods['goodsNumber'] = 1;  
             		$baoguo = $this->goodsInsertBaoguo($baoguo,$goods);            		
             		if ($baoguo['totalNumber']==2) {
             			array_push($this->baoguoArr,$baoguo);
@@ -170,7 +170,7 @@ class Zhongyou {
 
         if ($baoguo['totalNumber']>0) {
         	array_push($this->baoguoArr,$baoguo);
-        }
+        }*/
 
 		for($i=0;$i<3;$i++){
 	        //处理剩余的保健品和日用品

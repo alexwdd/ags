@@ -300,7 +300,7 @@ class Order extends Admin {
 		$map['eimg'] = array('neq','');
 		$map['type'] = array('in',[1,2,3]);
 		$map['sign'] = array('eq','');
-		db("OrderBaoguo")->where($map)->setField('flag',1);
+		db("OrderBaoguo")->where($map)->update(['flag'=>1,'updateTime'=>time()]);
 
 
 		foreach ($list as $key => $value) {
