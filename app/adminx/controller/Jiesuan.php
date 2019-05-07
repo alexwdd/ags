@@ -23,12 +23,15 @@ class Jiesuan extends Admin {
             'pay3'=>0,
             'pay4'=>0,
             'pay5'=>0,
+            'chengben'=>0,
+            'lirun'=>0,
 		];
 		foreach ($list as $key => $value) {
 			unset($map);
 			$map['createTime'] = array('between',array(strtotime($beginDate),strtotime($endDate)+86399));
 			$map['adminID'] = $value['id'];
 			$result = db("ShouyinOrder")->where($map)->select();
+			$orderIds = db("ShouyinOrder")->where($map)->column('id');
 			$type = [
 				'money'=>0,
                 'pay1'=>0,
@@ -63,6 +66,20 @@ class Jiesuan extends Admin {
 	            $total += $val['total'];
 			}
 			$list[$key]['type'] = $type;
+
+			unset($map);
+			$map['orderID'] = array('in',$orderIds);
+			$res = db('ShouyinOrderDetail')->field('chengben,lirun')->where($map)->select();
+			$lirun = 0;
+			$chengben = 0;
+			foreach ($res as $k => $val) {
+				$chengben += $val['chengben'];
+				$lirun += $val['lirun'];
+			}
+			$list[$key]['chengben'] = $chengben;
+			$list[$key]['lirun'] = $lirun;
+			$heji['chengben'] += $chengben;
+			$heji['lirun'] += $lirun;
 		}
 		$this->assign('list',$list);
 		$this->assign('beginDate',$beginDate);

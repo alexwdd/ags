@@ -22,6 +22,21 @@ class Stock extends Admin {
         $webMoney = db("Order")->where($map)->sum('total');
         $this->assign('webNumber',$webNumber);
         $this->assign('webMoney',$webMoney);
+
+        unset($map);
+        $map['stock'] = array('gt',0);
+        $map['stock1'] = array('gt',0);
+        $list = db("Goods")->field('inprice,stock,stock1')->where($map)->select();
+        $total = 0;
+        $web = 0;
+        $shop = 0;
+        foreach ($list as $key => $value) {
+            $web += $value['stock'] * $value['inprice'];
+            $shop += $value['stock1'] * $value['inprice'];
+        }
+        $this->assign('total',$shop+$web);
+        $this->assign('web',$web);
+        $this->assign('shop',$shop);
 	    return view();
 	}
 

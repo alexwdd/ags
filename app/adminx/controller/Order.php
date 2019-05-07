@@ -161,11 +161,9 @@ class Order extends Admin {
 		        		$map['payStatus'] = array('in',[2,3]);
 		        		db("Order")->where($map)->setField("payStatus",4);
 		        	}
-	        	}	        	
-	        	$this->success("操作成功");
-	        }else{
-	        	$this->error("操作失败");
+	        	}
 	        }
+	        $this->success("操作成功");
 		}else{
 			$id = input("param.id");
 			$map['id'] = $id;
