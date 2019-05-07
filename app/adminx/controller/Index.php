@@ -98,7 +98,6 @@ class Index extends Admin {
         $pageSize = input('post.limit',20);
         $field = input('post.field','id');
         $order = input('post.order','desc');
-        $createDate = input('post.createDate');
 
         $obj = db('Goods');        
         $total = $obj->count();
@@ -107,31 +106,72 @@ class Index extends Admin {
         $pageNum = input('post.page',1);
         $firstRow = $pageSize*($pageNum-1); 
         $list = $obj->where($map)->field('id,name,short,stock,stock1')->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
-        foreach ($list as $key => $value) {
-            unset($map);
-            if ($createDate!='') {
-                $date = explode(" - ", $createDate);
-                $startDate = $date[0];
-                $endDate = $date[1];
-                $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
-            }
-            $map['goodsID'] = $value['id'];
-            $number = db("OrderDetail")->where($map)->count();
-            $number = $number ? $number : 0;
-            $list[$key]['sellNumber'] = $number;
-            $list[$key]['bar'] = number_format($value['stock']*100 / ($number+$value['stock']),2);
-
-            $number1 = db("ShouyinOrderDetail")->where($map)->count();
-            $number1 = $number1 ? $number1 : 0;
-            $list[$key]['sellNumber1'] = $number1;
-            $list[$key]['bar1'] = number_format($value['stock1']*100 / ($number1+$value['stock1']),2);
-        }
         $data = array(
                 'code'=>0,
                 'count'=>$total,
                 'data'=>$list
             );
         echo json_encode($data);
+    }
+
+    public function phb(){
+        $createDate = input('post.createDate');
+        $pageSize = input('post.limit',20);
+        $field = input('post.field','num');
+        $order = input('post.order','desc');
+
+        if ($createDate!='') {
+            $date = explode(" - ", $createDate);
+            $startDate = $date[0];
+            $endDate = $date[1];
+            $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
+        }
+
+        $obj = db('OrderDetail');        
+        $total = $obj->where($map)->group('goodsID')->count();
+
+        $pages = ceil($total/$pageSize);
+        $pageNum = input('post.page',1);
+        $firstRow = $pageSize*($pageNum-1);
+
+        $list = $obj->field('goodsID,name,trueNumber,sum(number) as num')->where($map)->group('goodsID')->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
+
+        $data = array(
+                'code'=>0,
+                'count'=>$total,
+                'data'=>$list
+            );
+        echo json_encode($data);        
+    }
+
+    public function shopphb(){
+        $createDate = input('post.createDate');
+        $pageSize = input('post.limit',20);
+        $field = input('post.field','num');
+        $order = input('post.order','desc');
+
+        if ($createDate!='') {
+            $date = explode(" - ", $createDate);
+            $startDate = $date[0];
+            $endDate = $date[1];
+            $map['createTime'] = array('between',array(strtotime($startDate),strtotime($endDate)+86399));
+        }
+
+        $obj = db('ShouyinOrderDetail');        
+        $total = $obj->where($map)->group('goodsID')->count();
+
+        $pages = ceil($total/$pageSize);
+        $pageNum = input('post.page',1);
+        $firstRow = $pageSize*($pageNum-1);
+
+        $list = $obj->field('goodsID,name,sum(number) as num')->where($map)->group('goodsID')->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
+
+        $data = array(
+                'code'=>0,
+                'count'=>$total,
+                'data'=>$list
+            );
+        echo json_encode($data);        
     }
 
     public function menu(){

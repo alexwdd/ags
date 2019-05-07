@@ -44,31 +44,11 @@ body{background: #f1f1f1}
     </div>
 
     <div class="layui-row layui-col-space10">        
-        <div class="layui-col-md12">
+        <div class="layui-col-md4">
             <div class="layui-card">
-                <div class="layui-card-header">
-                    <div style="float: left;">商品库存</div>
-                    <form class="layui-form" style="float: right;">
-                        <div class="layui-input-inline">
-                            <input type="text" name="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder="选择日期"/>
-                        </div>
-                        <div style="float: right; margin-left: 10px">
-                            <button class="layui-btn" id="myBtn" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>           
-                        </div>
-                    </form>
-                    
-                </div>
+                <div class="layui-card-header">商品库存</div>
                 <div class="layui-card-body">
                     <table class="layui-hide" id="test" lay-filter="test"></table> 
-
-                    <script type="text/html" id="barTpl">
-                        <p style="font-size: 12px; height:12px; line-height: 100%">{{d.bar}}%</p>
-                        <div class="bar"><span style="width: {{d.bar}}%"></span></div>       
-                    </script>
-                    <script type="text/html" id="barTpl1">
-                        <p style="font-size: 12px; height:12px; line-height: 100%">{{d.bar1}}%</p>
-                        <div class="bar"><span style="width: {{d.bar1}}%"></span></div>       
-                    </script>
                     <script>
                     layui.use(['table','element'], function(){
                         var table = layui.table;
@@ -89,12 +69,8 @@ body{background: #f1f1f1}
                                         }
                                     }
                                 },
-                                {field:'stock', width:100, title: '网站库存',sort:true},
-                                {field:'sellNumber', width:100, title: '网站销量'},
-                                {width:200, title: '百分比',templet: '#barTpl',},
-                                {field:'stock1', width:100, title: '店铺库存',sort:true},
-                                {field:'sellNumber1', width:100, title: '店铺销量'},
-                                {width:200, title: '百分比',templet: '#barTpl1',}                                
+                                {field:'stock', width:100, title: '网站库存',sort:true},    
+                                {field:'stock1', width:100, title: '店铺库存',sort:true}
                             ]],
                             done: function(res){
                                 return false;
@@ -112,14 +88,124 @@ body{background: #f1f1f1}
                                 }
                             });
                         });
+                    });
+                    </script>     
+                </div>
+            </div>            
+        </div>
+
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <div style="float: left;">网站销量排行</div>
+                    <form class="layui-form" style="float: right;">
+                        <div class="layui-input-inline">
+                            <input type="text" name="createDate" id="createDate" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder="选择日期"/>
+                        </div>
+                        <div style="float: right; margin-left: 10px">
+                            <button class="layui-btn" id="myBtn" type="button" function="query"><i class="layui-icon">&#xe615;</i>查询</button>           
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="webPhb" lay-filter="webPhb"></table> 
+                    <script>
+                    layui.use(['table','element'], function(){
+                        var table = layui.table;
+                        var element = layui.element;
+                        var phbTable = table.render({
+                            elem: '#webPhb',
+                            url:'{:url('index/phb')}',
+                            method:'post',
+                            autoSort: false,
+                            cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                            where: {createDate:$("#createDate").val()},
+                            cols: [[
+                                {field:'name', title: '商品名称'},
+                                {field:'num', width:100, title: '销量',sort:true}
+                            ]],
+                            done: function(res){
+                                return false;
+                            },
+                            page: {
+                                limit:20
+                            }
+                        });
+
+                        table.on('sort(webPhb)', function(obj){ //
+                            phbTable.reload({
+                                where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                                    field: obj.field //排序字段
+                                    ,order: obj.type //排序方式
+                                }
+                            });
+                        });
 
                         $("#myBtn").click(function(){
-                            tableIns.reload({
+                            phbTable.reload({
                                 where:{createDate:$("#createDate").val()}
                             });
                         })
                     });
-                    </script>     
+                    </script>
+                </div>
+            </div>            
+        </div>
+
+        <div class="layui-col-md4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <div style="float: left;">店铺销量排行</div>
+                    <form class="layui-form" style="float: right;">
+                        <div class="layui-input-inline">
+                            <input type="text" name="createDate1" id="createDate1" autocomplete="off" class="layui-input fsDate" dateRange="1" placeholder="选择日期"/>
+                        </div>
+                        <div style="float: right; margin-left: 10px">
+                            <button class="layui-btn" id="myBtn1" type="button"><i class="layui-icon">&#xe615;</i>查询</button>           
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="shopPhb" lay-filter="shopPhb"></table> 
+                    <script>
+                    layui.use(['table','element'], function(){
+                        var table = layui.table;
+                        var element = layui.element;
+                        var shopTable = table.render({
+                            elem: '#shopPhb',
+                            url:'{:url('index/shopphb')}',
+                            method:'post',
+                            autoSort: false,
+                            cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                            where: {createDate:$("#createDate").val()},
+                            cols: [[
+                                {field:'name', title: '商品名称'},
+                                {field:'num', width:100, title: '销量',sort:true}
+                            ]],
+                            done: function(res){
+                                return false;
+                            },
+                            page: {
+                                limit:20
+                            }
+                        });
+
+                        table.on('sort(shopPhb)', function(obj){ //
+                            shopTable.reload({
+                                where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                                    field: obj.field //排序字段
+                                    ,order: obj.type //排序方式
+                                }
+                            });
+                        });
+
+                        $("#myBtn1").click(function(){
+                            shopTable.reload({
+                                where:{createDate:$("#createDate1").val()}
+                            });
+                        })
+                    });
+                    </script>
                 </div>
             </div>            
         </div>

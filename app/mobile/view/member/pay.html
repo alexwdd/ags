@@ -11,13 +11,13 @@
     <div class="price" style="text-align: center; padding: 20px 0">
         <li>
             <h2>{$money}</h2>
-            <span>充值金额<br/>订单号：{$order_no}</span>
+            <span>充值金额<br/>订单号：{$order_no} <span class="copyBtn" data-clipboard-text="{$order_no}">复制</span></span>
         </li>
     </div>
 <form id="myForm" class="mui-input-group" style="padding-bottom:15px">
 
     <div style="padding: 10px;border-bottom: 1px #ddd solid">
-    	<p>提示：预充值成为会员，可享会员价！首充${$config.money}成为会员，续充${$config.money1}即可，特殊要求请联系客服。</p>
+    	<p>{:config('site.chongzhi')}</p>
 
         <button id="moneyBtn" class="mui-btn mui-btn-block" type="button">选择支付方式</button>
         <input type="hidden" name="payType" id="payType" value="2" checkType="required" checkMsg="请选择支付方式">
@@ -42,6 +42,16 @@
 </form>
 </div>
 <input type="file" id="uploadfile"/> 
+<script src="{:RES}/js/clipboard.min.js"></script>
+<script>
+var clipboard = new ClipboardJS('.copyBtn');
+clipboard.on('success', function(e) {
+    mui.toast("已复制到粘贴板");
+});
+clipboard.on('error', function(e) {
+    mui.toast("系统不支持");
+});
+</script>
 
 <script src="{:RES}/mui/plugin/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="{:RES}/mui/plugin/mui.poppicker.js"></script>

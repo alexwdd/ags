@@ -135,7 +135,7 @@
                             </div>
 
                             <div class="mBox">
-                                <div class="hd">快递选择 <span style="color: #f00">应中国海关清关规定，所有订单需上传身份证，可在订单详情内或物流官网上传</span></div>
+                                <div class="hd">快递选择 <span style="color: #f00">{:config('site.weibo')}</span></div>
                                 <div class="bd">
                                     <div class="kuaidi">           
                                         <li v-for="vo in wuliu" @click="getWuliu(vo)" :class="{active:kid==vo.id}">{{vo.name}}</li>

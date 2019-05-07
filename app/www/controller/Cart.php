@@ -593,7 +593,8 @@ class Cart extends User
                         'price'=>$val['price'],
                         'server'=>$val['server'],
                         'extends'=>$val['extends'],
-                        'del'=>0
+                        'del'=>0,
+                        'createTime'=>time()
                     ];
 
                     db('OrderDetail')->insert($gData);      

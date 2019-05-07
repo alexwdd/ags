@@ -20,11 +20,23 @@
         
     	<div class="payOk">
     		<div class="fd">
+                <p>支付时请备注单号 <strong style="color:#000">{$list.order_no}</strong><span class="copyBtn" data-clipboard-text="{$list.order_no}">复制</span></p>
     			<p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
     		</div>
     	</div>
     </div>
 </div>
+<script src="{:RES}/js/clipboard.min.js"></script>
+<script>
+var clipboard = new ClipboardJS('.copyBtn');
+clipboard.on('success', function(e) {
+    mui.toast("已复制到粘贴板");
+});
+clipboard.on('error', function(e) {
+    mui.toast("系统不支持");
+});
+</script>
+
 <script type="text/javascript">
 var check = setInterval(checkOrder,2000);
 function checkOrder(){

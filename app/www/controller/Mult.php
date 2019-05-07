@@ -401,6 +401,7 @@ class Mult extends User
                         'server'=>$val['server'],
                         'extends'=>$val['exts'],
                         'del'=>1,
+                        'createTime'=>time()
                     ];
                     array_push($gData,$temp);
                 }
