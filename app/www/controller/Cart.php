@@ -452,9 +452,11 @@ class Cart extends User
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();            
             if ($goods) {
-                $goods['empty'] = getGoodsEmpty($goods);
                 if ($goods['empty']==1) {
-                    $this->error('商品【'.$goods['name'].'】库存不足');
+                    $stock = db("Goods")->where('id',$goods['goodsID'])->value("stock");
+                    if ($stock < $value['goodsNumber']) {
+                        $this->error('商品【'.$goods['name'].'】库存不足，当前库存为'.$stock);
+                    }
                 }
             }else{
                 $this->error('商品【'.$goods['name'].'】已经下架');

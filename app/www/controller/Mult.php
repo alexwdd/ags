@@ -294,12 +294,14 @@ class Mult extends User
         if (!$list) {
             $this->error('没有选择任何商品');
         }*/
-
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();
-            if ($goods) { 
-                if ($list[$key]['empty']==1) {
-                    $this->error('商品【'.$goods['name'].'】库存不足');
+            if ($goods) {
+                if ($goods['empty']==1) {
+                    $stock = db("Goods")->where('id',$goods['goodsID'])->value("stock");
+                    if ($stock < $value['goodsNumber']) {
+                        $this->error('商品【'.$goods['name'].'】库存不足，当前库存为'.$stock);
+                    }
                 }
             }else{
                 $this->error('商品【'.$goods['name'].'】已经下架');
