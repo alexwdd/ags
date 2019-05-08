@@ -11,6 +11,7 @@ return [
             'adminx/index/main',
             'adminx/index/menu',
             'adminx/upload/index',
+            'adminx/upload/image',
             'adminx/bag/upload',
             'adminx/order/image',
             'adminx/user/password',
