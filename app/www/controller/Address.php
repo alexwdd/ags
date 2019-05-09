@@ -13,12 +13,11 @@ class Address extends User
                 $map['name|mobile'] = $keyword;
             }
 
+            $map['memberID'] = $this->user['id'];
             $total = db('Address')->where($map)->count();
             $pages = ceil($total/$pageSize);
             $pageNum = input('post.page',1);
-            $firstRow = $pageSize*($pageNum-1); 
-
-            $map['memberID'] = $this->user['id'];
+            $firstRow = $pageSize*($pageNum-1);             
             $list = db('Address')->where($map)->order('id desc')->limit($firstRow.','.$pageSize)->select();        
             if($list) {
                 $list = collection($list)->toArray();
@@ -51,13 +50,13 @@ class Address extends User
     public function add(){
         if (request()->isPost()) {
             if (!checkRequest()) {die;}            
-            $data = input('post.');
+            $data = input('post.');            
             $data['memberID'] = $this->user['id'];
             $res = model('Address')->add( $data );
-            if ($res) {
+            if ($res['code']==1) {
                 $this->success('操作成功',url('address/index'),['id'=>$res['msg']]);
             }else{
-                $this->error('操作失败');
+                $this->error($res['msg']);
             }
         }else{
             return view();
@@ -69,18 +68,17 @@ class Address extends User
             if (!checkRequest()) {die;}    
             $data = input('post.');
             $data['memberID'] = $this->user['id'];        
-            $res = model('Address')->edit( $data );        
+            $res = model('Address')->edit( $data );
             if ($res['code']==1) {
                 $map['addressID'] = $data['id'];
                 $map['memberID'] = $this->user['id'];
                 $address['sn'] = $data['sn'];
                 $address['front'] = $data['front'];
                 $address['back'] = $data['back'];
-                db('OrderPerson')->where($map)->update($address);
-                
+                db('OrderPerson')->where($map)->update($address);                
                 $this->success('操作成功',url('address/index'));
             }else{
-                $this->error('操作失败');
+                $this->error($res['msg']);
             }
         }else{
             $id = input('param.id');
