@@ -77,6 +77,7 @@ class Order extends User
                 unset($where);
                 $where['image'] = array('eq','');
                 $where['orderID'] = $value["id"];
+                $where['type'] = array('not in',[1,2,3]);
                 $num = db("OrderBaoguo")->where($where)->count();
                 if ($num>0) {
                     $list[$key]['image'] = 0;
