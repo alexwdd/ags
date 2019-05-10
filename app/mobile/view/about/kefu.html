@@ -1,0 +1,18 @@
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">在线客服</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">
+    <div class="content">
+        <div class="kefuList">
+        	{volist name="kefu" id="vo"}
+        	<li><img src="{$vo.logo}"><p>{$vo.name}</p></li>
+        	{/volist}
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />

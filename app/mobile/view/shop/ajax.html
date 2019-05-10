@@ -1,0 +1,19 @@
+{volist name="list" id="vo" empty="$empty"}
+<div class="orderList">
+    <div class="hd">{$vo.order_no}
+    <span>${$vo.total}</span></div>
+    <div class="bd">
+        <div class="orderDetail">
+            <li>
+                {volist name="vo.goods" id="f"}
+                <p>{$f.name} x {$f.number}</p>
+                {/volist}
+            </li>
+        </div>
+    </div>
+    <div class="fd">                    
+        <div style="float:left">{$vo.payType}</div> 
+        <a href="{:url('shop/detail',array('id'=>$vo['id']))}"  class="mui-btn mui-btn-default">订单详情</a> 
+    </div>
+</div>
+{/volist}

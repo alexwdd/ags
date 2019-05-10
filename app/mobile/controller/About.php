@@ -7,8 +7,15 @@ class About extends Home
 
     public function index()
     {        
-            return view();
+        return view();
       
+    }
+
+    public function kefu(){
+        $map['show'] = 1;
+        $kefu=db("Kefu")->field('name,logo')->where($map)->order("sort asc,id asc")->select();
+        $this->assign('kefu',$kefu);
+        return view();
     }
 
     public function detail()

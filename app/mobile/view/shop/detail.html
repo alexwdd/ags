@@ -1,0 +1,31 @@
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	<h1 class="mui-title">订单详情</h1>
+</header>
+
+{include file="public/nav" /}
+
+<div class="mui-content">   
+    {volist name="list.goods" id="vo"}
+    <div class="mui-row cartList">
+        <div class="mui-col-xs-12" style="padding-left:10px" id="cart{$vo.id}">
+            <p>{$vo.name}</p>            
+            <p class="m">${$vo.price} X {$vo.number}</p> 
+        </div>
+    </div>
+    {/volist}
+
+    <div class="payOk">
+        <div class="fd">
+            <p>单号<span>{$list.order_no}</span></p>
+            <p>小票号<span>{$list.No}</span></p>
+            <p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
+            <p>商品金额<span>${$list.goodsMoney}</span></p>
+            <p>运费<span>${$list.yunfei}</span></p>
+            <p>订单总金额<span>${$list.total}</span></p>
+            <p>支付方式<span>{$list.payType}</span></p>            
+        </div>
+    </div>    
+</div>
+
+<input type="hidden" id="activeIndex" value="member" />

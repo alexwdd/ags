@@ -375,3 +375,8 @@
 .pinyin{height: 40px; line-height: 40px;clear: both; padding-left: 10px;}
 .pinpai{clear: both; overflow: hidden; background-color: #fff}
 .pinpai li{float: left; width: 33.333%; border-right: 1px #dbdbdb solid; border-bottom: 1px #dbdbdb solid; text-align: center;}
+
+.kefu{position: fixed; width: 40px; height: 40px; border-radius: 50%; text-align: center; background:#39c4da; bottom: 70px; right: 3px; line-height:40px;color:#fff}
+.kefu a{color: #fff}
+.kefu i{font-size: 26px}
+.kefuList{text-align: center;}
