@@ -79,18 +79,28 @@ class Order extends User
             }else{
                 $item['upload'] = 1;
             }
+
             if ($item['payType']>1) {
                 unset($where);
-                $where['image'] = array('eq','');
                 $where['orderID'] = $orderID;
-                $where['type'] = array('not in',[1,2,3]);
-                $num = db("OrderBaoguo")->where($where)->count();
-                if ($num>0) {
-                    $item['image'] = 0;
-                }else{
-                    $item['image'] = 1;
-                }
-            }            
+                $bag = db("OrderBaoguo")->field('type,image')->where($where)->select();     
+                foreach ($bag as $k => $val) {
+                    if(in_array($val['type'],[1,2,3])){//奶粉类
+                        if($val['image']!='' && $val['sign']!=''){
+                            $item['image'] = 1;
+                        }else{
+                            $item['image'] = 0;
+                        }
+                    }else{
+                        if($val['image']=='') {
+                            $item['image'] = 0;
+                            break;
+                        }else{
+                            $item['image'] = 1;
+                        }
+                    }                                          
+                }                
+            }         
             return $item;
         });
         $page = $list->render();

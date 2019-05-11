@@ -30,15 +30,24 @@ class Member extends User
 
             if ($value['payType']>1) {
                 unset($where);
-                $where['image'] = array('eq','');
                 $where['orderID'] = $value["id"];
-                $where['type'] = array('not in',[1,2,3]);
-                $num = db("OrderBaoguo")->where($where)->count();
-                if ($num>0) {
-                    $list[$key]['image'] = 0;
-                }else{
-                    $list[$key]['image'] = 1;
-                }
+                $bag = db("OrderBaoguo")->field('type,image')->where($where)->select();     
+                foreach ($bag as $k => $val) {
+                    if(in_array($val['type'],[1,2,3])){//奶粉类
+                        if($val['image']!='' && $val['sign']!=''){
+                            $list[$key]['image'] = 1;
+                        }else{
+                            $list[$key]['image'] = 0;
+                        }
+                    }else{
+                        if($val['image']=='') {
+                            $list[$key]['image'] = 0;
+                            break;
+                        }else{
+                            $list[$key]['image'] = 1;
+                        }
+                    }                                          
+                }                
             }
         }
         $this->assign('list',$list);
