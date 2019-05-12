@@ -5,8 +5,16 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		$value = db("OrderBaoguo")->where('kdNo','ZA02818059968')->find();
-		$this->createSingleOrder($value);
+		$list = db("Order")->field('id')->select();
+		foreach ($list as $key => $value) {
+			$detail = db("OrderDetail")->where('orderID',$value['id'])->select();
+			$chengben = 0;
+			foreach ($detail as $k => $val) {
+				$inprice = db("Goods")->where('id',$val['goodsID'])->value('inprice');
+				$chengben += $inprice * $val['number']; 
+			}
+			db('Order')->where('id',$value['id'])->setField("inprice",$chengben);
+		}
 	}
 	
 	//创建运单

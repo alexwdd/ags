@@ -449,8 +449,11 @@ class Cart extends User
         }
 
         $hongjiu = 0;
+        $chengben = 0;//商品总成本
         foreach ($list as $key => $value) {
-            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();            
+            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();
+            $goodsInprice = db("Goods")->where('id',$value['goodsID'])->value("inprice");
+            $chengben += $goodsInprice * $value['goodsNumber'];
             if ($goods) {
                 if ($goods['empty']==1) {
                     $stock = db("Goods")->where('id',$goods['goodsID'])->value("stock");
@@ -530,7 +533,8 @@ class Cart extends User
         $data['rmb'] = $rate * $data['money'];
         $data['goodsMoney'] = $totalPrice;
         $data['money'] = 0;
-        $data['wallet'] = 0;        
+        $data['wallet'] = 0;
+        $data['inprice'] = $chengben;
         $data['payment'] = $totalYunfei;
         $data['wuliuInprice'] = $totalInprice;
         $data['payType'] = 0;

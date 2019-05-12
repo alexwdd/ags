@@ -59,6 +59,7 @@ class Order extends Admin
             foreach ($list as $key => $value) {
                 $list[$key]['pay'] = getPayType($value['payType']);
                 $list[$key]['baoguoNumber'] = db('OrderBaoguo')->where('orderID',$value['id'])->count();
+                $list[$key]['lirun'] = $value['total']-$value['inprice']-$value['wuliuInprice'];
             }
         }
         $result = array(

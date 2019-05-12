@@ -460,15 +460,10 @@ class Mult extends User
             $this->error('没有选择任何商品');
         }
 
-        foreach ($list as $key => $value) {
-            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();            
-            if ($goods) { 
-                if ($list[$key]['empty']==1) {
-                    $this->error('商品【'.$goods['name'].'】库存不足');
-                }
-            }else{
-                $this->error('商品【'.$goods['name'].'】已经下架');
-            }
+        $chengben = 0;//商品总成本
+        foreach ($list as $key => $value) { 
+            $goodsInprice = db("Goods")->where('id',$value['goodsID'])->value("inprice");
+            $chengben += $goodsInprice * $value['goodsNumber'];
         }
 
         $res = $this->checkGoods($list);
@@ -508,6 +503,7 @@ class Mult extends User
         $data['money'] = 0;
         $data['wallet'] = 0;
         $data['rmb'] = $rate * $data['money'];
+        $data['inprice'] = $chengben;
         $data['payment'] = $totalYunfei;
         $data['wuliuInprice'] = $totalInprice;
         $data['payType'] = 0;
