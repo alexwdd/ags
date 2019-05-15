@@ -31,5 +31,13 @@ class User extends Home
         
     }  
 
-    
+    public function getOrderNo(){
+        $order_no = getStoreOrderNo();
+        $map['order_no'] = $order_no;
+        $count = db("Order")->where($map)->count();
+        if ($count>0) {
+            return $this->getOrderNo();
+        }
+        return $order_no;
+    }
 }

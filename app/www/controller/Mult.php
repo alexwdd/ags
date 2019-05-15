@@ -493,9 +493,9 @@ class Mult extends User
             $payStatus = 0;
         }*/
 
+        $order_no = $this->getOrderNo();
         $data['memberID'] = $this->user['id'];
         $data['memberMobile'] = $this->user['mobile'];
-        $order_no = getStoreOrderNo();
         $data['order_no'] = $order_no;
         $data['total'] = $totalPrice+$totalYunfei;
         $data['serverMoney'] = $serverMoney;

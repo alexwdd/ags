@@ -522,11 +522,12 @@ class Cart extends User
             $wallet = $this->user['money'];
             $payStatus = 0;
         }*/
+
+        $order_no = $this->getOrderNo();
         $data['sender'] = $sender[0];
         $data['senderMobile'] = $sender[1];
         $data['memberID'] = $this->user['id'];
-        $data['memberMobile'] = $this->user['mobile'];
-        $order_no = getStoreOrderNo();
+        $data['memberMobile'] = $this->user['mobile'];        
         $data['order_no'] = $order_no;
         $data['total'] = $totalPrice+$totalYunfei;
         $data['serverMoney'] = $serverMoney;
@@ -658,5 +659,5 @@ class Cart extends User
     public function getYunfei(){
         $kid = input("param.kid");
         echo $this->getYunfeiJson($this->user,$kid);
-    }    
+    } 
 }
