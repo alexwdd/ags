@@ -168,7 +168,7 @@ dl.action dd{ margin-left: 141px; border-left: 1px #dbdbdb solid; overflow: hidd
 dl.action dd li{padding: 10px; float: left;}
 
 .count{clear: both; overflow: hidden;}
-.count li{float: left; width: 33.3333%; padding: 10px; box-sizing:border-box; overflow: hidden;border-bottom: 1px #dbdbdb solid;overflow: hidden; line-height: 50px;}
+.count li{float: left; width:25%; padding: 10px; box-sizing:border-box; overflow: hidden;border-bottom: 1px #dbdbdb solid;overflow: hidden; line-height: 50px;}
 .count li label{width: 100px; float: left; color: #666; display: block; text-align: right; margin-right: 20px}
 .count li p{float: left;}
 .count li p span{ color: #c00; font-size: 20px; padding: 0 5px}

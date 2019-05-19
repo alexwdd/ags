@@ -30,6 +30,10 @@ class Base extends Controller {
         config('site',$config);        
     }
 
+    public function visitor(){
+        db("Visitor")->where('id',1)->setInc("number");
+    }
+
     public function getCartNumber($user){
         $map['memberID'] = $user['id']; 
         $list = db("Cart")->where($map)->select();

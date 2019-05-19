@@ -41,3 +41,8 @@
 </div>
 <input type="hidden" id="loginBg" value="{$loginBg}">
 <div class="copyright">版权所有：{:config('site.copyright')}</div>
+<script type="text/javascript">
+$(function(){
+	$.get("{:url('index/visitor')}");
+})
+</script>

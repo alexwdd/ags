@@ -40,6 +40,7 @@ class Index extends Admin {
         $order2 = db('Order')->where($map)->sum('total'); 
         
         $count = [
+            'visitor'=>db("Visitor")->value("number"),
             'totalMember'=>$totalMember,
             'order1'=>$order1,
             'order2'=>$order2           
