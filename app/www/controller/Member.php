@@ -320,6 +320,7 @@ class Member extends User
                 $map['type'] = $type;
             }            
             $map['memberID'] = $this->user['id'];
+            $map['show'] = 1;
             if ($createDate!='') {
                 $date = explode(" - ", $createDate);
                 $startDate = $date[0];

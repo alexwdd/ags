@@ -33,7 +33,7 @@ class Pay extends Admin
         }
 
         if ($keyword!='') {
-            $map['mobile'] = $keyword;
+            $map['memberID|mobile'] = $keyword;
         }
 
         $total = $this->where($map)->count();

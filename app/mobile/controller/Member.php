@@ -482,6 +482,7 @@ class Member extends User
 
     public function history(){   
         $map['memberID'] = $this->user['id'];
+        $map['show'] = 1;
         $list = db('Pay')->where($map)->order('id desc')->select();
         $this->assign('list',$list);
         return view();
