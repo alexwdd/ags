@@ -47,6 +47,7 @@ class Member extends Admin {
 		if(request()->isPost()){
 	        $mobile = input('post.mobile');
 	        $password = input('post.password');
+	        $repassword = input('post.repassword');
 			$name = input('post.name');
 			$sn = input('post.sn');
 			$weixin = input('post.weixin');
@@ -73,8 +74,8 @@ class Member extends Admin {
     			}    			
     		}
 
-			if (!empty($password)&&!empty($cpassword)) {
-				if($password!=$cpassword){
+			if (!empty($password) && !empty($repassword)) {
+				if($password!=$repassword){
 			    	$this->error('登录密码不一致！');  
 				}
 				$data['password']=think_encrypt($password,config('DATA_CRYPT_KEY'));
@@ -87,7 +88,6 @@ class Member extends Admin {
 	      	$data['disable'] = $disable;
 	      	$data['vip'] = $vip;
 	      	$data['group'] = $group;
-
 	        return model('Member')->edit( $data );
 		}else{
 			$id = input('get.id');
