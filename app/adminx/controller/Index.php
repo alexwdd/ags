@@ -37,7 +37,7 @@ class Index extends Admin {
         $endDate=strtotime($endDate);
         $map['createTime'] = array('between',array($beginDate,$endDate));
         $map['payStatus'] = array('in',[2,3,4]);
-        $order2 = db('Order')->where($map)->sum('total'); 
+        $order2 = db('Order')->where($map)->sum('total');
         
         $count = [
             'visitor'=>db("Visitor")->value("number"),
