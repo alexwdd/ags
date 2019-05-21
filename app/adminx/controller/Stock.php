@@ -48,7 +48,7 @@ class Stock extends Admin {
 
         $obj = db('Goods');
         if ($keyword!='') {
-            $map['name'] = array('like','%'.$keyword.'%');
+            $map['name|short|keyword'] = array('like','%'.$keyword.'%');
         }    
         $total = $obj->where($map)->count();
 

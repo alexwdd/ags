@@ -15,7 +15,7 @@ class Base extends Controller {
         define('RES', $THEME_PATH . 'common');
 
         //删除12小时内未付款的订单
-        $map['createTime'] = array('lt',(time()-3600*24));
+        $map['createTime'] = array('lt',(time()-3600*48));
         $map['payStatus'] = 0;
         $map['image'] = array('eq','');
         $list = db("Order")->where($map)->select();

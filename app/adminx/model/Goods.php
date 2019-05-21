@@ -75,7 +75,7 @@ class Goods extends Admin
             $map['path'] = array('like', $path.'%');
         }
         if($keyword!=''){
-            $map['name|short'] = array('like', '%'.$keyword.'%');
+            $map['name|short|keyword'] = array('like', '%'.$keyword.'%');
         }
 
         $total = $this->where($map)->count();
