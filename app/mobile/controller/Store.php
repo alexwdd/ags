@@ -195,7 +195,13 @@ class Store extends Home
             $this->assign('thisSpec',$thisSpec);
         }
 
-        $list['empty'] = getGoodsEmpty($list);
+        if ($list['empty']==1) {
+            if ($list['stock']<=0) {
+                $list['empty'] = 1;
+            }else{
+                $list['empty'] = 0;
+            }
+        }
 
         $this->assign('image',$image);
         $this->assign('list',$list);

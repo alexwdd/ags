@@ -194,13 +194,14 @@ class Zhongyou {
 		}
 
 		//全部分箱后是否还有保健品
-		for($i=0;$i<3;$i++){
+		for($i=0;$i<5;$i++){
 			if (count($this->baojianpin)>0) {
 	        	$goodsNumber = 0;
 				foreach ($this->baojianpin as $key => $value) {
 					$goodsNumber += $value['goodsNumber'];
 				}
 				$baoguoNumber = ceil($goodsNumber/8);
+
 				for ($i=0;$i<$baoguoNumber;$i++) {
 					$baoguo = [
 						'type'=>0, 				//类型
