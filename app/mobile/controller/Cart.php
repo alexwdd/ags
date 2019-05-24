@@ -85,7 +85,16 @@ class Cart extends User
         $this->assign("money",$money);
         $this->assign("kid",$kid);
 
-        $total = $baoguo['totalPrice']+$baoguo['totalExtend']+$money['total'];
+        $realMoney = $baoguo['totalPrice']+$baoguo['totalExtend']+$money['total'];
+        $zhekou = config('site.discount');
+        if($zhekou > 0){
+            $total = $realMoney * config('site.discount')/10;
+        }else{
+            $total = $realMoney;
+        }
+
+        $this->assign("zhekou",$zhekou);        
+        $this->assign("realMoney",$realMoney);
         $this->assign("total",$total);
 
         $payMoney = $total-$this->user['money'];

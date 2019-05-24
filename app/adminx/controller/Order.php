@@ -120,6 +120,10 @@ class Order extends Admin {
 	                $person[$key]['baoguo'] = $baoguo;
 	            }            
 	            $this->assign('person',$person);
+
+	            if ($list['discount']=='0' || $list['discount']=='') {
+	            	$list['discount'] = '无';
+	            }
 	            $this->assign('list',$list);
 	            return view();
 			}

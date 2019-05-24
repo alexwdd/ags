@@ -170,6 +170,9 @@
 
     <div class="payBox">
         <div class="box">
+        {gt name="zhekou" value="0"}
+        折扣：{$zhekou}&nbsp;&nbsp;&nbsp;&nbsp;
+        {/gt}
         账户预存款：${$user.money|number_format=###,2}&nbsp;&nbsp;&nbsp;&nbsp;
         运费总计：$<span id="yunfei">{{yunfei}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
         商品总计<span class="money" id="total">${{total}}</span>
@@ -333,6 +336,7 @@ vm = new Vue({
     data : {
         show:true,
         total:0.00,
+        zhekou:{$zhekou},
         yunfei:0.00,
         person:[],
         cart:[],
@@ -584,6 +588,10 @@ vm = new Vue({
                 _html="订单共计【$"+orderMoney+"元】";
             }*/
             let money = parseFloat(this.total)+parseFloat(this.yunfei);
+            if (this.zhekou>0){
+                money = money * parseFloat(this.zhekou) / 10;
+                money = money.toFixed(2);
+            }
             _html="订单共计【$"+money+"元】";      
             layer.confirm(
                 _html,

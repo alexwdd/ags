@@ -223,7 +223,7 @@ function _upload(url,form,o){
         cache: false,
         data: form,
         dataType:'json',
-        timeout: 5000,
+        //timeout: 5000,
         //必须false才会避开jQuery对 formdata 的默认处理 
         // XMLHttpRequest会对 formdata 进行正确的处理
         processData: false,

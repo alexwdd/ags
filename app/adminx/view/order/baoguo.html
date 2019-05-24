@@ -87,6 +87,11 @@
 							<label class="layui-form-label">支付方式</label>
 							<div class="layui-form-mid">{$list.payType|getPayType}</div>
 						</div>
+
+						<div class="layui-form-item">
+							<label class="layui-form-label">折扣</label>
+							<div class="layui-form-mid">{$list.discount}</div>
+						</div>
 						
 						{eq name="list.payType" value="0"}
 						<div class="layui-form-item">

@@ -11,7 +11,10 @@ class Mult extends User
         $map['orderID'] = 0;
         db("OrderBaoguo")->where($map)->delete();
         db("OrderPerson")->where($map)->delete();
-        db("OrderDetail")->where($map)->delete();        
+        db("OrderDetail")->where($map)->delete();     
+
+        $zhekou = config('site.discount');
+        $this->assign('zhekou',$zhekou);
         return view();
     }
 
@@ -481,7 +484,13 @@ class Mult extends User
         $totalYunfei = db("OrderPerson")->where($map)->sum("payment");
         $totalInprice = db("OrderPerson")->where($map)->sum("wuliuInprice");
 
-        $money = $totalPrice+$totalYunfei;
+        $realMoney = $totalPrice+$totalYunfei;
+        $zhekou = config('site.discount');
+        if($zhekou > 0){
+            $total = $realMoney * config('site.discount')/10;
+        }else{
+            $total = $realMoney;
+        }
         /*if ($this->user['money']>=$money) {
             $payType = 2;
             $wallet = $money;
@@ -497,7 +506,8 @@ class Mult extends User
         $data['memberID'] = $this->user['id'];
         $data['memberMobile'] = $this->user['mobile'];
         $data['order_no'] = $order_no;
-        $data['total'] = $totalPrice+$totalYunfei;
+        $data['total'] = $total;
+        $data['discount'] = $zhekou;
         $data['serverMoney'] = $serverMoney;
         $data['goodsMoney'] = $totalPrice;
         $data['money'] = 0;

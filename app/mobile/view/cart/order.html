@@ -71,6 +71,12 @@
                 <span class="money">${$baoguo.totalPrice}</span>
             </li>
             {/eq}
+            {gt name="zhekou" value="0"}
+            <li>
+                <p>折扣</p>
+                <span style="color:#f00">{$zhekou}</span>
+            </li>
+            {/gt}
         </div>
     </div>
     
@@ -78,7 +84,12 @@
 
     <div class="selectFooter">
         <div class="cartInfo" style="font-size: 12px">
-            总金额 <span id="totalMoney" style="color:#f00">${$total}</span>
+            {gt name="zhekou" value="0"}
+            金额 <span id="totalMoney" style="color:#f00">${$realMoney}</span>
+            折后 <span id="totalMoney" style="color:#f00">${$total}</span>
+            {else/}
+            金额 <span id="totalMoney" style="color:#f00">${$total}</span>
+            {/gt}
             预存款 <span id="yunfei" style="color:#f00">${$user.money}</span>
         </div> 
         <div id="confirmBtn" action="{:url('www/cart/doSubmit')}" class="btn">马上下单</div>

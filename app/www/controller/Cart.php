@@ -241,7 +241,16 @@ class Cart extends User
         $this->assign("money",$money);
         $this->assign("kid",$kid);
 
-        $total = $baoguo['totalPrice']+$baoguo['totalExtend']+$money['total'];
+        $realMoney = $baoguo['totalPrice']+$baoguo['totalExtend']+$money['total'];
+
+        $zhekou = config('site.discount');
+        if($zhekou > 0){
+            $total = $realMoney * config('site.discount')/10;
+        }else{
+            $total = $realMoney;
+        }
+        $this->assign("zhekou",$zhekou);        
+        $this->assign("realMoney",$realMoney);
         $this->assign("total",$total);
 
         $payMoney = $total-$this->user['money'];
@@ -522,6 +531,13 @@ class Cart extends User
             $wallet = $this->user['money'];
             $payStatus = 0;
         }*/
+        $realMoney = $totalPrice+$totalYunfei;
+        $zhekou = config('site.discount');
+        if($zhekou > 0){
+            $total = $realMoney * config('site.discount')/10;
+        }else{
+            $total = $realMoney;
+        }
 
         $order_no = $this->getOrderNo();
         $data['sender'] = $sender[0];
@@ -529,7 +545,8 @@ class Cart extends User
         $data['memberID'] = $this->user['id'];
         $data['memberMobile'] = $this->user['mobile'];        
         $data['order_no'] = $order_no;
-        $data['total'] = $totalPrice+$totalYunfei;
+        $data['total'] = $total;
+        $data['discount'] = $zhekou;
         $data['serverMoney'] = $serverMoney;
         $data['rmb'] = $rate * $data['money'];
         $data['goodsMoney'] = $totalPrice;
