@@ -33,7 +33,7 @@
             <p>商品金额<span>${$list.goodsMoney}</span></p>
             <p>运费<span>${$list['payment']}</span></p>
             <p>余额支付<span>${$list.wallet}</span></p>
-            <p>订单总金额<span>${$list.total}</span></p>
+            <p>订单总金额{gt name="list.discount" value="0"}({$list.discount}折){/gt}<span>${$list.total}</span></p>
             <p>支付方式<span>{$list.payType|getPayType}</span></p>
             <p>状态
             <span>

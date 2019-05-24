@@ -319,6 +319,13 @@
         </form>
     </el-dialog>
 </div>
+
+{gt name=":config('site.discount')" value="0"}
+<div class="zhekou">
+    <p>8.5<span>折</span></p>
+</div>
+{/gt}
+
 <script>
 var is_over = false;
 function alert_if_over() {
