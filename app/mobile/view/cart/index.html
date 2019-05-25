@@ -12,7 +12,7 @@
 
 <div class="mui-content" id="cartContent">
     {gt name=":config('site.discount')" value="0"}
-    <div class="alert">今日下单，马上享受85折</div>
+    <div class="alert">今日下单，马上享受{:config('site.discount')}折</div>
     {/gt}
     {empty name="list"}
 

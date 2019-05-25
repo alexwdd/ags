@@ -24,12 +24,13 @@
                         <div style="border:1px #dbdbdb solid">
                             <div id="showbox">
                                 {volist name="image" id="vo"}
-                                <img src="{$vo.url}" />
+                                <img src="{$vo.url}" width="446" height="446"/>
                                 {/volist}
                             </div><!--展示图片盒子-->
                         </div>
 
                         <div id="showsum"></div><!--展示图片里边-->
+
                         <p class="showpage">
                             <a href="javascript:void(0);" id="showlast"> < </a>
                             <a href="javascript:void(0);" id="shownext"> > </a>
@@ -208,7 +209,7 @@ $(document).ready(function(){
               "sumw":60,//列表每个宽度,该版本中请把宽高填写成一样
               "sumh":60,//列表每个高度,该版本中请把宽高填写成一样
               "sumi":14,//列表间隔
-              "sums":6,//列表显示个数
+              "sums":5,//列表显示个数
               "sumsel":"sel",
               "sumborder":1,//列表边框，没有边框填写0，边框在css中修改
               "lastid":"showlast",
