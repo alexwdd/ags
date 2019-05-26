@@ -355,11 +355,11 @@ class Order extends User
                     }
                     $data['money'] = $list['total'] - $this->user['money'];
                     $data['wallet'] = $this->user['money'];  
-                }
-
-                db('Order')->where('id',$list['id'])->update($data);
+                }         
 
                 if ($data['wallet']>0) {
+                    $finance = model('Finance');
+                    $finance->startTrans();
                     $fdata = array(
                         'type' => 2,
                         'money' => $data['wallet'],
@@ -374,8 +374,32 @@ class Order extends User
                         'showTime' => time(),
                         'createTime' => time()
                     );
-                    db('Finance')->insert($fdata);
-                    $this->setUserGroup($this->user);//更改会员身份
+                    //db('Finance')->insert($fdata);
+                    $res = $finance->insert( $fdata );
+                    if ($res) {
+                        $orderModel = model('Order');      
+                        $orderModel->startTrans();  
+                        $result = $orderModel->where('id',$list['id'])->update($data);
+                        if ($result) {  
+                            $orderModel->commit();
+                            $finance->commit();  
+                            file_put_contents("pay".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."订单" .$list['order_no']. "，总金额".$list['total']."，用户余额".$this->user['money']."，扣余额".$data['wallet']."，应付".$data['money']."\r\n", FILE_APPEND);
+                        }else{
+                            $orderModel->rollBack();    
+                            $finance->rollBack();  
+                            $this->error('操作失败'); 
+                        }                        
+                        $this->setUserGroup($this->user);//更改会员身份
+                    }else{
+                        $orderModel->rollBack();    
+                        $finance->rollBack();  
+                        $this->error('操作失败');
+                    }
+                }else{
+                    $result = db("Order")->where('id',$list['id'])->update($data);
+                    if (!$result) {  
+                        $this->error('操作失败'); 
+                    }
                 }
 
                 if ($data['payStatus']==2) {
