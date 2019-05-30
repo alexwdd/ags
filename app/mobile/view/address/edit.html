@@ -18,23 +18,12 @@
         <div class="mui-input-row">
             <label>手机号</label>
             <input type="number" name="mobile" id="mobile" value="{$address.mobile}" class="mui-input-clear mui-input" checkType="phone" checkMsg="请输入正确手机号码">
-        </div>
-        
-        <script src="{:RES}/js/diqu.js" type="text/javascript" charset="utf-8"></script>
+        </div>    
     
-        <div class="mui-row" style="border-bottom:1px #c8c7cc solid;margin-left:15px">
-            <div class="mui-col-xs-4">
-                <select name="province" class="mui-input" checkType="required" checkMsg="请选择城市" style="margin:0"></select>
-            </div>
-            <div class="mui-col-xs-4">
-                <select name="city" style="margin:0"></select>
-            </div>
-            <div class="mui-col-xs-4">
-                <select name="area" style="margin:0"></select>
-            </div>
+        <div class="mui-input-row">
+            <label>选择地区</label>
+            <input type="text" id="cityResult" value="{$address.province} {$address.city} {$address.area}" class="mui-input-clear mui-input" readonly="">
         </div>
-
-        <script language="javascript" defer>new PCAS("province","city","area","{$address.province}","{$address.city}","{$address.address}");</script>
 
         <div class="mui-input-row">
             <label>详细地址</label>
@@ -60,7 +49,42 @@
         <input type="hidden" name="id" value="{$address.id}">
         <input type="hidden" name="kid" value="{$kid}">
         <input type="hidden" name="sid" value="{$sid}">
+        <input type="hidden" name="province" id="province" value="{$address.province}" checkType="required" checkMsg="请选择区域">
+        <input type="hidden" name="city" id="city" value="{$address.city}">   
+        <input type="hidden" name="area" id="area" value="{$address.area}"> 
     </form>
 
 </div>
 <input type="file" id="uploadfile"/> 
+
+<link href="{:RES}/css/mui.picker.min.css" rel="stylesheet" />
+<link href="{:RES}/css/mui.poppicker.css" rel="stylesheet" />
+<script src="{:RES}/mui/plugin/mui.picker.min.js"></script>
+<script src="{:RES}/mui/plugin/mui.poppicker.js"></script>
+<script src="{:RES}/js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+<script>
+(function($, doc) {
+    $.init();
+    $.ready(function() {
+        //-----------------------------------------
+        //                  //级联示例
+        var cityPicker3 = new $.PopPicker({
+            layer: 3
+        });
+        cityPicker3.setData(cityData3);
+        var showCityPickerButton = doc.getElementById('cityResult');
+        var cityResult3 = doc.getElementById('cityResult');
+        showCityPickerButton.addEventListener('tap', function(event) {
+            cityPicker3.show(function(items) {
+                cityResult3.value = (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+
+                doc.getElementById('province').value = (items[0] || {}).text;
+                doc.getElementById('city').value = (items[1] || {}).text;
+                doc.getElementById('area').value = (items[2] || {}).text;
+                //返回 false 可以阻止选择框的关闭
+                //return false;
+            });
+        }, false);
+    });
+})(mui, document);
+</script>
