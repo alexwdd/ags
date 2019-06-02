@@ -342,6 +342,17 @@ class Order extends User
             $map['memberID'] = $this->user['id'];
             $map['payStatus'] = 0;
             $list = db('Order')->where($map)->find();
+
+            if ($list['payStatus']>0) {
+                $this->error("该订单已支付完成，不要重复支付。");
+            }
+
+            if ($list['payType']==3) {
+                $this->redirect(url('order/pay','order_no='.$order_no));die;
+            }elseif($list['payType']==4) {
+                $this->redirect(url('order/cardpay','order_no='.$order_no));die;
+            }      
+
             if ($list) {
                 if ($this->user['money']>=$list['total']) {
                     $data['payType'] = 2;

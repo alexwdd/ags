@@ -61,6 +61,8 @@ class Goods extends Admin
 
             $wuliu = db("Wuliu")->order("sort asc")->select();
             $this->assign('wuliu', $wuliu);
+
+            $this->assign('tag',config('GOODS_TAG'));
             return view();
         }
     }
@@ -120,6 +122,8 @@ class Goods extends Admin
 
                 $wuliu = db("Wuliu")->order("sort asc")->select();
                 $this->assign("wuliu",$wuliu);
+
+                $this->assign('tag',config('GOODS_TAG'));
                 return view();
             }
         }
@@ -150,6 +154,8 @@ class Goods extends Admin
             $cate[$key]['count'] = $count;
         }
         $this->assign('cate', $cate);
+
+        $this->assign('tag',config('GOODS_TAG'));
         $res = $this->fetch();        
         echo $res;
     }

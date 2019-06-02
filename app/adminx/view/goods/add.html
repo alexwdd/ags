@@ -217,10 +217,9 @@
 					<div class="layui-input-inline">
 						<select name="tag" id="tag">
 							<option value="">无</option>
-					        <option value="1">包邮</option>
-					        <option value="2">三罐包邮</option>
-					        <option value="3">三袋包邮</option>
-					        <option value="4">六袋包邮</option>
+							{volist name="tag" id="vo"}
+					        <option value="{$vo.id}">{$vo.name}</option>
+					        {/volist}
 	      				</select>
 					</div>	
 				</div>

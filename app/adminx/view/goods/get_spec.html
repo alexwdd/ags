@@ -38,10 +38,9 @@
     </select></td>
     <td><select name="spec_tag[]">
         <option value="">无</option>
-        <option value="1">包邮</option>
-        <option value="2">三罐包邮</option>
-        <option value="3">三袋包邮</option>
-        <option value="4">六袋包邮</option>
+        {volist name="tag" id="vo"}
+        <option value="{$vo.id}">{$vo.name}</option>
+        {/volist}
     </select>
     </td>
     <td><a href="javascript:void(0)" onclick="delSpec(this)" class="layui-btn layui-btn-primary layui-btn-xs"><i class="layui-icon layui-icon-delete"></i> 删除</a></td>
