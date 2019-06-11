@@ -30,6 +30,8 @@
                 </div>
                 {/gt}
                 <div class="sold_out" v-if="vo.empty==1">售罄</div>
+
+                <div class="baoyou_tag b_tag{$user.id}" v-if="vo.tag>0"><img :src="'/app/www/view/common/image/tag'+vo.tag+'.png'"></div>
             </div>
         </li>
     </div>
