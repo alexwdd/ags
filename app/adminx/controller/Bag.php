@@ -82,7 +82,8 @@ class Bag extends Admin {
             ->setCellValue('E1', '电话')
             ->setCellValue('F1', '地址')
             ->setCellValue('G1', '快递')
-            ->setCellValue('H1', '商品');
+            ->setCellValue('H1', '商品')
+            ->setCellValue('I1', '发件人');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
@@ -93,7 +94,8 @@ class Bag extends Admin {
                 ->setCellValue('E'.$num, $v['mobile'])
                 ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['area'].'/'.$v['address'])
                 ->setCellValue('G'.$num, $v['kuaidi'])
-                ->setCellValue('H'.$num, $v['goods']);
+                ->setCellValue('H'.$num, $v['goods'])
+                ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderMobile']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('包裹');
