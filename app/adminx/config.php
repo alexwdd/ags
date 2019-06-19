@@ -10,6 +10,7 @@ return [
             'adminx/index/index',
             'adminx/index/main',
             'adminx/index/menu',
+            'adminx/admin/getbrand',
             'adminx/upload/index',
             'adminx/upload/image',
             'adminx/bag/upload',
