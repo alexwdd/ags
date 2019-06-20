@@ -11,6 +11,8 @@ return [
             'adminx/index/main',
             'adminx/index/menu',
             'adminx/admin/getbrand',
+            'adminx/admin/getbaoguo',
+            'adminx/editor/upload',
             'adminx/upload/index',
             'adminx/upload/image',
             'adminx/bag/upload',
