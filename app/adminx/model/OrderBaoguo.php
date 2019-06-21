@@ -23,6 +23,7 @@ class OrderBaoguo extends Admin
         $type = input('post.type');
         $flag = input('post.flag');
         $print = input('post.print');
+        $goodsName = input('post.goodsName');
         $keyword = input('post.keyword');
         $order_no = input('post.order_no');
         $createDate = input('post.createDate');
@@ -46,6 +47,14 @@ class OrderBaoguo extends Admin
         }
         if ($sign==1) {
             $map['sign'] = array('neq','');
+        }
+        if($goodsName!=''){
+            $where['name'] = array('like','%'.$goodsName.'%');
+            $orderIds = db("OrderDetail")->where($where)->column('orderID');
+            if(!$orderIds){
+                $orderIds = [0];
+            }
+            $map['orderID'] = array('in',$orderIds);
         }
         if ($image==1) {
             $sql = "SELECT `id` FROM `pm_order_baoguo` WHERE (`sign` <> '' AND `type` IN (1,2,3) AND ( `image` = '' )) OR (`image` = '' and `type` NOT IN (1,2,3))";

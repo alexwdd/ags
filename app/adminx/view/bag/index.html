@@ -2,13 +2,16 @@
 	<div class="layui-row grid-demo">
 		<form class="layui-form" style="margin-bottom:10px">
 			<div class="layui-form-item">
-			<div class="layui-input-inline">
+			<div class="layui-input-inline" style="width: 120px">
 				<input type="text" name="order_no" placeholder="订单号/快递单号" class="layui-input layui-btn-small">
+			</div>
+			<div class="layui-input-inline" style="width: 120px">
+				<input type="text" name="goodsName" placeholder="商品名称" class="layui-input layui-btn-small">
 			</div>
 			<div class="layui-input-inline">
 				<input type="text" name="keyword" placeholder="会员账号/收件人/手机" class="layui-input layui-btn-small">
 			</div>
-			<div class="layui-input-inline">
+			<div class="layui-input-inline" style="width: 100px">
 				<select name="type" id="type">
 					<option value="">包裹类型</option>
 					{volist name="type" id="vo"}
@@ -16,14 +19,14 @@
 					{/volist}
 				</select>
 			</div>
-			<div class="layui-input-inline">
+			<div class="layui-input-inline" style="width: 100px">
 				<select name="flag" id="flag">
 					<option value="">状态</option>
 					<option value="1">已导出</option>
 					<option value="0">未导出</option>
 				</select>
 			</div>
-			<div class="layui-input-inline">
+			<div class="layui-input-inline" style="width: 100px">
 				<select name="print" class="fsSelect" dict="print" addNull="1"></select>
 			</div>
 			<div class="layui-inline">

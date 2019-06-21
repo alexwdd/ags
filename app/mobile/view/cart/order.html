@@ -48,6 +48,30 @@
     {/eq}
 
     <div class="infobox" style="margin-bottom:10px">
+        <div class="hd"><i class="icon icon-cart"></i> 商品明细</div>
+        <div class="list">
+            {volist name="list" id="vo"}
+            <div class="mui-row cartList">
+                <div class="mui-col-xs-3">
+                    <img src="{$vo.goods.picname|getThumb=280,280}">
+                </div>
+
+                <div class="mui-col-xs-9" style="padding-left:10px" id="cart{$vo.id}">
+                    <p>{notempty name="vo.goods.wuliu"}【{$vo.goods.wuliu}】{/notempty}{$vo.goods.name}{$vo.extends}</p>
+                    {volist name="vo.server" id="s"}
+                    <div class="serverLi" data-name="{$s.name}" data-price="{$s.price}" data-number="{$vo.goodsNumber}">
+                        {$s.name}${$s.price}/件，数量{$vo.goodsNumber * $vo.number}，合计${$s.price * $vo.goodsNumber * $vo.number}
+                    </div>
+                    {/volist}
+                    <p>{$vo.goods.weight}kg</p>
+                    <p class="m">{$vo.goods.price}</p>      
+                </div>
+            </div>
+            {/volist}
+        </div>
+    </div>
+
+    <div class="infobox" style="margin-bottom:10px">
         <div class="hd"><i class="mui-icon mui-icon-bars"></i> 费用明细</div>
         <div class="list">
             <li>
@@ -109,7 +133,7 @@ $(function(){
     $("#confirmBtn").click(function(){
         var btnArray = ['确认', '取消'];
         var btn = $(this);
-        var _html = '订单共计【${$total|number_format=###,2}元】';
+        var _html = '请确认订单详细信息，付款后无法更改。订单共计【${$total|number_format=###,2}元】';
         mui.confirm(_html,function(e){
             if (e.index == 1) {
                 var res = muiFormCheck('#myForm');

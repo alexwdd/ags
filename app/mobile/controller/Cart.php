@@ -45,11 +45,38 @@ class Cart extends User
             $this->error('购物车中没有商品',url('index/index'));
         }
 
+        $map['memberID'] = $this->user['id'];
+        $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
+        $total = 0;
+        $weight = 0;
+        foreach ($list as $key => $value) {
+            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
+            if ($this->user['group']==2) {
+                $goods['price'] = $goods['price1'];
+            }
+            if ($value['server']!='') {
+                $serverID = explode(",",$value['server']);
+                unset($map);
+                $map['id'] = array('in',$serverID);
+                $server = db("server")->field('name,price')->where($map)->select();
+                $list[$key]['server'] = $server;
+            }else{
+                $list[$key]['server'] = null;
+            }
+            $list[$key]['goodsNumber'] = $goods['number'];//套餐中包含几个商品
+            //小计金额
+            $money = $value['number'] * $goods['price'];
+            $list[$key]['goods'] = $goods;
+            $list[$key]['money'] = number_format($money,2);
+        }       
+        $this->assign('list',$list);
+
         $this->assign('rate',$this->getRate());
 
         $sender = db("Sender")->where('memberID',$this->user['id'])->select();
         $this->assign('sender',$sender);
 
+        unset($map);
         //收件信息
         $aid = input("param.aid");
         $map['memberID'] = $this->user['id'];

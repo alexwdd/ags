@@ -369,7 +369,7 @@ class Api extends Home
             }            
             $list = db("ShouyinOrder")->where($map)->order('id desc')->select();
             foreach ($list as $key => $value) {
-                $detail = db("ShouyinOrderDetail")->field('itemID,goodsID,number,type')->where("orderID",$value['id'])->select();
+                $detail = db("ShouyinOrderDetail")->field('itemID,goodsID,price,number,type')->where("orderID",$value['id'])->select();
                 foreach ($detail as $k => $val) {
                     if ($val['type']==2) {
                         $goods = db("ShouyinYunfei")->field('id,name,price,inprice')->where('id',($val['itemID']-10000))->find();   
@@ -389,6 +389,7 @@ class Api extends Home
                         $goods['itemType'] = 2; //商品
                     }else{
                         $goods = db("GoodsIndex")->field('id,en,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find(); 
+                        $goods['price'] = $val['price'];
                         $goods['inprice'] = db("Goods")->where('id',$val['goodsID'])->value('inprice');
                         $goods['number'] = $val['number'];
                         $goods['money'] = 0;
