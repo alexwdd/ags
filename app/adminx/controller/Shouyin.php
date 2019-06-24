@@ -26,6 +26,7 @@ class Shouyin extends Admin {
 		if (!$list) {
 			$this->error('信息不存在');
 		}else{
+			$list['pay'] = db("ShouyinOrderPay")->where("orderID",$list['id'])->select();
 			$list['detail'] = db("ShouyinOrderDetail")->where("orderID",$list['id'])->select();
 			$list['adminName'] = db("User")->where('id',$list['adminID'])->value("name");
             $this->assign('list',$list);

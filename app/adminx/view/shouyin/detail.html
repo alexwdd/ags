@@ -11,6 +11,27 @@
             <li>会员账号：{$list.memberID}</li>
             <li>会员手机：{$list.mobile}</li>
         </div>
+        <table class="layui-table">
+            <colgroup>
+                <col>
+                <col width="150">
+                <col width="150">
+            </colgroup>
+            <thead>
+            <tr>
+              <th>支付方式</th>
+              <th>金额</th>
+            </tr> 
+            </thead>
+            <tbody>
+                {volist name="list.pay" id="vo"}
+                <tr>
+                    <td>{$vo.payType}</td>
+                    <td>${$vo.money}</td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
 		<table class="layui-table">
             <colgroup>
                 <col>

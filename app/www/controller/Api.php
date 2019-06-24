@@ -180,11 +180,11 @@ class Api extends Home
             for ($i=strtotime($end); $i>=strtotime($start)  ; $i=$i-86400) { 
                 unset($map);
                 $map['adminID'] = $this->user['id'];
-                $map['temp'] = 0;
+                //$map['temp'] = 0;
                 $beginToday=$i;
                 $endToday=$i+86399;
                 $map['createTime'] = array('between',array($beginToday,$endToday));
-                $list = db("ShouyinOrder")->where($map)->select();
+                $list = db("ShouyinOrderPay")->where($map)->select();   
                 $total = 0;
                 $type = [
                     'pay1'=>0,
@@ -195,21 +195,21 @@ class Api extends Home
                 ];
                 foreach ($list as $key => $value) {
                     if ($value['payType'] == 'OMI支付') {
-                        $type['pay1'] += $value['total'];
+                        $type['pay1'] += $value['money'];
                     }
                     if ($value['payType'] == '现金支付') {
-                        $type['pay2'] += $value['total'];
+                        $type['pay2'] += $value['money'];
                     }
                     if ($value['payType'] == '银行刷卡') {
-                        $type['pay3'] += $value['total'];
+                        $type['pay3'] += $value['money'];
                     }
                     if ($value['payType'] == '银行转账') {
-                        $type['pay4'] += $value['total'];
+                        $type['pay4'] += $value['money'];
                     }
                     if ($value['payType'] == '余额支付') {
-                        $type['pay5'] += $value['total'];
+                        $type['pay5'] += $value['money'];
                     }  
-                    $total += $value['total'];
+                    $total += $value['money'];
                 }
                 array_push($data,['date'=>date("Y-m-d",$i),'type'=>$type,'total'=>$total]);
             }
@@ -282,8 +282,9 @@ class Api extends Home
         $payType = db("ShouyinPay")->cache(true)->field('id,name')->select();
         foreach ($payType as $key => $value) {
             $payType[$key]['checked'] = false;
+            $payType[$key]['money'] = '';
         }
-        array_push($payType, ['id'=>999,'name'=>'余额支付','checked'=>true]);   
+        array_push($payType, ['id'=>999,'name'=>'余额支付','money'=>'','checked'=>true]);   
   
         returnJson(1,'success',['goods'=>$list,'payType'=>$payType]);
     }
@@ -419,27 +420,31 @@ class Api extends Home
             }
             $res = db("ShouyinOrder")->where($map)->delete();
             if($res) {
-                if ($list['payType']=='余额支付') {
+                $where['orderID'] = $id;
+                $where['payType'] = '余额支付';
+                $pay = db("ShouyinOrderPay")->where($where)->find();
+                if ($pay) {
                     $member = db("Member")->where('id',$list['memberID'])->find();
                     $money = $this->getUserMoney($member['id']);
                     $member['money'] = $money['money'];
                     $fdata = array(
                         'type' => 3,
-                        'money' => $list['total'],
+                        'money' => $pay['money'],
                         'memberID' => $member['id'],
                         'mobile' => $member['mobile'],
                         'doID' => $member['id'],
                         'doUser' => $member['mobile'],
                         'oldMoney'=>$member['money'],
-                        'newMoney'=>$member['money']+$list['total'],
+                        'newMoney'=>$member['money']+$pay['money'],
                         'admin' => 2,
-                        'msg' => '取消店铺订单，退还账户余额$'.$list['total'].'，订单号：'.$list['order_no'],
+                        'msg' => '取消店铺订单，退还账户余额$'.$pay['money'].'，订单号：'.$list['order_no'],
                         'showTime' => time(),
                         'createTime' => time()
                     );
                     db('Finance')->insert($fdata);
                 }
                 db("ShouyinOrderDetail")->where("orderID",$id)->delete();
+                db("ShouyinOrderPay")->where("orderID",$id)->delete();
                 returnJson(1,'success'); 
             }else{
                 returnJson(0,'操作失败'); 
@@ -469,11 +474,27 @@ class Api extends Home
             }else{
                 $member = $jsonData['member'];
             }
+            $pay = [];
+            $payType = '';
+            foreach ($jsonData['payType'] as $key => $value) {
+                if($value['name']!='' && $value['money']!=0){
+                    if($payType==''){
+                        $payType = $value['name'];
+                    }else{
+                        $payType .= '+' . $value['name'];
+                    }
+                    array_push($pay,$value);
+                }
+            }
 
-            if ($member['id']==0 && $jsonData['payType']=='余额支付') {
+            if($payType==''){
+                returnJson(0,'支付方式错误');
+            }
+
+            if ($member['id']==0 && $this->isMemberPay($pay)) {
                 returnJson(0,'没有选择会员不能使用余额支付');
             }
-            
+
             $totalMoney = $jsonData['total'];
             $goods = $jsonData['goods'];
             $chengben = 0;
@@ -489,7 +510,7 @@ class Api extends Home
                 'memberID'=>$member['id'],
                 'name'=>$member['name'],
                 'mobile'=>$member['mobile'],
-                'payType'=>$jsonData['payType'],
+                'payType'=>$payType,
                 'total'=>$totalMoney,
                 'chengben'=>$chengben,
                 'lirun'=>$lirun,
@@ -503,29 +524,29 @@ class Api extends Home
                 if (!$user) {
                     returnJson(0,'用户不存在');
                 }
-                if ($jsonData['payType']=='余额支付') {
+                if ($memberPay = $this->isMemberPay($pay)) {
                     $fina = $this->getUserMoney($user['id']);
                     $money = $fina['money'];
-                    if ($money < $totalMoney) {
+                    if ($money < $memberPay['money']) {
                         returnJson(0,'账户余额不足');
                     }
 
                     $fdata = array(
                         'type' => 2,
-                        'money' => $totalMoney,
+                        'money' => $memberPay['money'],
                         'memberID' => $user['id'],
                         'mobile' => $user['mobile'],
                         'doID' => $user['id'],
                         'doUser' => $user['mobile'],
                         'oldMoney'=>$fina['money'],
-                        'newMoney'=>$fina['money']-$totalMoney,
+                        'newMoney'=>$fina['money']-$memberPay['money'],
                         'admin' => 2,
-                        'msg' => '店铺购买商品，账户余额支付$'.$totalMoney.'，小票号：'.$jsonData['No'],
+                        'msg' => '店铺购买商品，账户余额支付$'.$memberPay['money'].'，小票号：'.$jsonData['No'],
                         'showTime' => time(),
                         'createTime' => time()
                     );
                     db('Finance')->insert($fdata);
-                    $user['money'] = $money - $totalMoney;
+                    $user['money'] = $money - $memberPay['money'];
                     $this->setUserGroup($user);//更改会员身份
                 }
 
@@ -541,6 +562,20 @@ class Api extends Home
 
             $res = db("ShouyinOrder")->insertGetId($data);
             if ($res) {
+                //保存收款方式
+                $payData = [];
+                foreach ($pay as $key => $value) {
+                    $temp = [
+                        'adminID'=>$this->user['id'],
+                        'orderID'=>$res,
+                        'payType'=>$value['name'],
+                        'money'=>$value['money'],
+                        'createTime'=>time()
+                    ];
+                    array_push($payData,$temp);
+                }
+                db("ShouyinOrderPay")->insertAll($payData);
+
                 //保存商品和快递
                 $goods = $jsonData['goods'];
                 $detail = [];
@@ -594,6 +629,14 @@ class Api extends Home
         }else{
             returnJson(9001,'账户超时请重新登录！');
         }
+    }
 
+    public function isMemberPay($data){
+        foreach ($data as $key => $value) {
+            if($value['money']!='' && $value['money']!=0 && $value['id']==999){
+                return $value;
+            }
+        }
+        return false;
     }
 }

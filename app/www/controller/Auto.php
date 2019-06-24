@@ -5,16 +5,17 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		$list = db("Order")->field('id')->select();
+		/*$list = db("ShouyinOrder")->field('id,adminID,total,payType,createTime')->select();
 		foreach ($list as $key => $value) {
-			$detail = db("OrderDetail")->where('orderID',$value['id'])->select();
-			$chengben = 0;
-			foreach ($detail as $k => $val) {
-				$inprice = db("Goods")->where('id',$val['goodsID'])->value('inprice');
-				$chengben += $inprice * $val['number']; 
-			}
-			db('Order')->where('id',$value['id'])->setField("inprice",$chengben);
-		}
+			$temp = [
+                'adminID'=>$value['adminID'],
+                'orderID'=>$value['id'],
+                'payType'=>$value['payType'],
+                'money'=>$value['total'],
+                'createTime'=>$value['createTime']
+            ];
+			db('ShouyinOrderPay')->insert($temp);
+		}*/
 	}
 	
 	//创建运单

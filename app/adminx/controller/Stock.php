@@ -203,7 +203,7 @@ class Stock extends Admin {
             $end=strtotime($end);            
             $map['createTime'] = array('between',array($start,$end));
             $map['payType'] = $value['name'];
-            $list[$key]['value'] = db("ShouyinOrder")->where($map)->sum('total');
+            $list[$key]['value'] = db("ShouyinOrderPay")->where($map)->sum('money');
             array_push($type,$value['name']);
         }
         $detail = $this->getShopMonth($year,1);
@@ -317,8 +317,7 @@ class Stock extends Admin {
         $start=strtotime($start);
         $end=strtotime($end);            
         $map['createTime'] = array('between',array($start,$end));
-        $data = db('ShouyinOrder')->where($map)->select();
-
+        $data = db('ShouyinOrderPay')->where($map)->select();
         $money1 = 0;
         $money2 = 0;
         $money3 = 0;
@@ -329,19 +328,19 @@ class Stock extends Admin {
         $yingli = 0;
         foreach ($data as $key => $value) {
             if ($value['payType'] == 'OMI支付') {
-                $money1 += $value['total'];
+                $money1 += $value['money'];
             }
             if ($value['payType'] == '现金支付') {
-                $money2 += $value['total'];
+                $money2 += $value['money'];
             }
             if ($value['payType'] == '银行刷卡') {
-                $money3 += $value['total'];
+                $money3 += $value['money'];
             }
             if ($value['payType'] == '银行转账') {
-                $money4 += $value['total'];
+                $money4 += $value['money'];
             }
             if ($value['payType'] == '余额支付') {
-                $money5 += $value['total'];
+                $money5 += $value['money'];
             }
             $goods = db("ShouyinOrderDetail")->where('orderID',$value['id'])->select();
             foreach ($goods as $k => $val) {
