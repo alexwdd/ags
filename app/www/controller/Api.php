@@ -442,6 +442,14 @@ class Api extends Home
                         'createTime' => time()
                     );
                     db('Finance')->insert($fdata);
+                }      
+                $detail = db("ShouyinOrderDetail")->where("orderID",$id)->select();
+                foreach ($detail as $key => $value) {
+                    if ($value['stock']=='web') {
+                        db('Goods')->where('id',$value['goodsID'])->setInc("stock",$value['trueNumber']);
+                    }else{
+                        db('Goods')->where('id',$value['goodsID'])->setInc("stock1",$value['trueNumber']);
+                    }
                 }
                 db("ShouyinOrderDetail")->where("orderID",$id)->delete();
                 db("ShouyinOrderPay")->where("orderID",$id)->delete();
@@ -591,8 +599,10 @@ class Api extends Home
                         'itemID'=>$value['id'],                        
                         'name'=>$value['name'],                        
                         'number'=>$value['number'],
+                        'trueNumber'=>$value['number']*$value['goodsNumber'],
                         'price'=>$price,
                         'gst'=>$value['gst'],
+                        'stock'=>$jsonData['stock'],
                         'money'=>$money,
                         'lirun'=>$lirun,
                         'chengben'=>$chengben,

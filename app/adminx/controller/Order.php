@@ -47,6 +47,11 @@ class Order extends Admin {
 	        $remark = input('post.remark');
 	        $total = input('post.total/f');
 
+	        $list = db('Order')->where(array('id'=>$orderID))->find();
+	        if(!$list){
+	        	$this->error("订单不存在");
+	        }
+
             /*for ($i=0; $i < count($id); $i++) { 
                 unset($map);
                 $map['id'] = $id[$i];                
@@ -77,6 +82,13 @@ class Order extends Admin {
             	db('OrderPerson')->where('orderID',$orderID)->setField('cancel',1);
             	db('OrderDetail')->where('orderID',$orderID)->setField('cancel',1);
             	db('OrderBaoguo')->where('orderID',$orderID)->setField('cancel',1);
+            	//返库存
+            	if($list['payStatus']>1){
+	            	$detail = db("OrderDetail")->where("orderID",$orderID)->select();
+	                foreach ($detail as $key => $value) {       
+	                    db('Goods')->where('id',$value['goodsID'])->setInc("stock",$value['number']);                
+	                }
+            	}
             }
             $this->success('操作成功'); 
         }else{
