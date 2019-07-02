@@ -23,16 +23,17 @@ class Stock extends Admin {
         $this->assign('webNumber',$webNumber);
         $this->assign('webMoney',$webMoney);
 
-        unset($map);
-        $map['stock'] = array('gt',0);
-        $map['stock1'] = array('gt',0);
-        $list = db("Goods")->field('inprice,stock,stock1')->where($map)->select();
+        $list = db("Goods")->field('inprice,stock,stock1')->select();
         $total = 0;
         $web = 0;
         $shop = 0;
         foreach ($list as $key => $value) {
-            $web += $value['stock'] * $value['inprice'];
-            $shop += $value['stock1'] * $value['inprice'];
+            if($value['stock']>0){
+                $web += $value['stock'] * $value['inprice'];
+            }
+            if($value['stock1']>0){
+                $shop += $value['stock1'] * $value['inprice'];
+            }            
         }
         $this->assign('total',$shop+$web);
         $this->assign('web',$web);

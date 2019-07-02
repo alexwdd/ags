@@ -375,7 +375,9 @@ class Goods extends Admin
             ->setCellValue('V1', '进货价')
             ->setCellValue('W1', '特色描述')
             ->setCellValue('X1', '快递')
-            ->setCellValue('Y1', '英文');
+            ->setCellValue('Y1', '英文')
+            ->setCellValue('Z1', '网站库存')
+            ->setCellValue('AA1', '店铺库存');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
@@ -403,7 +405,9 @@ class Goods extends Admin
                 ->setCellValue('V'.$num, $v['inprice'])
                 ->setCellValue('W'.$num, $v['say'])
                 ->setCellValue('X'.$num, $v['wuliu'])
-                ->setCellValue('Y'.$num, $v['en']);
+                ->setCellValue('Y'.$num, $v['en'])
+                ->setCellValue('Z'.$num, $v['stock'])
+                ->setCellValue('AA'.$num, $v['stock1']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('商品');
