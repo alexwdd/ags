@@ -4,6 +4,6 @@
 		${$vo.money}
 		<span>{$vo.createTime|date="Y-m-d",###}</span>
 	</div>
-	<div class="bd">{$vo.msg}</div>
+	<div class="bd">原金额 ${$vo.oldMoney}，新金额 ${$vo.newMoney}<br/>{$vo.msg}</div>
 </li>
 {/volist}
