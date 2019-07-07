@@ -285,7 +285,7 @@ class Stock extends Admin {
         foreach ($data as $key => $value) {
             //if ($value['payType'] == 2) {
                 $money1 += $value['wallet'];                
-            //}
+            //} 
             if ($value['payType'] == 3) {
                 $money2 += $value['money'];
             }
