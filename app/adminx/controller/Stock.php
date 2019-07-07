@@ -230,7 +230,7 @@ class Stock extends Admin {
             $end=strtotime($end);            
             $map['createTime'] = array('between',array($start,$end));
             $map['payStatus'] = array('in',[2,3,4]);
-            $money = db('Order')->where($map)->sum('money');
+            $money = db('Order')->where($map)->sum('total');
             $total += $money;
             array_push($moneyArr, $money);
         } 
@@ -246,10 +246,14 @@ class Stock extends Admin {
             $end = date('Y-m-d H:i:s', strtotime("$start +1 year -1 second")); 
             $start=strtotime($start);
             $end=strtotime($end);            
-            $map['createTime'] = array('between',array($start,$end));
-            $map['payType'] = $value['id'];
+            $map['createTime'] = array('between',array($start,$end));            
             $map['payStatus'] = array('in',[2,3,4]);
-            $list[$key]['value'] = db("Order")->where($map)->sum('money');
+            if($value['id']==2){
+                $list[$key]['value'] = db("Order")->where($map)->sum('wallet');
+            }else{
+                $map['payType'] = $value['id'];
+                $list[$key]['value'] = db("Order")->where($map)->sum('money');
+            }            
             array_push($type,$value['name']);
         }
         $detail = $this->getWebMonth($year,1);
@@ -279,9 +283,9 @@ class Stock extends Admin {
         $chengben = 0;
         $yingli = 0;
         foreach ($data as $key => $value) {
-            if ($value['payType'] == 2) {
-                $money1 += $value['money'];
-            }
+            //if ($value['payType'] == 2) {
+                $money1 += $value['wallet'];                
+            //}
             if ($value['payType'] == 3) {
                 $money2 += $value['money'];
             }
@@ -293,7 +297,7 @@ class Stock extends Admin {
                 $cb = db('Goods')->where('id',$val['goodsID'])->value('inprice');
                 $chengben += $cb*$val['number'];
             }
-            $total += $value['money'];
+            $total += $value['total'];
         }
         $yingli = $total - $chengben;
         $list = [
