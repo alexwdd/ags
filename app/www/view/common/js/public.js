@@ -130,8 +130,8 @@ $(function(){
 				}
 			},
 			sign: function(value) {
-                if(value =='') {return '请输入签名，中文1个汉字，英文不超过1个单词';}
-                var reg = /^[\u4E00-\u9FA5]{1,500}$/;
+                if(value =='') {return '请输入签名，中文1个汉字，英文不超过1个单词';}  
+                var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
                 if(reg.test(value)){//中文
                     if (value.length>1){
                         return '中文只能1个汉字';

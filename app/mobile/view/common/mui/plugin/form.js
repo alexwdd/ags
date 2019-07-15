@@ -80,7 +80,7 @@ function muiFormCheckBase(obj){
 		break;
 		case 'sign'  :
 			if(checkVal =='') {return muiFormCheckShowErrMsg(checkMsg);}
-            var reg = /^[\u4E00-\u9FA5]{1,500}$/;
+            var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
             if(reg.test(checkVal)){//中文 
                 if (checkVal.length>1){
                     mui.toast('中文只能1个汉字'); return false;
