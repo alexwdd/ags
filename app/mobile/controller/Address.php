@@ -6,6 +6,10 @@ use think\Db;
 class Address extends User
 {
     public function index(){ 
+        $keyword = input('param.keyword');
+        if($keyword!=''){
+            $map['name|mobile'] = $keyword;
+        }
         $map['memberID'] = $this->user['id'];
         $list = db('Address')->where($map)->select();
         $this->assign('list',$list);

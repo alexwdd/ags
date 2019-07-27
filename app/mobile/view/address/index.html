@@ -7,6 +7,11 @@
 {include file="public/nav" /}
 
 <div class="mui-content">
+    <div class="topSearch">
+        <input type="text" name="keyword" id="keyword" class="mui-input-clear" placeholder="收件人姓名/手机">
+        <span style="cursor: pointer;" id="searchBtn"><i class="mui-icon mui-icon-search"></i></span>
+        <span><a href="{:url('address/index')}">全部</a></span>
+    </div>
     <div class="myaddress">
         {volist name="list" id="vo"}
             <p {eq name="vo.def" value="1"}class="item_defalut"{/eq}>{$vo.province} {$vo.city} {$vo.area} {$vo.address}<br>{$vo.name}, {$vo.mobile} <span>{gt name="kid" value="0"}<a href="{:url('cart/order',array('kid'=>$kid,'sid'=>$sid,'aid'=>$vo['id']))}">选择</a>&nbsp;&nbsp;&nbsp;&nbsp;{/gt}<a href="{:url('Address/edit',array('kid'=>$kid,'sid'=>$sid,'id'=>$vo['id']))}">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" data-url="{:url('Address/del',array('id'=>$vo['id']))}" class="delBtn">删除</a></span>
@@ -19,6 +24,13 @@
 
 <script type="text/javascript">
 $(function(){
+    $("#searchBtn").click(function(){
+        var keyword = $("#keyword").val();
+        if(keyword!=''){
+            window.location.href = '{:url('address/index')}?keyword='+keyword;
+        }
+    })
+
     $(".delBtn").click(function(){
         var btnArray = ['确认', '取消'];
         var url = $(this).attr("data-url");
