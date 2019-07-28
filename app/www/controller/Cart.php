@@ -496,6 +496,10 @@ class Cart extends User
                 $this->error($result['msg']);
             }
             $baoguo = $result['data'];
+
+            if(count($baoguo['baoguo'])<1){
+                $this->error("包裹错误");
+            }
             $totalYunfei = $baoguo['totalPrice']+$baoguo['totalExtend'];
             $totalInprice = $baoguo['totalInprice'];
         }else{
