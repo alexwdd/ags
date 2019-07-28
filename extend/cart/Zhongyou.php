@@ -114,7 +114,7 @@ class Zhongyou {
             		$goods = $value;	            		
             		$goods['goodsNumber'] = 1;
 	            	$baoguo = [
-						'type'=>$goods['type'], 				//类型
+						'type'=>$goods['typeID'], 				//类型
 			            'totalNumber'=>1, 		//总数量
 			            'totalWeight'=>$goods['weight'], 		//商品总重量
 			            'totalWuliuWeight'=>$goods['wuliuWeight'],	//包装后总重量
@@ -123,14 +123,14 @@ class Zhongyou {
 			            'extend'=>0,
 			            'kuaidi'=>'',
 			            'status'=>1,
-			            'goods'=>$goods,
+			            'goods'=>[],
 			        ];
+			        array_push($baoguo['goods'],$goods);
 			        array_push($this->baoguoArr,$baoguo);
             	}
             	$this->deleteBaojianpin($value,$value['goodsNumber']);
             }
         }
-
         //处理两个可混 
         /*$baoguo = [
 			'type'=>0, 				//类型
