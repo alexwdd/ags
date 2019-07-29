@@ -10,7 +10,7 @@
     <div class="topSearch">
         <input type="text" name="keyword" id="keyword" class="mui-input-clear" placeholder="收件人姓名/手机">
         <span style="cursor: pointer;" id="searchBtn"><i class="mui-icon mui-icon-search"></i></span>
-        <span><a href="{:url('address/index')}">全部</a></span>
+        <span><a href="{:url('address/index',array('kid'=>$kid))}">全部</a></span>
     </div>
     <div class="myaddress">
         {volist name="list" id="vo"}
@@ -27,7 +27,7 @@ $(function(){
     $("#searchBtn").click(function(){
         var keyword = $("#keyword").val();
         if(keyword!=''){
-            window.location.href = '{:url('address/index')}?keyword='+keyword;
+            window.location.href = '{:url('address/index')}?kid={$kid}&keyword='+keyword;
         }
     })
 
