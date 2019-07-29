@@ -509,8 +509,7 @@ class Cart extends User
         
         $flag = 0;
         foreach ($baoguo['baoguo'] as $key => $value) {
-            if($value['serverIds']){
-                echo 'a';die;
+            if($value['serverIds']){  
                 $ids = explode(",", $value['serverIds']);
                 if (in_array(2,$ids)) {
                     $flag = 1;
