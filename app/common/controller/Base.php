@@ -17,6 +17,7 @@ class Base extends Controller {
         //删除12小时内未付款的订单
         $map['createTime'] = array('lt',(time()-3600*48));
         $map['payStatus'] = 0;
+        $map['wallet'] = 0;
         $map['image'] = array('eq','');
         $list = db("Order")->where($map)->select();
         foreach ($list as $key => $value) {
