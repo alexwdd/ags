@@ -584,6 +584,7 @@ class Cart extends User
             $detail['wuliuInprice'] = $value['inprice'];//物流成本
             $detail['type'] = $value['type'];
             $detail['weight'] = $value['totalWuliuWeight'];
+            $detail['kid'] = $data['kid'];
             $detail['kuaidi'] = $value['kuaidi'];
             $detail['serverIds'] = $value['serverIds'];
             $detail['kdNo'] = '';

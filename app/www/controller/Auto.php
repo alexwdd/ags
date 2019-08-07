@@ -20,9 +20,9 @@ class Auto extends Base
 	
 	//创建运单
 	public function createOrder(){
-		$content = date('Y-m-d H:i:s')." 创建运单\r\n";
+		/*$content = date('Y-m-d H:i:s')." 创建运单\r\n";
         $file = 'auto.log';
-        file_put_contents($file, $content,FILE_APPEND);
+        file_put_contents($file, $content,FILE_APPEND);*/
 
 		$map['kdNo'] = '';
 		//$map['status'] = 1;

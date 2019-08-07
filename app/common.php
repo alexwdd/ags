@@ -119,20 +119,28 @@ function diffBetweenTwoDays ($second1, $second2){
 }
 
 //获取中邮快递ID
-function getBrandID($type){
-    if ($type==1 || $type==2 || $type==3) {
-        return 1;
+function getBrandID($order){
+    if ($order['type']==1 || $order['type']==2 || $order['type']==3) {
+        if($order['kid']==6){
+            return 19;
+        }else{
+            return 1;
+        }        
     }
-    if ($type==5) {
+    if ($order['type']==5) {
         return 2;
     }
     return 3;
 }
 
 //获取中邮快递名称
-function getBrandName($type){
+function getBrandName($type,$kid=null){
     if ($type==1 || $type==2 || $type==3) {
-        return '澳邮';
+        if($kid==6){
+            return '京东';
+        }else{
+            return '澳邮';
+        }        
     }
     if ($type==5) {
         return '中邮';

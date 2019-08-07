@@ -268,7 +268,7 @@ class Zhongyou {
 			$wuliuWeight = ceil($this->baoguoArr[$key]['totalWuliuWeight']*10);
 			$this->baoguoArr[$key]['totalWuliuWeight'] = number_format($wuliuWeight/10,1);
 	
-			$brandName = getBrandName($value['type']);
+			$brandName = getBrandName($value['type'],$this->kuaidi['id']);
 	        $danjia = getDanjia($value['type'],$this->user);	        
 	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
 	        	$this->baoguoArr[$key]['kuaidi'] = $brandName;
@@ -943,19 +943,43 @@ class Zhongyou {
 	private function getNaifen($goodsType,$number){
 		if ($goodsType==1 || $goodsType==2) {//大罐奶粉
 	        if ($number==1) {
-	        	return 6;
+	        	if($this->kuaidi['name']=='澳邮京东'){
+	        		return 6.5;
+	        	}else{
+	        		return 6;
+	        	}	        	
 	        }elseif($number==2){
-	        	return 12;
+	        	if($this->kuaidi['name']=='澳邮京东'){
+	        		return 13;
+	        	}else{
+	        		return 12;
+	        	}	  
 	        }elseif($number==3){
-	        	return 13.5;
+	        	if($this->kuaidi['name']=='澳邮京东'){
+	        		return 15;
+	        	}else{
+	        		return 13.5;
+	        	}
 	        }
 	    }elseif($goodsType==3){//小罐奶粉
 	    	if ($number==1) {
-	        	return 7;
+	    		if($this->kuaidi['name']=='澳邮京东'){
+	        		return 7.5;
+	        	}else{
+	        		return 7;
+	        	}
 	        }elseif($number==2){
-	        	return 14;
+	        	if($this->kuaidi['name']=='澳邮京东'){
+	        		return 15;
+	        	}else{
+	        		return 14;
+	        	}
 	        }elseif($number==3){
-	        	return 18;
+	        	if($this->kuaidi['name']=='澳邮京东'){
+	        		return 19.5;
+	        	}else{
+	        		return 18;
+	        	}
 	        }
 	    }
 	}

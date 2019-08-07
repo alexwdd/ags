@@ -89,7 +89,7 @@ class Base extends Controller {
             $list[$key]['singleNumber'] = $goods['number'];             
             if ($goods['wuliu']!='') { //套餐类的先处理掉
                 for ($i=0; $i < $value['number']; $i++) { 
-                    $brandName = getBrandName($goods['typeID']);
+                    $brandName = getBrandName($goods['typeID'],$kid);
                     $list[$key]['goodsNumber'] = $goods['number'];
 
                     $danjia = getDanjia($goods['typeID'],$user);
@@ -188,7 +188,7 @@ class Base extends Controller {
 
             if ($goods['wuliu']!='') { //套餐类的先处理掉
                 for ($i=0; $i < $value['number']; $i++) {   
-                    $brandName = getBrandName($goods['typeID']);
+                    $brandName = getBrandName($goods['typeID'],$kid);
                     $list[$key]['goodsNumber'] = $goods['number'];
 
                     $danjia = getDanjia($goods['typeID'],$user);
@@ -393,7 +393,7 @@ class Base extends Controller {
             }
         }
 
-        $brandID = getBrandID($order['type']);
+        $brandID = getBrandID($order);
         $config = config("aue");
         $data = [
             'MemberId'=>$config['MemberId'],
