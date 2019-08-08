@@ -106,12 +106,18 @@ class Base extends Controller {
                             $sign=1; 
                         }                           
                     }
+
+                    if($kid==6 && in_array($goods['typeID'],[1,2,3])){//京东快递
+                        $yunfei = $goods['number']*0.5;
+                    }else{
+                        $yunfei = 0;
+                    }
                     $baoguo = [
                         'type'=>$goods['typeID'],
                         'totalNumber'=>$goods['number'],
                         'totalWeight'=>$goods['weight']*$goods['number'],
                         'totalWuliuWeight'=>$goods['wuliuWeight']*$goods['number'],
-                        'yunfei'=>0,
+                        'yunfei'=>$yunfei,
                         'inprice'=>$goods['wuliuWeight']*$goods['number']*$danjia['inprice'],
                         'extend'=>$extend,
                         'sign'=>$sign,
@@ -205,12 +211,18 @@ class Base extends Controller {
                         $sign=0;
                     }
 
+                    if($kid==6 && in_array($goods['typeID'],[1,2,3])){//京东快递
+                        $yunfei = $goods['number']*0.5;
+                    }else{
+                        $yunfei = 0;
+                    }
+
                     $baoguo = [
                         'type'=>$goods['typeID'],
                         'totalNumber'=>$goods['number'],
                         'totalWeight'=>$goods['weight']*$goods['number'],
                         'totalWuliuWeight'=>$goods['wuliuWeight']*$goods['number'],
-                        'yunfei'=>0,
+                        'yunfei'=>$yunfei,
                         'inprice'=>$goods['wuliuWeight']*$goods['number']*$danjia['inprice'],
                         'extend'=>$extend,
                         'sign'=>$sign,
