@@ -14,10 +14,19 @@ class Order extends User
                 $pageName = '待付款订单';
                 break;
             case '1':
-                $pageName = '配货中订单';
+                $pageName = '待审核订单';
                 break;
             case '2':
+                $pageName = '待配货订单';
+                break;
+            case '3':
+                $pageName = '配货中订单';
+                break;
+            case '4':
                 $pageName = '已发货订单';
+                break;
+            case '99':
+                $pageName = '取消订单';
                 break;
             default:
                 $pageName = '全部订单';
