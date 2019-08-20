@@ -86,11 +86,13 @@ class Stock extends Admin {
             $price1 = input('post.price1');
             $price = input('post.price');
             $inprice = input('post.inprice');
+            $show = input('post.show');
             $map['id'] = $id;
 
             $data['price'] = $price;
             $data['price1'] = $price1;
             $data['inprice'] = $inprice;
+            $data['show'] = $show;
             if ($type==1) {
                 $data['stock'] = array('inc',$number);
             }elseif($type==2){
@@ -105,6 +107,7 @@ class Stock extends Admin {
             $map['base'] = 1;
             $update['price'] = $price;
             $update['price1'] = $price1;
+            $update['show'] = $show;
             db('GoodsIndex')->where($map)->update($update);
             echo $this->success("操作成功");
         }
