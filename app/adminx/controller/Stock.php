@@ -50,7 +50,7 @@ class Stock extends Admin {
         $obj = db('Goods');
         if ($keyword!='') {
             $map['name|short|keyword'] = array('like','%'.$keyword.'%');
-        }    
+        }
         $total = $obj->where($map)->count();
 
         $pages = ceil($total/$pageSize);
@@ -87,12 +87,14 @@ class Stock extends Admin {
             $price = input('post.price');
             $inprice = input('post.inprice');
             $show = input('post.show');
+            $empty = input('post.empty');
             $map['id'] = $id;
 
             $data['price'] = $price;
             $data['price1'] = $price1;
             $data['inprice'] = $inprice;
             $data['show'] = $show;
+            $data['empty'] = $empty;
             if ($type==1) {
                 $data['stock'] = array('inc',$number);
             }elseif($type==2){
@@ -107,8 +109,13 @@ class Stock extends Admin {
             $map['base'] = 1;
             $update['price'] = $price;
             $update['price1'] = $price1;
-            $update['show'] = $show;
             db('GoodsIndex')->where($map)->update($update);
+
+            unset($map);
+            $map['goodsID'] = $id; 
+            $temp['show'] = $show;
+            $temp['empty'] = $empty;
+            db('GoodsIndex')->where($map)->update($temp);
             echo $this->success("操作成功");
         }
     }
