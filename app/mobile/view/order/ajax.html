@@ -19,8 +19,13 @@
                 {/volist}
             </li>
         </div>
+        <div>
+            {volist name="vo.person" id="p"}
+            <p style="font-size: 12px; padding:0 10px; margin: 0">{$p.name},{$p.mobile}</p>
+            {/volist}
+        </div>
     </div>
-    <div class="fd">                    
+    <div class="fd">                
         <div style="float:left">
         {switch name="vo.payStatus" }
             {case value="0"}<span class="my-badge mui-badge mui-badge-danger">待付款</span>

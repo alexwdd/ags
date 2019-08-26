@@ -61,6 +61,10 @@ class Order extends User
         }
         $list = $obj->where($map)->limit($firstRow.','.$pagesize)->order('id desc')->select();
         foreach ($list as $key => $value) {
+
+            $person = db("OrderPerson")->field('id,name,mobile')->where("orderID",$value['id'])->select();
+            $list[$key]['person'] = $person;
+
             $orderID = $value["id"]; //获取数据集中的id            
             $goods = db("OrderDetail")->field('*,sum(number) as num')->where("orderID='$orderID'")->group('itemID')->select(); 
             foreach ($goods as $k => $val) {
