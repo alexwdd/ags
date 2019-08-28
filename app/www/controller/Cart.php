@@ -36,7 +36,7 @@ class Cart extends User
         $heji = $this->getCartNumber($this->user);
         $this->assign('heji',$heji); 
 
-        $wuliu = db("Wuliu")->select();
+        $wuliu = db("Wuliu")->where('show',1)->select();
         $this->assign('wuliu',$wuliu); 
         return view();
     }

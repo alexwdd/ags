@@ -37,6 +37,14 @@
 	    <div class="layui-form-mid layui-word-aux">/kg(额外附加费)</div>
 	</div>
 
+	<div class="layui-form-item">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="show" value="1" title="显示" {php}if($list['show']==1) echo 'checked';{/php}>
+			<input type="radio" name="show" value="0" title="隐藏" {php}if($list['show']==0) echo 'checked';{/php}>
+		</div>
+	</div>
+
 	<div class="layui-form-item layui-form-text">
 		<label class="layui-form-label">排序</label>
 		<div class="layui-input-inline">

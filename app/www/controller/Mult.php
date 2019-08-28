@@ -114,13 +114,13 @@ class Mult extends User
             $total += $money+$serverMoney;
         }
 
-        $wuliu = db("Wuliu")->select();
+        $wuliu = db("Wuliu")->where('show',1)->select();
         returnJson(1,'success',['data'=>$list,'total'=>$total,'wuliu'=>$wuliu]);
     }
 
     //创建订单
     public function create(){
-        $wuliu = db("Wuliu")->select();
+        $wuliu = db("Wuliu")->where('show',1)->select();
         $this->assign('wuliu',$wuliu); 
 
         $map['memberID'] = $this->user['id'];
