@@ -5,17 +5,12 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		/*$list = db("ShouyinOrder")->field('id,adminID,total,payType,createTime')->select();
-		foreach ($list as $key => $value) {
-			$temp = [
-                'adminID'=>$value['adminID'],
-                'orderID'=>$value['id'],
-                'payType'=>$value['payType'],
-                'money'=>$value['total'],
-                'createTime'=>$value['createTime']
-            ];
-			db('ShouyinOrderPay')->insert($temp);
-		}*/
+		$map['kdNo'] = '';
+		//$map['status'] = 1;
+		$map['kuaidi'] = array('neq','');
+		$map['type'] = array('not in',[12,13,14]);
+		$list = db("OrderBaoguo")->where($map)->select();
+		dump($list);
 	}
 	
 	//创建运单

@@ -69,11 +69,11 @@ layui.use(['table','form'], function(){
     	cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
     	where: {keyword:$("#keyword").val()},
     	cols: [[
-	      	{field:'name', title: '商品名称',templet: function(d){
+	      	{field:'short', title: '商品名称',templet: function(d){
 	      			if(d.stock==0 || d.stock1==0){
-	      				return '<span style="color: #c00;">'+ d.name +'</span>'
+	      				return '<span style="color: #c00;">'+ d.short +'</span>'
 	      			}else{
-	      				return d.name
+	      				return d.short
 	      			}        			
       			}
   			},
