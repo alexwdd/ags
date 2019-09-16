@@ -95,7 +95,7 @@ function getOrderNo($fix='') {
 }
 
 function getStoreOrderNo($fix='') {
-    $randNum = rand(10000000, 99999999);
+    $randNum = rand(100000, 999999);
     return $randNum;die;
 }
 
