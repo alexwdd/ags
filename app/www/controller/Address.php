@@ -161,4 +161,41 @@ class Address extends User
         db('Sender')->where($map)->delete();
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
+
+    public function textToAddress(){
+        if (request()->isPost()) { 
+            if(!checkFormDate()){returnJson(0,'ERROR');}
+            $text = input('post.text');
+
+            if($text==""){
+                returnJson(0,"请输入需要转换的地址信息");
+            }
+
+            $app_id = '104534';
+            $method = 'cloud.address.resolve';
+            $key = 'fe1248c9ba671014c1659607a245407f2d201d1b';
+            $time = time();
+            $sign = md5($app_id.$method.$time.$key);
+
+            $url = "https://kop.kuaidihelp.com/api";
+            $data = [
+                "app_id"=>$app_id,
+                "method"=>$method,
+                "sign"=>$sign,
+                "ts"=>$time,
+                "data"=>'{
+                    "text":"'.$text.'",
+                    "multimode":false
+                }'
+            ];
+
+            $result = $this->https_post($url,$data);
+            $result = json_decode($result,true);
+            if($result['code']==0){
+                returnJson(1,'success',$result['data'][0]);
+            }else{
+                returnJson(0,'转换失败');
+            }            
+        }
+    }
 }

@@ -2,7 +2,14 @@
     <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
     <h1 class="mui-title">添加收件人</h1>
 </header>
-
+<style type="text/css">
+.title{background: #fff; clear: both; font-size: 14px; padding: 10px; overflow: hidden;}
+.title p{float: left; margin-bottom: 0}
+.title span{float: right; cursor: pointer;}
+.textBox{padding:0 10px; background:#fff; box-sizing: border-box; clear: both; position: relative;}
+.textarea{background-color: #f1f1f1; border-radius: 5px; margin: 0 5px; border: 0; width: 100%; font-size: 14px; box-sizing: border-box; margin: 0; padding: 10px; height:80px; display: block}
+.tBtn{position: absolute; right: 10px; bottom: 0; background: #F2493C; color: #fff; width:60px; line-height: 30px; border-radius: 5px; border-top-right-radius: 0; border-bottom-left-radius: 0; text-align: center; font-size: 14px;}
+</style>
 <div class="mui-content">
 <form id="myForm" class="mui-input-group" style="padding-bottom:15px">
     <input type="hidden" name="front" id="front" >
@@ -25,6 +32,16 @@
     <div class="mui-input-row">
         <label>详细地址</label>
         <input type="text" name="address" id="address" class="mui-input-clear mui-input" checkType="required" checkMsg="请输入详细地址">
+    </div>
+
+    <div class="title">
+        <p><i class="icon icon-edit"></i> 智能填写</p>
+        <span id="clearBtn">清空</span>
+    </div>
+
+    <div class="textBox">
+        <textarea class="textarea" style="background: #f1f1f1" id="text" placeholder="快速录入格式:收件人，电话，地址自动提取（或空格间隔）"></textarea>
+        <div class="tBtn">提取</div>
     </div>
 
     <div class="mui-input-row">
@@ -104,6 +121,33 @@ $(function(){
 
     $("#cancel_btn").bind('click',function(){
         $("#add_address").slideUp(100);         
+    })
+
+    $("#clearBtn").click(function(){
+        $("#text").val('');
+    })
+
+    $(".tBtn").click(function(){
+        var text = $("#text").val();
+        if(text==''){
+            mui.alert("请输入需要转换的文字");
+            return false;
+        }
+        mui.showLoading();
+        $.post('{:url('www/address/textToAddress')}',{text:text},function(res){
+            mui.hideLoading();
+            if(res.code==1){
+                $("#name").val(res.body.name);
+                $("#mobile").val(res.body.mobile);
+                $("#province").val(res.body.province_name);
+                $("#city").val(res.body.city_name);
+                $("#area").val(res.body.county_name);
+                $("#address").val(res.body.detail);
+                $("#cityResult").val(res.body.province_name+' '+res.body.city_name+' '+res.body.county_name);
+            }else{
+                mui.alert(res.desc);
+            }
+        },'json');
     })
 })
 </script> 
