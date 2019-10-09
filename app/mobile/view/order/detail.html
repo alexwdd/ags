@@ -103,12 +103,12 @@
                     <span>未生成</span>
                 </li>
                 {else/}
-                {volist name="f.kdNo" id="kd"}
+       
                 <li>
                     <p>快递单号</p>
-                    <span class="copyBtn" data-clipboard-text="{$kd}">{$kd} 复制</span>
+                    <span class="copyBtn" data-clipboard-text="{$f.kdNo}">{$f.kdNo} 复制</span>
                 </li>
-                {/volist}
+               
                 {/empty}
             </div>     
             <div class="bd">{volist name="f.goods" id="g"}<p>{$g.short} * {$g.trueNumber}</p>{/volist}</div>
