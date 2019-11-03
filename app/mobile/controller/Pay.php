@@ -127,31 +127,40 @@ class Pay extends Home
             $input->setNonceStr($response['nonce_str']);
             $input->setSign();
             if ($input->getSign() == $response['sign']) {   //验证成功
-                $content = json_encode($response)."\r\n";
+                /*$content = json_encode($response)."\r\n";
                 $file = date('Y-m-d') . '.log';
-                file_put_contents($file, $content,FILE_APPEND);
+                file_put_contents($file, $content,FILE_APPEND);*/
                 $order_no = $response['out_order_no'];
                 $map['order_no'] = $order_no;
                 $list = db('Pay')->where($map)->find();
                 if ($list) {
+                    $config = tpCache("member");
                     if ($list['status'] == 1) {
                         exit('该订单已经支付完成，请不要重复操作');  
                     }else{
+                        if($config['give']>0){
+                            $give = $config['give'];
+                        }else{
+                            $give = 0;
+                        }
                         //更新订单状态
                         $data['status'] = 1;
                         $data['show'] = 1;
                         db('Pay')->where($map)->update($data);
                         db('Member')->where('id',$list['memberID'])->setField('group',2);
+                        $fina = $this->getUserMoney($list['memberID']);
                         if ($list['money']>0) {
                             unset($data);
                             $data['type'] = 1;
-                            $data['money'] = $list['money'];
+                            $data['money'] = $list['money']+$give;
                             $data['memberID'] = $list['memberID'];    
                             $data['mobile'] = $list['mobile'];
                             $data['doID'] = 0;
                             $data['doUser'] = '';
+                            $data['oldMoney'] = $fina['money'];
+                            $data['newMoney'] = $fina['money']+$list['money']+$give;
                             $data['admin'] = 1;
-                            $data['msg'] = '在线充值成功，余额账户增加 $'.$list['money'];
+                            $data['msg'] = '在线充值成功，余额账户增加 $'.($list['money']+$give);
                             $data['createTime'] = time();
                             $data['showTime'] = time();                     
                             $result = db("Finance")->insert($data);

@@ -39,6 +39,7 @@ class Chongzhi extends Admin {
 
 	public function domatch(){
 		if (request()->isPost()) {
+			$config = tpCache("member");
 			$txid=input("post.txID");
 			if ($txid=='' && !is_numeric($txid)) {
 				$this->error('参数错误');
@@ -55,19 +56,24 @@ class Chongzhi extends Admin {
 		        $list = $tx->where(array('id'=>$txid))->update($data);
 		        $fina = $this->getUserMoney($txinfo['memberID']);
 		        if ($list) {
+		        	if($config['give']>0){
+		        		$give = $config['give'];
+		        	}else{
+		        		$give = 0;
+		        	}
 		        	//增加
 		        	if ($txinfo['money']>0) {
 		        		unset($data);
 		        		$data['type'] = 1;
-		        		$data['money'] = $txinfo['money'];
+		        		$data['money'] = $txinfo['money']+$give;
 				        $data['memberID'] = $txinfo['memberID'];	
 				        $data['mobile'] = $txinfo['mobile'];
 				        $data['doID'] = $this->admin['id'];
 				        $data['doUser'] = $this->admin['name'];
 				        $data['oldMoney'] = $fina['money'];
-	        			$data['newMoney'] = $fina['money']+$txinfo['money'];
+	        			$data['newMoney'] = $fina['money']+$txinfo['money']+$give;
 				        $data['admin'] = 2;
-				        $data['msg'] = '充值申请审核通过，余额账户增加 $'.$txinfo['money'];
+				        $data['msg'] = '充值申请审核通过，余额账户增加 $'.($txinfo['money']+$give);
 				        $data['createTime'] = time();
 				        $data['showTime'] = time();				        
 				        $result = db("Finance")->insert($data);

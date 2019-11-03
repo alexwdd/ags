@@ -65,13 +65,13 @@
 
                     <p style="clear: both; overflow: hidden;color: #f00">转账时请备注订单号</p>
                 </div>
-
             </div>
         </div>
 
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="go" url="{:url('Member/pay')}">提交</button>
+                {gt name="config.give" value="0"}充值立送50元{/gt}
             </div>                    
         </div>
         <input type="hidden" name="image" id="image" value="">
