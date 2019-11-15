@@ -187,5 +187,79 @@ class Bag extends Admin {
             return array('code'=>0,'msg'=>$file->getError());
         }       
     }
+
+    public function select(){
+        if (request()->isPost()) {
+            $kdNo = input('post.kdNo');
+            $kdNo = explode("\n", $kdNo);
+            $arr = [];
+            foreach ($kdNo as $key => $value) {
+                $v = trim($value);
+                if($v!=''){
+                    array_push($arr, $v);
+                }
+            }
+
+            $map['kdNo'] = array('in',$arr);
+            $map['del'] = 0;
+            $map['status'] = 1;
+
+            $list = db('OrderBaoguo')->where($map)->order('id desc')->select();
+            foreach ($list as $key => $value) {
+                db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
+                $goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
+                $content = '';
+                foreach ($goods as $k => $val) {
+                    if ($val['extends']!='') {
+                        $goodsName = $val['short'].'['.$val['extends'].']';
+                    }else{
+                        $goodsName = $val['short'];
+                    }   
+                    if ($k==0) {
+                        $content .= $goodsName.'*'.$val['trueNumber'];
+                    }else{
+                        $content .= ";".$goodsName.'*'.$val['trueNumber'];
+                    }               
+                }       
+                $list[$key]['goods'] = $content;
+            }
+
+            $objPHPExcel = new \PHPExcel();    
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A1', '编号')
+                ->setCellValue('B1', '订单号')
+                ->setCellValue('C1', '快递号')
+                ->setCellValue('D1', '姓名')
+                ->setCellValue('E1', '电话')
+                ->setCellValue('F1', '地址')
+                ->setCellValue('G1', '快递')
+                ->setCellValue('H1', '商品')
+                ->setCellValue('I1', '发件人');
+            foreach($list as $k => $v){
+                $num=$k+2;
+                $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A'.$num, $v['id'])                
+                    ->setCellValue('B'.$num, $v['order_no'])                
+                    ->setCellValue('C'.$num, $v['kdNo'])
+                    ->setCellValue('D'.$num, $v['name'])                 
+                    ->setCellValue('E'.$num, $v['mobile'])
+                    ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['area'].'/'.$v['address'])
+                    ->setCellValue('G'.$num, $v['kuaidi'])
+                    ->setCellValue('H'.$num, $v['goods'])
+                    ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderMobile']);
+            }
+
+            $objPHPExcel->getActiveSheet()->setTitle('包裹');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="包裹'.date("Y-m-d",time()).'.xls"');
+            header('Cache-Control: max-age=0');
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+            $objWriter->save('php://output');
+        }else{
+            return view();
+        }
+    }
 }
 ?>

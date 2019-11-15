@@ -17,7 +17,7 @@ class OrderBaoguo extends Admin
     }
 
     //获取列表
-    public function getList($map){
+    public function getList($map=null){
         $field = input('post.field','id');
         $order = input('post.order','desc');
         $type = input('post.type');

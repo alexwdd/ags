@@ -1,0 +1,19 @@
+<layout name='layout' />
+
+<form  method="post" action="{:url('bag/select')}">
+	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">包裹单号</label>
+		<div class="layui-input-inline" style="width:400px">
+			<textarea name="kdNo" class="layui-textarea" required="required" style="height: 300px"></textarea>
+			<p>单号每条一行</p>
+		</div>
+	</div>
+
+	<hr/>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+	    <button class="layui-btn" type="submit">导出</button>
+	    <button type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>
+	</div>
+</form>
