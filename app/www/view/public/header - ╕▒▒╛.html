@@ -1,0 +1,84 @@
+<div class="topBar">
+    <div class="main">
+        <div class="welcome">欢迎访问{:config('site.name')} <span>参考汇率 4.974</span></div>
+        <div class="account">
+            <a href="">
+            <i class="layui-icon layui-icon-username"></i> 13503784120
+            </a>
+            <a href="">注册</a>
+            |
+            <a href="">登录</a>
+        </div>
+    </div>
+</div>
+
+<div class="header">
+    <div class="main">
+        <div class="logo"><img src="{:RES}/image/logo.png"></div>
+        <div class="topSearch">
+            <div class="hotkey">
+                <a href="">关键词</a>
+                <a href="">关键词</a>
+                <a href="">关键词</a>
+                <a href="">关键词</a>
+                <a href="">关键词</a>
+            </div>
+            <input type="text">
+            <button type="button"><i class="layui-icon layui-icon-search"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="navBox">
+    <div class="main">
+        <div class="nav-list">
+            <p>全部商品分类</p>
+            <ul class="navlist-ul none" id="top_nav">
+                {volist name="treeMenu" id="vo" key="k"}
+                <li>
+                    <div class="navlist-li-cover" data-navid="{$k}">
+                        <span class="nalist-li-span">
+                            <a href="{:url('Goods/lists',array('cid'=>$vo['id']))}" class="navlist-li-a">{$vo.name}</a>
+                        </span> 
+                    </div>
+                    <div class="navlist-active">                      
+                        {volist name="vo.son" id="vo2"}
+                        <dl>
+                            <dt><a class="category_s" href="{:url('Goods/lists',array('cid'=>$vo2['id']))}">{$vo2.name}</a></dt>
+                            <dd>
+                            {volist name="vo2.son" id="vo3"}
+                               <a href="{:url('Goods/lists',array('cid'=>$vo3['id']))}">
+                               <img src="{$vo3.picname}" alt="">
+                               {$vo3.name}</a> 
+                            {/volist}
+                            </dd>
+                        </dl>
+                        {/volist}                
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+
+        <div class="nav">
+            <li><a href="">首页</a></li>
+            <li><a href="">特价专区</a></li>
+            <li><a href="">母婴</a></li>
+            <li><a href="">生活用品</a></li>
+            <li><a href="">保健品</a></li>
+            <li><a href="">品牌</a></li>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+    $('#top_nav li').each(function (i) {
+        $(this).find('.navlist-active').css({"top": -50 * i});
+    });
+    $(".nav-list").hover(function(){
+        $("#top_nav").removeClass('none');
+    },function(){
+        $("#top_nav").addClass('none');
+    });
+})
+</script>

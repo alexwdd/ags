@@ -435,6 +435,7 @@ class Order extends User
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$token));
         $result = curl_exec($ch);
         $result = json_decode($result,true);
+      	//dump($result);
         if ($result['Code']!=0) {
             $this->error("没有查询到相关资源");
         }
