@@ -5,38 +5,7 @@ use app\common\controller\Base;
 class Auto extends Base
 {
 	public function test(){
-		$map['id']=51239;
-		$value = db("OrderBaoguo")->where($map)->find();		
-		$token = $this->getAueToken();
-      	
-		//foreach ($list as $key => $value) {
-			$order = db('OrderPerson')->where('id',$value['personID'])->find();
-      		
-			if ($order['front']!='' && $order['back']!='') {
-				$data = [
-					'OrderIds'=>[$value['kdNo']],
-					'ReceiverName'=>$order['name'],
-					'ReceiverPhone'=>$order['mobile'],
-					'PhotoID'=>$order['sn'],
-					'PhotoFront'=>base64EncodeImage('.'.$order['front']),
-					'PhotoRear'=>base64EncodeImage('.'.$order['back'])
-				];		
-              	dump($data);die;
-				$url = 'http://aueapi.auexpress.com/api/PhotoIdUpload';
-				$ch = curl_init($url);
-
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-				curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode($data));
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization: Bearer '.$token));
-				$result = curl_exec($ch);
-				$result = json_decode($result,true);
-              	dump($result);die;
-				if ($result['Code']==0 && $result['ReturnResult']=='Success') {
-					db("OrderBaoguo")->where($map)->setField('snStatus',1);
-				}
-			}			
-		//}
+		
 	}
 	
 	//创建运单
