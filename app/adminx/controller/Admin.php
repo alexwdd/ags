@@ -81,7 +81,7 @@ class Admin extends Base {
             echo json_encode(array(
                 'code'=>1,
                 'results'=>array(
-                    'data'=>config('baoguoType')
+                    'data'=>config('BAOGUO_ZH')
                     )
             ));
         //}

@@ -1,0 +1,4 @@
+修改
+
+config.php
+adminx/controller/admin.php
