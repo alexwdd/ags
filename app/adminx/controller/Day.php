@@ -17,8 +17,8 @@ class Day extends Admin {
 
 		$map['createTime'] = array('between',array(strtotime($beginDate),strtotime($endDate)+86399));
 		$map['payStatus'] = array('in',[2,3,4]);
-		$list = db("Order")->where($map)->select();
-		$orderIds = db("Order")->where($map)->column('id');
+		$list = db("Order")->where($map)->select();		
+		$orderIds = db("Order")->where($map)->column('id');		
 		$type = [
 			'money'=>0,
             'pay1'=>0,
@@ -42,13 +42,17 @@ class Day extends Admin {
             $type['wuliu'] += $val['wuliuInprice'];
 		}
 		unset($map);
-		$map['orderID'] = array('in',$orderIds);
+		if($orderIds){
+			$map['orderID'] = array('in',$orderIds);
+		}else{
+			$map['id'] = 0;
+		}		
 		$list = db('OrderDetail')->field('goodsID,number')->where($map)->select();
 		foreach ($list as $key => $value) {
 			$inprice = db("Goods")->where("id",$value['goodsID'])->value("inprice");
 			$type['goodsMoney'] += $inprice * $value['number'];
 		}
-
+		$type['lirun'] = number_format(($type['money'] - $type['wuliu'] - $type['goodsMoney']),2);
 		$this->assign('type',$type);
 		$this->assign('beginDate',$beginDate);
 		$this->assign('endDate',$endDate);
