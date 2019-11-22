@@ -157,10 +157,15 @@
 .cateTab span{display: inline-block; font-size: 18px; padding: 0 10px}
 .cateTab span.active{border-bottom: 2px #39c4da solid}
 
-.kuaidi{clear: both; overflow: hidden; display: flex; padding: 10px; padding-right: 0}
-.kuaidi li{flex:1; border-right:1px #f1f1f1 solid; text-align: center; text-align: center; height: 30px;line-height:30px; cursor: pointer; background: #f1f1f1; margin-right: 10px}
+.kuaidi{clear: both; overflow: hidden; padding:0 10px;}
+.kuaidi li{clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; display: flex; padding: 5px 0; cursor: pointer;}
 .kuaidi li:last-child{border:0;}
-.kuaidi li.active{background: #39c4da; color: #fff; border-color:#39c4da}
+.kuaidi li .kInfo{flex: 1}
+.kuaidi li .kInfo .name{font-size: 14px; font-weight: bold; color: #000}
+.kuaidi li .kInfo .intr{font-size: 12px; color: #999}
+.kuaidi li .radio{width:16px; height:16px; border-radius: 50%; border:1px #ccc solid; margin-top: 10px;}
+.kuaidi li.active .radio{background: #39c4da;border-color:#39c4da}
+
 .kdResult{clear: both; overflow: hidden;}
 .kdResult .kdTotle{text-align: right; font-size: 16px; height: 40px; line-height: 40px; color: #39c4da;border-bottom: 1px #dbdbdb solid; padding-right: 10px}
 .kdResult .kdBaoguo{ clear: both; color: #999}

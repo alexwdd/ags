@@ -1,4 +1,7 @@
 修改
 
+数据库要增加单独打包
+
+cart目录改名pack
 config.php
 adminx/controller/admin.php

@@ -60,13 +60,24 @@
 	
 	<div class="infobox" style="margin-bottom:10px">
         <div class="hd">快递选择</div>
+        <div style="float: right; line-height:120%; color: #f00; padding:5px 10px; border-bottom: 1px #f1f1f1 solid">{:config('site.weibo')}</div>
         <div class="kuaidi">
-	        {volist name="wuliu" id="vo"}
-	        <li data-id="{$vo.id}">{$vo.name}</li>
-	        {/volist}
-	        <!-- <li data-id="0">店铺自提</li> -->
+	        <li data-type='zy'>
+                <div class="kInfo">
+                    <div class="name">澳洲中邮</div>
+                    <div class="intr">包裹数：，总重量：，运费$11</div>
+                </div>
+                <div class="radio"></div>
+            </li>
+            <li data-type='zh'>
+                <div class="kInfo">
+                    <div class="name">澳邮中环</div>
+                    <div class="intr">包裹数：，总重量：，运费$11</div>
+                </div>
+                <div class="radio"></div>
+            </li>
 	    </div>
-        <div style="float: right; line-height:120%; color: #f00; padding: 0 10px">{:config('site.weibo')}<br/>澳邮京东专线额外收费：0.5/罐</div>
+        
 	    <div class="kdResult"></div>
     </div>
     
@@ -145,22 +156,10 @@ mui.ready(function(){
     $(".kuaidi li").click(function(){
         $(".kuaidi li").removeClass("active");
         $(this).addClass('active');
-        var id = $(this).attr("data-id");
-        if (id==0){
-            kuaidi = $("#kuaidi").val('0');
-            $(".kdResult").html("<div class=\"hAddress\"><p>提示：请到AGS店铺付款，付款时请告知店员您的电话。</p><p>地址：7/60 King Wiliam Steet Adelaide SA 5000</p></div>");
-            $("#doJiesuan").html("提交订单");
-
-            goodsMoney = parseFloat($("#goodsMoney").html());
-            $("#youfei").html('0');
-            $("#total").html(goodsMoney);
-
-            return;
-        }
-
+        var type = $(this).attr("data-type");
         $("#doJiesuan").html("去结算");
 
-        $.get("{:url('www/cart/getYunfei')}?kid="+id+"&temp="+new Date().getTime(),function(res){
+        $.get("{:url('www/cart/getYunfei')}?kid="+type+"&temp="+new Date().getTime(),function(res){
             if (res.code==1) {
                 data = res.data;
                 _html = '<div class="kdTotle">共 '+data.baoguo.length+' 箱 - $'+data.totalPrice+'</div>';

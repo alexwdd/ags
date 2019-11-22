@@ -66,10 +66,12 @@ class Base extends Controller {
         return array('number'=>$number,'total'=>$total,'serverMoney'=>$server,'weight'=>number_format($weight,2)); 
     }
 
-    /*
-    type : zh中环 zy中邮
-    */
-    public function getYunfeiJson($user,$type,$province=null){
+    public function getYunfeiJson($user,$kid,$province=null){
+        $kuaidi = db('Wuliu')->where('id',$kid)->find();
+        if (!$kuaidi) {
+            return json_encode(['code'=>0,'msg'=>'快递公司不存在']);die;
+        }
+        $baoguoArr1 = [];
         $map['memberID'] = $user['id']; 
         $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
         foreach ($list as $key => $value) {
@@ -77,35 +79,79 @@ class Base extends Controller {
             if ($user['group']==2 || $user['vip']==1) {
                 $goods['price'] = $goods['price1'];
             }
+
             $list[$key]['goodsID'] = $goods['goodsID'];
             $list[$key]['name'] = $goods['name'];
             $list[$key]['short'] = $goods['short'];
             $list[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $list[$key]['weight'] = $goods['weight'];            
-            $list[$key]['price'] = $goods['price'];
-            $cart[$key]['baoyou'] = $goods['single'];
-            $list[$key]['singleNumber'] = $goods['number'];
+            $list[$key]['price'] = $goods['price'];            
+            $list[$key]['singleNumber'] = $goods['number'];             
+            if ($goods['wuliu']!='') { //套餐类的先处理掉
+                for ($i=0; $i < $value['number']; $i++) { 
+                    $brandName = getBrandName($goods['typeID'],$kid);
+                    $list[$key]['goodsNumber'] = $goods['number'];
+
+                    $danjia = getDanjia($goods['typeID'],$user);
+
+                    if ($this->inExtendArea($province)) {                        
+                        $extend = $goods['wuliuWeight']*$goods['number']*$danjia['otherPrice'];
+                    }else{
+                        $extend = 0;
+                    }
+                    $sign=0;
+                    if ($value['server']!=''){//包含签名
+                        $ids = explode(",", $value['server']);
+                        if (in_array(2,$ids)) {
+                            $sign=1; 
+                        }                           
+                    }
+
+                    if($kid==6 && in_array($goods['typeID'],[1,2,3])){//京东快递
+                        $yunfei = $goods['number']*0.5;
+                    }else{
+                        $yunfei = 0;
+                    }
+                    $baoguo = [
+                        'type'=>$goods['typeID'],
+                        'totalNumber'=>$goods['number'],
+                        'totalWeight'=>$goods['weight']*$goods['number'],
+                        'totalWuliuWeight'=>$goods['wuliuWeight']*$goods['number'],
+                        'yunfei'=>$yunfei,
+                        'inprice'=>$goods['wuliuWeight']*$goods['number']*$danjia['inprice'],
+                        'extend'=>$extend,
+                        'sign'=>$sign,
+                        'kuaidi'=>$brandName.'(包邮)',
+                        'goods'=>array($list[$key]),
+                    ];
+                    array_push($baoguoArr1,$baoguo);
+                }
+                unset($list[$key]);
+            }
         } 
-
-        if($type=='zy'){
-            $zhongyou = new \pack\Zhongyou($cart,$province);        
-            $baoguo = $this->getBagTotal($zhongyou->getBaoguo());
+        if ($list) {
+            $cart = new \cart\Zhongyou($list,$kuaidi,$province,$user);
+            $baoguoArr2 = $cart->getBaoguo();
+            $baoguoArr = array_merge($baoguoArr1,$baoguoArr2);
         }else{
-            $zhonghuan = new \pack\Zhonghuan($cart,$province);
-            $baoguo = $this->getBagTotal($zhonghuan->getBaoguo());
-        }
-   
-        //$data = fix_number_precision($data,2);  
-        return json_encode(['code'=>1,'data'=>$baoguo]);
-    }
-
-    public function getBagTotal($baoguoArr){
+            $baoguoArr =$baoguoArr1;
+        }        
         $totalWeight = 0;
         $totalWuliuWeight = 0;
         $totalPrice = 0;
         $totalExtend = 0;
         $totalInprice = 0;
         foreach ($baoguoArr as $key => $value) {
+            $server = [];
+            foreach ($value['goods'] as $k => $val) {
+                if ($val['server']) {
+                    $val['server'] = explode(",", $val['server']);
+                    $server = array_merge($server,$val['server']);
+                    $server = array_unique($server);
+                }
+            }
+            $baoguoArr[$key]['serverIds'] = implode(",",$server);
+
             $totalWeight += $value['totalWeight'];
             $totalWuliuWeight += $value['totalWuliuWeight'];
             $totalPrice += $value['yunfei'];
@@ -120,7 +166,9 @@ class Base extends Controller {
             'totalInprice'=>fix_number_precision($totalInprice,2),
             'baoguo'=>$baoguoArr
         ];     
-        return $data;
+
+        //$data = fix_number_precision($data,2);  
+        return json_encode(['code'=>1,'data'=>$data]);
     }
 
     public function getMultYunfeiJson($user,$kid,$goods,$province=null){

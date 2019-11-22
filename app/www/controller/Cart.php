@@ -682,7 +682,7 @@ class Cart extends User
     }
 
     public function getYunfei(){
-        $kid = input("param.kid");
-        echo $this->getYunfeiJson($this->user,$kid);
+        $type = input("param.type");
+        echo $this->getYunfeiJson($this->user,$type);
     } 
 }
