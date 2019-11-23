@@ -219,7 +219,7 @@
 .cartList p{clear: both; margin: 0px; font-size: 14px}
 .cartList p.m{ color: #f00;}
 .numberAction div{display: block; float: left; min-width: 24px; height: 24px; line-height:24px ;text-align: center; border: 1px #dbdbdb solid; margin-right: 5px; font-size: 12px; cursor: pointer;}
-.infobox{overflow:hidden; margin-bottom:0; border-top: 1px #dbdbdb solid; background-color: #fff;}
+.infobox{overflow:hidden; margin-bottom:0; border-top: 1px #dbdbdb solid; background-color: #fff; clear: both;}
 .infobox .hd{ height: 40px; line-height: 40px; padding-left: 10px; font-weight: bold; background-color: #F5F4F4}
 .infobox .hd i{color: #39c4da; font-size: 16px;}
 .infobox .bd{clear: both; overflow: hidden;}
@@ -227,6 +227,8 @@
 .infobox>p:last-child { border: none;}
 .infoTable{border: 0px; margin: 0; font-size: 1.2rem}
 .infobox .fd{ height: 30px; line-height: 30px; padding:0 10px;background-color: #f1f1f1; border-top: 1px #dbdbdb solid}
+.kBtn{text-align: center; padding:8px 0; cursor: pointer; font-weight: bold;}
+.kBtn.active{color: #c00; border-bottom: 2px #c00 solid}
 
 /* 收货地址 */
 #add_address{display: none;}
