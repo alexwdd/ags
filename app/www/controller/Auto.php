@@ -4,8 +4,8 @@ use app\common\controller\Base;
 
 class Auto extends Base
 {
-	public function test(){
-		
+	public function update(){
+
 	}
 	
 	//创建运单
@@ -17,7 +17,7 @@ class Auto extends Base
 		$map['kdNo'] = '';
 		//$map['status'] = 1;
 		$map['kuaidi'] = array('neq','');
-		$map['type'] = array('not in',[12,13,14]);
+		$map['type'] = array('not in',[15,16,17]);
 		$list = db("OrderBaoguo")->where($map)->select();
 		foreach ($list as $key => $value) {
 			$this->createSingleOrder($value);
@@ -31,7 +31,7 @@ class Auto extends Base
         file_put_contents($file, $content,FILE_APPEND);*/
 
 		$map['kdNo'] = array('neq','');
-		$map['type'] = array('not in',[12,13,14]);
+		$map['type'] = array('not in',[15,16,17]);
 		$map['eimg'] = array('eq','');
 		//$map['status'] = 1;
 		$list = db("OrderBaoguo")->where($map)->select();
@@ -53,7 +53,7 @@ class Auto extends Base
         file_put_contents($file, $content,FILE_APPEND);*/
 
 		$map['kdNo'] = array('neq','');
-		$map['type'] = array('not in',[12,13,14]);
+		$map['type'] = array('not in',[15,16,17]);
 		//$map['status'] = 1;
 		$map['snStatus'] = 0;
 		$list = db("OrderBaoguo")->where($map)->select();		

@@ -98,16 +98,18 @@ class Cart extends User
 
         //包裹信息
         $kid = input('param.kid');
-        if ($kid>0) {
-            $result = $this->getYunfeiJson($this->user,$kid,$address['province']);
-            $result = json_decode($result,true);
-            if ($result['code']==0) {
-                $this->error($result['msg']);
-            }
-            $baoguo = $result['data'];
-            $baoguo['number'] = count($baoguo['baoguo']);
-            $this->assign("baoguo",$baoguo);
-        }        
+        if($kid==''){
+            $this->error('请选择快递');
+        }
+        $result = $this->getYunfeiJson($this->user,$kid,$address['province']);
+        $result = json_decode($result,true);
+        if ($result['code']==0) {
+            $this->error($result['msg']);
+        }
+        $baoguo = $result['data'];
+        $baoguo['number'] = count($baoguo['baoguo']);
+        $this->assign("baoguo",$baoguo);
+           
         $money = $this->getCartNumber($this->user);
         $this->assign("money",$money);
         $this->assign("kid",$kid);

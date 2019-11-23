@@ -213,10 +213,10 @@ class Mult extends User
     }
 
     public function getYunfei(){
-        $kid = input("param.kid");
+        $type = input("param.type");
         $goods = input("param.goods");
         $province = input("param.province");
-        if ($kid=='') {
+        if ($type=='') {
             $this->error("请选择快递公司");
         }
         if (!$goods) {
@@ -242,7 +242,7 @@ class Mult extends User
                 $goods[$key]['server'] = '';
             }*/
         }
-        echo $this->getMultYunfeiJson($this->user,$kid,$goods,$province);
+        echo $this->getMultYunfeiJson($this->user,$type,$goods,$province);
     }
 
     //保存信息
@@ -275,7 +275,7 @@ class Mult extends User
 
         $hongjiu = 0;
         foreach ($list as $key => $value) {
-            if ($value['typeID']==12) {
+            if ($value['typeID']==15) {
                 $hongjiu += $value['number'];
             }
         }

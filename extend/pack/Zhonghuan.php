@@ -4,6 +4,7 @@ namespace pack;
 class Zhonghuan {
 
 	private $cart;				//购物车商品
+	private $user;
 	private $baoguoArr = [];
 	private $province;
 	private $extendArea = ['新疆维吾尔自治区','西藏自治区'];
@@ -23,6 +24,7 @@ class Zhonghuan {
 		$cart = array_values($cart);//创建索引
 		$this->cart = $cart;
 		$this->province = trim($province);
+		$this->user = $user;
 		header("Content-type: text/html;charset=utf-8");
 	}
 
@@ -44,8 +46,7 @@ class Zhonghuan {
 	        array_push($this->baoguoArr,$baoguo);
 		}
 
-		//$totalNumber = 0;//计算遍历包裹后该商品一共插入了几个
-		
+		//$totalNumber = 0;//计算遍历包裹后该商品一共插入了几个		
 		foreach ($this->baoguoArr as $key => $value) {
 			if($value['status']==0){
 				$number = $this->canInsert($value,$item,false);
@@ -195,24 +196,27 @@ class Zhonghuan {
 		
  		
  		foreach ($this->baoguoArr as $key => $value) {
+ 			if ($this->baoguoArr[$key]['totalWuliuWeight']<1) {
+				$this->baoguoArr[$key]['totalWuliuWeight']=1;
+			}
+
 			$wuliuWeight = ceil($this->baoguoArr[$key]['totalWuliuWeight']*10);
 			$this->baoguoArr[$key]['totalWuliuWeight'] = number_format($wuliuWeight/10,1);
-	
+			
+			$danjia = getDanjia($value['type'],'zh',$this->user);
 	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
-	        	$danjia = getDanjia(1);
 	        	$this->baoguoArr[$key]['kuaidi'] = '澳邮';
-	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
+	        	if($this->baoguoArr[$key]['baoyou']==0){
+	        		$this->baoguoArr[$key]['yunfei'] = $this->getNaifen($value['type'],$value['totalNumber']);
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}
 	        	$config = tpCache('kuaidi');
 	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
 	        }else{
-	        	$danjia = getDanjia(3);
 	        	$this->baoguoArr[$key]['kuaidi'] = '中环';
-	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
+	        	if($this->baoguoArr[$key]['baoyou']==0){
+	        		$this->baoguoArr[$key]['yunfei'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['price'];
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}	        	
@@ -222,6 +226,15 @@ class Zhonghuan {
 	        if ($this->inExtendArea()) {
 	        	$this->baoguoArr[$key]['extend'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'];
 	        }
+
+	        $this->baoguoArr[$key]['sign']=0;
+	        foreach ($value['goods'] as $k => $val) {
+	        	$ids = explode(",", $val['server']);
+	            if (in_array(2,$ids)) {
+	                $this->baoguoArr[$key]['sign']=1;
+	                break;
+	            }
+			}
 		}
 		return $this->baoguoArr;
 	}
@@ -491,10 +504,22 @@ class Zhonghuan {
 	}
 
 	private function getNaifen($goodsType,$number){
-		if ($goodsType==1 || $goodsType==2) {//大罐奶粉	    
-	        return 6;
+		if ($goodsType==1 || $goodsType==2) {//大罐奶粉
+	        if ($number==1) {	
+	        	return 6;	              	
+	        }elseif($number==2){	  
+	        	return 12;	        
+	        }elseif($number==3){	   
+	        	return 13.5;	        
+	        }
 	    }elseif($goodsType==3){//小罐奶粉
-	        return 7;
+	    	if ($number==1) {	
+	        	return 7;	        
+	        }elseif($number==2){	   
+	        	return 14;	        
+	        }elseif($number==3){	     
+	        	return 18;	        	
+	        }
 	    }
 	}
 }

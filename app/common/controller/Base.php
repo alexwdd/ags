@@ -71,27 +71,32 @@ class Base extends Controller {
     */
     public function getYunfeiJson($user,$type,$province=null){
         $map['memberID'] = $user['id']; 
-        $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
-        foreach ($list as $key => $value) {
+        $cart = db("Cart")->where($map)->order('typeID asc,number desc')->select();
+        foreach ($cart as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
             if ($user['group']==2 || $user['vip']==1) {
                 $goods['price'] = $goods['price1'];
             }
-            $list[$key]['goodsID'] = $goods['goodsID'];
-            $list[$key]['name'] = $goods['name'];
-            $list[$key]['short'] = $goods['short'];
-            $list[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
-            $list[$key]['weight'] = $goods['weight'];            
-            $list[$key]['price'] = $goods['price'];
-            $cart[$key]['baoyou'] = $goods['single'];
-            $list[$key]['singleNumber'] = $goods['number'];
-        } 
+            $cart[$key]['goodsID'] = $goods['goodsID'];
+            $cart[$key]['name'] = $goods['name'];
+            $cart[$key]['short'] = $goods['short'];
+            $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
+            $cart[$key]['weight'] = $goods['weight'];            
+            $cart[$key]['price'] = $goods['price'];
+            if($goods['wuliu']!=''){
+                $cart[$key]['baoyou'] = 1;
+            }else{
+                $cart[$key]['baoyou'] = 0;
+            }            
+            $cart[$key]['singleNumber'] = $goods['number'];
+            $cart[$key]['trueNumber'] = $value['goodsNumber'];
+        }
 
         if($type=='zy'){
-            $zhongyou = new \pack\Zhongyou($cart,$province);        
+            $zhongyou = new \pack\Zhongyou($cart,$province,$user);        
             $baoguo = $this->getBagTotal($zhongyou->getBaoguo());
         }else{
-            $zhonghuan = new \pack\Zhonghuan($cart,$province);
+            $zhonghuan = new \pack\Zhonghuan($cart,$province,$user);
             $baoguo = $this->getBagTotal($zhonghuan->getBaoguo());
         }
    
@@ -105,100 +110,7 @@ class Base extends Controller {
         $totalPrice = 0;
         $totalExtend = 0;
         $totalInprice = 0;
-        foreach ($baoguoArr as $key => $value) {
-            $totalWeight += $value['totalWeight'];
-            $totalWuliuWeight += $value['totalWuliuWeight'];
-            $totalPrice += $value['yunfei'];
-            $totalExtend += $value['extend'];
-            $totalInprice += $value['inprice'];
-        }
-        $data = [
-            'totalWeight'=>fix_number_precision($totalWeight,2),
-            'totalWuliuWeight'=>fix_number_precision($totalWuliuWeight,2),
-            'totalPrice'=>fix_number_precision($totalPrice,2),
-            'totalExtend'=>fix_number_precision($totalExtend,2),
-            'totalInprice'=>fix_number_precision($totalInprice,2),
-            'baoguo'=>$baoguoArr
-        ];     
-        return $data;
-    }
-
-    public function getMultYunfeiJson($user,$kid,$goods,$province=null){
-        $kuaidi = db('Wuliu')->where('id',$kid)->find();
-        if (!$kuaidi) {
-            return json_encode(['code'=>0,'msg'=>'快递公司不存在']);die;
-        }
-        $baoguoArr1 = [];
-        $list = $goods;   
-        foreach ($list as $key => $value) {
-            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();
-            if ($user['group']==2 || $user['vip']==1) {
-                $goods['price'] = $goods['price1'];
-            } 
-            $list[$key]['id'] = db('Cart')->where('itemID='.$value['itemID'])->value("id");
-            $list[$key]['goodsID'] = $goods['goodsID'];
-            $list[$key]['name'] = $goods['name'];
-            $list[$key]['short'] = $goods['short'];
-            $list[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
-            $list[$key]['weight'] = $goods['weight'];            
-            $list[$key]['price'] = $goods['price'];            
-            $list[$key]['singleNumber'] = $goods['number']; 
-
-            if ($goods['wuliu']!='') { //套餐类的先处理掉
-                for ($i=0; $i < $value['number']; $i++) {   
-                    $brandName = getBrandName($goods['typeID'],$kid);
-                    $list[$key]['goodsNumber'] = $goods['number'];
-
-                    $danjia = getDanjia($goods['typeID'],$user);
-
-                    if ($this->inExtendArea($province)) {                        
-                        $extend = $goods['wuliuWeight']*$goods['number']*$danjia['otherPrice'];
-                    }else{
-                        $extend = 0;
-                    }
-
-                    if ($value['flag']==1){//包含签名
-                        $sign=1;      
-                    }else{
-                        $sign=0;
-                    }
-
-                    if($kid==6 && in_array($goods['typeID'],[1,2,3])){//京东快递
-                        $yunfei = $goods['number']*0.5;
-                    }else{
-                        $yunfei = 0;
-                    }
-
-                    $baoguo = [
-                        'type'=>$goods['typeID'],
-                        'totalNumber'=>$goods['number'],
-                        'totalWeight'=>$goods['weight']*$goods['number'],
-                        'totalWuliuWeight'=>$goods['wuliuWeight']*$goods['number'],
-                        'yunfei'=>$yunfei,
-                        'inprice'=>$goods['wuliuWeight']*$goods['number']*$danjia['inprice'],
-                        'extend'=>$extend,
-                        'sign'=>$sign,
-                        'kuaidi'=>$brandName.'(包邮)',
-                        'goods'=>array($list[$key]),
-                    ];
-                    array_push($baoguoArr1,$baoguo);
-                }
-                unset($list[$key]);
-            }      
-        } 
-    
-        if ($list) {
-            $cart = new \cart\Zhongyou($list,$kuaidi,$province,$user);
-            $baoguoArr2 = $cart->getBaoguo();
-            $baoguoArr = array_merge($baoguoArr1,$baoguoArr2);
-        }else{
-            $baoguoArr =$baoguoArr1;
-        }        
-        $totalWeight = 0;
-        $totalWuliuWeight = 0;
-        $totalPrice = 0;
-        $totalExtend = 0;
-        $totalInprice = 0;
+        $baoguoNumber = 0;
         foreach ($baoguoArr as $key => $value) {
             $server = [];
             foreach ($value['goods'] as $k => $val) {
@@ -215,24 +127,54 @@ class Base extends Controller {
             $totalPrice += $value['yunfei'];
             $totalExtend += $value['extend'];
             $totalInprice += $value['inprice'];
+            $baoguoNumber++;
         }
         $data = [
-            /*'totalWeight'=>fix_number_precision($totalWeight,2),
-            'totalPrice'=>fix_number_precision($totalPrice,2),
-            'totalExtend'=>fix_number_precision($totalExtend,2),
-            'total'=>fix_number_precision($totalPrice+$totalExtend,2),
-            'baoguo'=>$baoguoArr*/
-
+            'baoguoNumber'=>$baoguoNumber,
             'totalWeight'=>fix_number_precision($totalWeight,2),
             'totalWuliuWeight'=>fix_number_precision($totalWuliuWeight,2),
             'totalPrice'=>fix_number_precision($totalPrice,2),
             'totalExtend'=>fix_number_precision($totalExtend,2),
             'totalInprice'=>fix_number_precision($totalInprice,2),
             'baoguo'=>$baoguoArr
-        ];      
+        ];     
+        return $data;
+    }
+
+    /*
+    type : zh中环 zy中邮
+    */
+    public function getMultYunfeiJson($user,$type,$cart,$province=null){   
+        foreach ($cart as $key => $value) {
+            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();
+            if ($user['group']==2 || $user['vip']==1) {
+                $goods['price'] = $goods['price1'];
+            } 
+            $cart[$key]['id'] = db('Cart')->where('itemID='.$value['itemID'])->value("id");
+            $cart[$key]['goodsID'] = $goods['goodsID'];
+            $cart[$key]['name'] = $goods['name'];
+            $cart[$key]['short'] = $goods['short'];
+            $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
+            $cart[$key]['weight'] = $goods['weight'];            
+            $cart[$key]['price'] = $goods['price'];            
+            $cart[$key]['singleNumber'] = $goods['number']; 
+            $cart[$key]['trueNumber'] = $value['goodsNumber'];
+            if($goods['wuliu']!=''){
+                $cart[$key]['baoyou'] = 1;
+            }else{
+                $cart[$key]['baoyou'] = 0;
+            }    
+        } 
+        if($type=='zy'){
+            $zhongyou = new \pack\Zhongyou($cart,$province,$user);        
+            $baoguo = $this->getBagTotal($zhongyou->getBaoguo());
+        }else{
+            $zhonghuan = new \pack\Zhonghuan($cart,$province,$user);
+            $baoguo = $this->getBagTotal($zhonghuan->getBaoguo());
+        }     
 
         //$data = fix_number_precision($data,2);  
-        return json_encode(['code'=>1,'data'=>$data]);
+        return json_encode(['code'=>1,'data'=>$baoguo]);
 
     }
 

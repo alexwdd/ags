@@ -189,7 +189,7 @@ class Cart extends User
 
         $hongjiu = 0;
         foreach ($list as $key => $value) {
-            if ($value['typeID']==12) {
+            if ($value['typeID']==15) {
                 $hongjiu += $value['goodsNumber'];
             }
         }
@@ -225,18 +225,18 @@ class Cart extends User
 
         //包裹信息
         $kid = input('param.kid');
-        if ($kid>0) {
-            $result = $this->getYunfeiJson($this->user,$kid,$address['province']);            
-            $result = json_decode($result,true);            
-            if ($result['code']==0) {
-                $this->error($result['msg']);
-            }          
-            $baoguo = $result['data'];
-            $baoguo['number'] = count($baoguo['baoguo']);
-            $this->assign("baoguo",$baoguo);
-        }else{
+        if ($kid=='') {
             $this->error("请选择快递");
         }
+        $result = $this->getYunfeiJson($this->user,$kid,$address['province']);            
+        $result = json_decode($result,true);            
+        if ($result['code']==0) {
+            $this->error($result['msg']);
+        }          
+        $baoguo = $result['data'];
+        $baoguo['number'] = count($baoguo['baoguo']);
+        $this->assign("baoguo",$baoguo);
+        
         $money = $this->getCartNumber($this->user);        
         $this->assign("money",$money);
         $this->assign("kid",$kid);
@@ -473,7 +473,7 @@ class Cart extends User
             }else{
                 $this->error('商品【'.$goods['name'].'】已经下架');
             }
-            if ($value['typeID']==12) {
+            if ($value['typeID']==15) {
                 $hongjiu += $value['goodsNumber'];
             }
         }
@@ -489,23 +489,23 @@ class Cart extends User
         $totalPrice = $cart['total'];
         $serverMoney = $cart['serverMoney'];
 
-        if ($data['kid']>0) { 
-            $result = $this->getYunfeiJson($this->user,$data['kid'],$data['province']);
-            $result = json_decode($result,true);    
-            if ($result['code']==0) {
-                $this->error($result['msg']);
-            }
-            $baoguo = $result['data'];
-
-            if(count($baoguo['baoguo'])<1){
-                $this->error("包裹错误");
-            }
-            $totalYunfei = $baoguo['totalPrice']+$baoguo['totalExtend'];
-            $totalInprice = $baoguo['totalInprice'];
-        }else{
-            //$totalYunfei = 0;
-            $this->error("请选择快递");
+        if($data['kid']==''){
+            $this->error('请选择快递');
         }
+        
+        $result = $this->getYunfeiJson($this->user,$data['kid'],$data['province']);
+        $result = json_decode($result,true);    
+        if ($result['code']==0) {
+            $this->error($result['msg']);
+        }
+        $baoguo = $result['data'];
+
+        if(count($baoguo['baoguo'])<1){
+            $this->error("包裹错误");
+        }
+        $totalYunfei = $baoguo['totalPrice']+$baoguo['totalExtend'];
+        $totalInprice = $baoguo['totalInprice'];
+        
         
         $flag = 0;
         foreach ($baoguo['baoguo'] as $key => $value) {

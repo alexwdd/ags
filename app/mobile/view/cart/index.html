@@ -64,15 +64,15 @@
         <div class="kuaidi">
 	        <li data-type='zy'>
                 <div class="kInfo">
-                    <div class="name">澳洲中邮</div>
-                    <div class="intr">包裹数：，总重量：，运费$11</div>
+                    <div class="name">澳邮中邮</div>
+                    <div class="intr">&nbsp;</div>
                 </div>
                 <div class="radio"></div>
             </li>
             <li data-type='zh'>
                 <div class="kInfo">
                     <div class="name">澳邮中环</div>
-                    <div class="intr">包裹数：，总重量：，运费$11</div>
+                    <div class="intr">&nbsp;</div>
                 </div>
                 <div class="radio"></div>
             </li>
@@ -112,7 +112,10 @@ mui.ready(function(){
                     goodsMoney = parseFloat($("#goodsMoney").html());
                     $("#youfei").html('0');
                     $("#total").html(goodsMoney);
+                    $(".kuaidi li").removeClass("active");
+                    $(".kuaidi li .intr").html("&nbsp;");
                     $(".kdResult").html('');
+                    $("#kuaidi").val('');
                 },'json')
         	}                
         });
@@ -121,6 +124,7 @@ mui.ready(function(){
     //更改数量
     $('.numberAction .set').on('click', function () {
         $(".kuaidi li").removeClass("active");
+        $(".kuaidi li .intr").html("&nbsp;");
         $(".kdResult").html('');
         $("#kuaidi").val('');
         var action = $(this).attr("data-action");
@@ -156,14 +160,15 @@ mui.ready(function(){
     $(".kuaidi li").click(function(){
         $(".kuaidi li").removeClass("active");
         $(this).addClass('active');
+        var obj = $(this);
         var type = $(this).attr("data-type");
         $("#doJiesuan").html("去结算");
 
-        $.get("{:url('www/cart/getYunfei')}?kid="+type+"&temp="+new Date().getTime(),function(res){
+        $.get("{:url('www/cart/getYunfei')}?type="+type+"&temp="+new Date().getTime(),function(res){
             if (res.code==1) {
-                data = res.data;
-                _html = '<div class="kdTotle">共 '+data.baoguo.length+' 箱 - $'+data.totalPrice+'</div>';
-                _html += '<div class="kdBaoguo">';                
+                data = res.data;            
+                obj.find(".intr").html('包裹数：'+data.baoguo.length+'箱，总重量：'+data.totalWuliuWeight+'，运费:$'+data.totalPrice);
+                _html = '<div class="kdBaoguo">';                
                 for (var i = 0; i < data.baoguo.length; i++) {
                     _html += '<li>';
                     _html += '<div class="goods">';
@@ -177,7 +182,7 @@ mui.ready(function(){
                 _html += '</div>';
                 $(".kdResult").html(_html);
                 $(window).scrollTop($(window).height());
-                kuaidi = $("#kuaidi").val(id);
+                kuaidi = $("#kuaidi").val(type);
 
                 goodsMoney = parseFloat($("#goodsMoney").html());
                 $("#youfei").html(data.totalPrice);

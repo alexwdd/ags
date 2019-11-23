@@ -4,6 +4,7 @@ namespace pack;
 class Zhongyou {
 
 	private $cart;				//购物车商品
+	private $user;
 	private $baoguoArr = [];
 	private $province;
 	private $extendArea = ['新疆维吾尔自治区','西藏自治区'];
@@ -13,15 +14,17 @@ class Zhongyou {
 
 	/*
 	$cart中的trueNumber是实际单品数量，比如商品A单品数量是3个，如果购物车中有2个，单品数量总数是6，这里的trueNumber不是数据库中单个商品的trueNumber！！！
+	包裹的status属性如果是1就是该包裹不再跟别的包裹2次混编
 	*/
-	public function __construct($cart,$province) {
+	public function __construct($cart,$province,$user) {
 		foreach ($cart as $key => $value) {
 			unset($cart[$key]['memberID']);
 		}
 
 		$cart = array_values($cart);//创建索引
 		$this->cart = $cart;
-		$this->province = trim($province);		
+		$this->province = trim($province);
+		$this->user = $user;
 		header("Content-type: text/html;charset=utf-8");
 	}
 
@@ -43,8 +46,7 @@ class Zhongyou {
 	        array_push($this->baoguoArr,$baoguo);
 		}
 
-		//$totalNumber = 0;//计算遍历包裹后该商品一共插入了几个
-		
+		//$totalNumber = 0;//计算遍历包裹后该商品一共插入了几个		
 		foreach ($this->baoguoArr as $key => $value) {
 			if($value['status']==0){
 				$number = $this->canInsert($value,$item,false);
@@ -129,7 +131,6 @@ class Zhongyou {
             }
 		}
 
-
 		foreach ($this->cart as $key => $value) {			
 			$this->goodsInsertBaoguo($value);           
 		}		
@@ -193,24 +194,27 @@ class Zhongyou {
 		}
  		
  		foreach ($this->baoguoArr as $key => $value) {
+ 			if ($this->baoguoArr[$key]['totalWuliuWeight']<1) {
+				$this->baoguoArr[$key]['totalWuliuWeight']=1;
+			}
+
 			$wuliuWeight = ceil($this->baoguoArr[$key]['totalWuliuWeight']*10);
 			$this->baoguoArr[$key]['totalWuliuWeight'] = number_format($wuliuWeight/10,1);
-	
+			
+			$danjia = getDanjia($value['type'],'zy',$this->user);
 	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
-	        	$danjia = getDanjia(1);
 	        	$this->baoguoArr[$key]['kuaidi'] = '澳邮';
-	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
+	        	if($this->baoguoArr[$key]['baoyou']==0){
+	        		$this->baoguoArr[$key]['yunfei'] = $this->getNaifen($value['type'],$value['totalNumber']);
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}
 	        	$config = tpCache('kuaidi');
 	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
 	        }else{
-	        	$danjia = getDanjia(2);
 	        	$this->baoguoArr[$key]['kuaidi'] = '中邮';
-	        	if($this->baoguoArr[$key]['totalWuliuWeight']<1 && $this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = (1-$this->baoguoArr[$key]['totalWuliuWeight'])*$danjia['price'];
+	        	if($this->baoguoArr[$key]['baoyou']==0){
+	        		$this->baoguoArr[$key]['yunfei'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['price'];
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}	        	
@@ -220,6 +224,15 @@ class Zhongyou {
 	        if ($this->inExtendArea()) {
 	        	$this->baoguoArr[$key]['extend'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'];
 	        }
+
+	        $this->baoguoArr[$key]['sign']=0;
+	        foreach ($value['goods'] as $k => $val) {
+	        	$ids = explode(",", $val['server']);
+	            if (in_array(2,$ids)) {
+	                $this->baoguoArr[$key]['sign']=1;
+	                break;
+	            }
+			}
 		}	
 		return $this->baoguoArr;
 	}
@@ -489,10 +502,22 @@ class Zhongyou {
 	}
 
 	private function getNaifen($goodsType,$number){
-		if ($goodsType==1 || $goodsType==2) {//大罐奶粉	    
-	        return 6;
+		if ($goodsType==1 || $goodsType==2) {//大罐奶粉
+	        if ($number==1) {	
+	        	return 6;	              	
+	        }elseif($number==2){	  
+	        	return 12;	        
+	        }elseif($number==3){	   
+	        	return 13.5;	        
+	        }
 	    }elseif($goodsType==3){//小罐奶粉
-	        return 7;
+	    	if ($number==1) {	
+	        	return 7;	        
+	        }elseif($number==2){	   
+	        	return 14;	        
+	        }elseif($number==3){	     
+	        	return 18;	        	
+	        }
 	    }
 	}
 }

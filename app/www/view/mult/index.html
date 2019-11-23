@@ -135,10 +135,10 @@
                             </div>
 
                             <div class="mBox">
-                                <div class="hd">快递选择(澳邮京东专线额外收费：0.5/罐)<span style="color: #f00">{:config('site.weibo')}</span></div>
+                                <div class="hd">快递选择<span style="color: #f00">{:config('site.weibo')}</span></div>
                                 <div class="bd">
                                     <div class="kuaidi">           
-                                        <li v-for="vo in wuliu" @click="getWuliu(vo)" :class="{active:kid==vo.id}">{{vo.name}}</li>
+                                        <li v-for="vo in wuliu" @click="getWuliu(vo)" :class="{active:type==vo.type}">{{vo.name}}</li>
                                     </div>
                                     <div class="kdResult" v-if="kdInfo!=''">
                                         <div class="kdTotle">共 {{kdInfo.number}} 箱 - ${{kdInfo.totalPrice}}</div>
@@ -349,9 +349,12 @@ vm = new Vue({
         cart:[],
         goods:[],        
         
-        kid:0,
+        type:'',
         kdInfo:[],
-        wuliu:[],
+        wuliu:[
+            {name:'澳洲中邮',type:'zy'},
+            {name:'澳洲中环',type:'zh'}
+        ],
         sign:'',
         signShow:false,
 
@@ -377,7 +380,7 @@ vm = new Vue({
             if (res.code==1){
                 that.cart = res.body.data;
                 that.total = res.body.total;
-                that.wuliu = res.body.wuliu;
+                //that.wuliu = res.body.wuliu;
                 if (that.cart.length==0){
                     that.show=false;
                 }
@@ -482,7 +485,7 @@ vm = new Vue({
             }
         },
         setCartGood(info,number,type){
-            this.kid = 0;
+            this.type = '';
             this.kdInfo = [];
 
             for(var i= 0; i<this.cart.length; i++){
@@ -506,9 +509,9 @@ vm = new Vue({
                 layer.alert("请选择收件人");
                 return;
             }
-            that.kid = value.id;
+            that.type = value.type;
             data = {
-                'kid':that.kid,
+                'type':that.type,
                 'goods':JSON.stringify(that.goods),
                 'province':that.address.province
             }
@@ -536,7 +539,7 @@ vm = new Vue({
                 layer.alert("请选择发件人");
                 return;
             }
-            if (that.kid==0){
+            if (that.type==''){
                 layer.alert("请选择快递");
                 return;
             }
@@ -560,7 +563,7 @@ vm = new Vue({
 
             var that = this;
             data = {
-                'kuaidi':that.kid,
+                'kuaidi':that.type,
                 'goods':JSON.stringify(that.goods),
                 'addressID':that.address.id,
                 'sender':that.sender.name+','+that.sender.mobile,
@@ -714,7 +717,7 @@ vm = new Vue({
             this.address = '';
             this.sign = '';
             this.signShow = false;
-            this.kid = 0;
+            this.type = '';
             this.kdInfo = '';
         },
         handleCurrentChange(v){

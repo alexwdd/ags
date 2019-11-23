@@ -1,6 +1,8 @@
 修改
 
-数据库要增加单独打包
+修改后台物流列表
+
+pm_order_baoguo 表kid修改varche
 
 cart目录改名pack
 config.php

@@ -71,12 +71,10 @@
      
         <div class="cartTitle">快递选择</div>
         <div class="kuaidi">
-            {volist name="wuliu" id="vo"}
-            <li data-id="{$vo.id}">{$vo.name}</li>
-            {/volist}
-            <!-- <li data-id="0">店铺自提</li> -->
+            <li data-type="zy">澳邮中邮</li>
+            <li data-type="zh">澳邮中环</li>
 
-            <div style="float: right; color: #f00">{:config('site.weibo')}<br/>澳邮京东专线额外收费：0.5/罐</div>
+            <div style="float: right; color: #f00; line-height: 40px">{:config('site.weibo')}</div>
         </div>
         <div class="kdResult"></div>
 
@@ -180,21 +178,10 @@ $(function(){
     $(".kuaidi li").click(function(){
         $(".kuaidi li").removeClass("active");
         $(this).addClass('active');
-        var id = $(this).attr("data-id");
-        if (id==0){
-            kuaidi = $("#kuaidi").val('0');
-            $(".kdResult").html("<div class=\"hAddress\"><p>提示：请到AGS店铺付款，付款时请告知店员您的电话。</p><p>地址：7/60 King Wiliam Steet Adelaide SA 5000</p></div>");
-            $("#doJiesuan").html("提交订单");
-
-            goodsMoney = parseFloat($("#goodsMoney").html());
-            $("#youfei").html('0');
-            $("#total").html("$"+goodsMoney);
-            return;
-        }
-
+        var type = $(this).attr("data-type");
         $("#doJiesuan").html("去结算");
 
-        $.get("{:url('cart/getYunfei')}?kid="+id+"&temp="+new Date().getTime(),function(res){
+        $.get("{:url('cart/getYunfei')}?type="+type+"&temp="+new Date().getTime(),function(res){
             if (res.code==1) {
                 data = res.data;
                 _html = '<div class="kdTotle">共 '+data.baoguo.length+' 箱 - $'+data.totalPrice+'</div>';
@@ -212,7 +199,7 @@ $(function(){
                 _html += '</div>';
                 $(".kdResult").html(_html);
                 $(window).scrollTop($(window).height());
-                kuaidi = $("#kuaidi").val(id);
+                kuaidi = $("#kuaidi").val(type);
 
                 goodsMoney = parseFloat($("#goodsMoney").html());
                 $("#youfei").html(data.totalPrice);
