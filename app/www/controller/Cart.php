@@ -685,4 +685,37 @@ class Cart extends User
         $type = input("param.type");
         echo $this->getYunfeiJson($this->user,$type);
     } 
+
+    public function getYunfeiAll(){
+        $map['memberID'] = $this->user['id']; 
+        $cart = db("Cart")->where($map)->order('typeID asc,number desc')->select();
+        foreach ($cart as $key => $value) {
+            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
+            if ($this->user['group']==2 || $this->user['vip']==1) {
+                $goods['price'] = $goods['price1'];
+            }
+            $cart[$key]['goodsID'] = $goods['goodsID'];
+            $cart[$key]['name'] = $goods['name'];
+            $cart[$key]['short'] = $goods['short'];
+            $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
+            $cart[$key]['weight'] = $goods['weight'];            
+            $cart[$key]['price'] = $goods['price'];
+            if($goods['wuliu']!=''){
+                $cart[$key]['baoyou'] = 1;
+            }else{
+                $cart[$key]['baoyou'] = 0;
+            }            
+            $cart[$key]['singleNumber'] = $goods['number'];
+            $cart[$key]['trueNumber'] = $value['goodsNumber'];
+        }
+        $zhongyou = new \pack\Zhongyou($cart,'',$this->user);        
+        $zyBaoguo = $this->getBagTotal($zhongyou->getBaoguo());
+    
+        $zhonghuan = new \pack\Zhonghuan($cart,'',$this->user);
+        $zhBaoguo = $this->getBagTotal($zhonghuan->getBaoguo());
+        
+   
+        //$data = fix_number_precision($data,2);  
+        echo json_encode(['code'=>1,'zhonghuan'=>$zhBaoguo,'zhongyou'=>$zyBaoguo]);
+    }
 }

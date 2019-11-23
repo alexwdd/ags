@@ -62,29 +62,31 @@
         <div class="hd">快递选择</div>
 
         <div style="line-height:120%;color: #f00;padding:5px 10px;border-bottom:1px #f1f1f1 solid">{:config('site.weibo')}</div>
-
+        <div style="padding: 5px 0; clear: both; overflow: hidden;">
         <div class="kBtn">澳洲直邮</div>
+        </div>
 
         <div class="loadding" style="display: none;"><i class="mui-spinner"></i></div>
 
-        <div class="kuaidi" style="display: none;">
-	        <li data-type='zy'>
-                <div class="kInfo">
-                    <div class="name">澳邮中邮</div>
-                    <div class="intr">&nbsp;</div>
-                </div>
-                <div class="radio"></div>
-            </li>
+        <div class="kuaidi" style="display: none;">	        
             <li data-type='zh'>
                 <div class="kInfo">
                     <div class="name">澳邮中环</div>
-                    <div class="intr">&nbsp;</div>
+                    <div class="intr" id="zhIntr">&nbsp;</div>
                 </div>
                 <div class="radio"></div>
             </li>
-	    </div>
-        
-	    <div class="kdResult"></div>
+            <div class="kdResult" id="zhBaoguo" style="display: none;"></div>
+
+            <li data-type='zy'>
+                <div class="kInfo">
+                    <div class="name">澳邮中邮</div>
+                    <div class="intr" id="zyIntr">&nbsp;</div>
+                </div>
+                <div class="radio"></div>
+            </li>
+            <div class="kdResult" id="zyBaoguo" style="display: none;"></div>
+	    </div>	    
     </div>
     
     
@@ -101,6 +103,7 @@
 <input type="hidden" id="kuaidi" value="">
 <input type="hidden" id="activeIndex" value="cart" />
 <script>
+var baoguoData = [];
 mui.init();
 mui.ready(function(){
 	//删除商品
@@ -120,8 +123,10 @@ mui.ready(function(){
                     $("#total").html(goodsMoney);
                     $(".kuaidi li").removeClass("active");
                     $(".kuaidi li .intr").html("&nbsp;");
-                    $(".kdResult").html('');
                     $("#kuaidi").val('');
+                    $(".kuaidi").hide();
+                    $(".kdResult").html('').hide();
+                    $(".kBtn").removeClass("active");        
                 },'json')
         	}                
         });
@@ -159,7 +164,9 @@ mui.ready(function(){
         goodsMoney = parseFloat($("#goodsMoney").html());
         $("#youfei").html('0');
         $("#total").html("$"+goodsMoney);
-        $(".kdResult").html('');
+        $(".kuaidi").hide();
+        $(".kdResult").html('').hide();
+        $(".kBtn").removeClass("active");
     });
 
     $(".kBtn").click(function(){
@@ -168,7 +175,42 @@ mui.ready(function(){
         }
         $(this).addClass("active");
         $(".loadding").show();
-        
+        $.get("{:url('www/cart/getYunfeiAll')}?temp="+new Date().getTime(),function(res){
+            $(".loadding").hide();
+            baoguoData = res;
+            $("#zyIntr").html('包裹数：'+res.zhongyou.baoguo.length+'箱，总重量：'+res.zhongyou.totalWuliuWeight+'kg，运费:$'+res.zhongyou.totalPrice);
+            $("#zhIntr").html('包裹数：'+res.zhonghuan.baoguo.length+'箱，总重量：'+res.zhonghuan.totalWuliuWeight+'kg，运费:$'+res.zhonghuan.totalPrice);
+            $(".kuaidi").show();
+
+            _html = '<div class="kdBaoguo">';                
+            for (var i = 0; i < res.zhongyou.baoguo.length; i++) {
+                _html += '<li>';
+                _html += '<div class="goods">';
+                for (var j = 0; j < res.zhongyou.baoguo[i].goods.length; j++) {
+                _html += '<p>'+res.zhongyou.baoguo[i].goods[j]['trueNumber']+' * '+res.zhongyou.baoguo[i].goods[j]['name']+'</p>';
+                }
+                _html += '</div>';
+                _html += '<div class="yunfei">'+res.zhongyou.baoguo[i].kuaidi+' - 约'+res.zhongyou.baoguo[i].totalWuliuWeight+'kg - $'+res.zhongyou.baoguo[i].yunfei+'</div>';
+                _html += '</li>';
+            }                
+            _html += '</div>';
+            $("#zyBaoguo").html(_html);
+
+            _html = '<div class="kdBaoguo">';                
+            for (var i = 0; i < res.zhonghuan.baoguo.length; i++) {
+                _html += '<li>';
+                _html += '<div class="goods">';
+                for (var j = 0; j < res.zhonghuan.baoguo[i].goods.length; j++) {
+                _html += '<p>'+res.zhonghuan.baoguo[i].goods[j]['trueNumber']+' * '+res.zhonghuan.baoguo[i].goods[j]['name']+'</p>';
+                }
+                _html += '</div>';
+                _html += '<div class="yunfei">'+res.zhonghuan.baoguo[i].kuaidi+' - 约'+res.zhonghuan.baoguo[i].totalWuliuWeight+'kg - $'+res.zhonghuan.baoguo[i].yunfei+'</div>';
+                _html += '</li>';
+            }                
+            _html += '</div>';
+            $("#zhBaoguo").html(_html);
+
+        },'json')
     })
 
     //计算物流
@@ -177,9 +219,25 @@ mui.ready(function(){
         $(this).addClass('active');
         var obj = $(this);
         var type = $(this).attr("data-type");
+        var thisData = [];
         $("#doJiesuan").html("去结算");
 
-        $.get("{:url('www/cart/getYunfei')}?type="+type+"&temp="+new Date().getTime(),function(res){
+        if(type=='zy'){
+            $("#zyBaoguo").show();
+            $("#zhBaoguo").hide();
+            thisData = baoguoData.zhongyou;
+        }else{
+            $("#zyBaoguo").hide();
+            $("#zhBaoguo").show();
+            thisData = baoguoData.zhonghuan;
+        }
+        $(window).scrollTop($(window).height());
+        $("#kuaidi").val(type);
+        goodsMoney = parseFloat($("#goodsMoney").html());
+        $("#youfei").html(thisData.totalPrice);
+        $("#total").html("$"+(goodsMoney+parseFloat(thisData.totalPrice)).toFixed(2));
+
+        /*$.get("{:url('www/cart/getYunfei')}?type="+type+"&temp="+new Date().getTime(),function(res){
             if (res.code==1) {
                 data = res.data;            
                 obj.find(".intr").html('包裹数：'+data.baoguo.length+'箱，总重量：'+data.totalWuliuWeight+'，运费:$'+data.totalPrice);
@@ -205,7 +263,7 @@ mui.ready(function(){
             }else{
                 mui.alert(res.msg);
             }
-        },'json'); 
+        },'json'); */
     })
 
     $("#doJiesuan").click(function(){

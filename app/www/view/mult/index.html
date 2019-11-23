@@ -147,7 +147,7 @@
 
                                             <li v-for="vo in kdInfo.baoguo">
                                                 <div class="goods">
-                                                    <p v-for="f in vo.goods">{{f.goodsNumber}} * {{f.name}}</p>
+                                                    <p v-for="f in vo.goods">{{f.trueNumber}} * {{f.name}}</p>
                                                 </div>
                                                 <div class="yunfei">
                                                     {{vo.kuaidi}} - 约{{vo.totalWuliuWeight}}kg - ${{vo.yunfei}}
