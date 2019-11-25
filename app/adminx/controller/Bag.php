@@ -113,7 +113,7 @@ class Bag extends Admin {
                 ->setCellValue('K'.$num, $v['address'])
                 ->setCellValue('L'.$num, $v['goods'])
                 ->setCellValue('M'.$num, $v['totalNumber'])
-                ->setCellValue('N'.$num, $v['sn'])
+                ->setCellValue('N'.$num, $v['sign'])
                 ->setCellValue('O'.$num, '')
                 ->setCellValue('P'.$num, $v['kuaidi'])
                 ->setCellValue('Q'.$num, $v['kdNo']);
@@ -225,11 +225,13 @@ class Bag extends Admin {
             $map['del'] = 0;
             $map['status'] = 1;
 
-            $list = db('OrderBaoguo')->where($map)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
+
+                $list[$key]['sn'] = db("OrderPerson")->where('id',$value['personID'])->value("sn");
                 $goods = db("OrderDetail")->where("baoguoID",$value['id'])->select();
                 $content = '';
+                $totalNumber = 0;
                 foreach ($goods as $k => $val) {
                     if ($val['extends']!='') {
                         $goodsName = $val['short'].'['.$val['extends'].']';
@@ -240,34 +242,52 @@ class Bag extends Admin {
                         $content .= $goodsName.'*'.$val['trueNumber'];
                     }else{
                         $content .= ";".$goodsName.'*'.$val['trueNumber'];
-                    }               
+                    }   
+                    $totalNumber += $val['trueNumber'];
                 }       
                 $list[$key]['goods'] = $content;
+                $list[$key]['totalNumber'] = $totalNumber;
             }
 
             $objPHPExcel = new \PHPExcel();    
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A1', '编号')
                 ->setCellValue('B1', '订单号')
-                ->setCellValue('C1', '快递号')
-                ->setCellValue('D1', '姓名')
-                ->setCellValue('E1', '电话')
-                ->setCellValue('F1', '地址')
-                ->setCellValue('G1', '快递')
-                ->setCellValue('H1', '商品')
-                ->setCellValue('I1', '发件人');
+                ->setCellValue('C1', '发件人')
+                ->setCellValue('D1', '发件电话')
+                ->setCellValue('E1', '收件人')
+                ->setCellValue('F1', '收件电话')
+                ->setCellValue('G1', '证件号码')
+                ->setCellValue('H1', '州省')
+                ->setCellValue('I1', '区市')
+                ->setCellValue('J1', '区县')
+                ->setCellValue('K1', '地址')
+                ->setCellValue('L1', '商品')
+                ->setCellValue('M1', '数量')
+                ->setCellValue('N1', '签名')
+                ->setCellValue('O1', '备注')
+                ->setCellValue('P1', '快递公司') 
+                ->setCellValue('Q1', '运单号');
             foreach($list as $k => $v){
                 $num=$k+2;
                 $objPHPExcel->setActiveSheetIndex(0)
                     ->setCellValue('A'.$num, $v['id'])                
                     ->setCellValue('B'.$num, $v['order_no'])                
-                    ->setCellValue('C'.$num, $v['kdNo'])
-                    ->setCellValue('D'.$num, $v['name'])                 
-                    ->setCellValue('E'.$num, $v['mobile'])
-                    ->setCellValue('F'.$num, $v['province'].'/'.$v['city'].'/'.$v['area'].'/'.$v['address'])
-                    ->setCellValue('G'.$num, $v['kuaidi'])
-                    ->setCellValue('H'.$num, $v['goods'])
-                    ->setCellValue('I'.$num, $v['sender'].'/'.$v['senderMobile']);
+                    ->setCellValue('C'.$num, $v['sender'])
+                    ->setCellValue('D'.$num, $v['senderMobile'])
+                    ->setCellValue('E'.$num, $v['name'])                 
+                    ->setCellValue('F'.$num, $v['mobile'])
+                    ->setCellValue('G'.$num, $v['sn'])
+                    ->setCellValue('H'.$num, $v['province'])
+                    ->setCellValue('I'.$num, $v['city'])
+                    ->setCellValue('J'.$num, $v['area'])
+                    ->setCellValue('K'.$num, $v['address'])
+                    ->setCellValue('L'.$num, $v['goods'])
+                    ->setCellValue('M'.$num, $v['totalNumber'])
+                    ->setCellValue('N'.$num, $v['sign'])
+                    ->setCellValue('O'.$num, '')
+                    ->setCellValue('P'.$num, $v['kuaidi'])
+                    ->setCellValue('Q'.$num, $v['kdNo']);
             }
 
             $objPHPExcel->getActiveSheet()->setTitle('包裹');
