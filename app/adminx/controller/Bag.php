@@ -224,7 +224,7 @@ class Bag extends Admin {
             $map['kdNo'] = array('in',$arr);
             $map['del'] = 0;
             $map['status'] = 1;
-
+            $list = db('OrderBaoguo')->where($map)->order('id desc')->select();
             foreach ($list as $key => $value) {
                 db("OrderBaoguo")->where('id',$value['id'])->setField('flag',1);
 
