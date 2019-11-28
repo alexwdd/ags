@@ -229,7 +229,7 @@ class Cart extends User
             $this->error("请选择快递");
         }
         $result = $this->getYunfeiJson($this->user,$kid,$address['province']);            
-        $result = json_decode($result,true);            
+        $result = json_decode($result,true);
         if ($result['code']==0) {
             $this->error($result['msg']);
         }          
@@ -620,8 +620,8 @@ class Cart extends User
                         'itemID'=>$val['itemID'],
                         'name'=>$val['name'],
                         'short'=>$val['short'],
-                        'number'=>$val['goodsNumber'],    
-                        'trueNumber'=>$val['goodsNumber'],    
+                        'number'=>$val['trueNumber'],    
+                        'trueNumber'=>$val['trueNumber'],    
                         'price'=>$val['price'],
                         'server'=>$val['server'],
                         'extends'=>$val['extends'],

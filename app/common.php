@@ -123,7 +123,7 @@ function getBrandID($order){
     if ($order['type']==1 || $order['type']==2 || $order['type']==3) {
         return 1;
     }
-    if ($order['kid']=='zy') {
+    if ($order['kuaidi']=='中邮') {
         return 2;
     }
     return 3;

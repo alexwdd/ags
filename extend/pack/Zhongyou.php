@@ -28,6 +28,27 @@ class Zhongyou {
 		header("Content-type: text/html;charset=utf-8");
 	}
 
+	//把商品放入包裹中
+	private function goodsInsertTo($baoguo,$goods){
+		$flag = false;
+		foreach ($baoguo['goods'] as $key => $value) {
+			if ($value['id']==$goods['id']) {
+				$baoguo['goods'][$key]['trueNumber'] += $goods['trueNumber'];
+				$flag = true;
+				break;
+			}
+		}
+		if (!$flag) {
+			//$goods['trueNumber'] = 1;
+			array_push($baoguo['goods'],$goods);
+		}
+		$baoguo['totalNumber'] += $goods['trueNumber'];
+		$baoguo['totalWeight'] += $goods['trueNumber']*$goods['weight'];
+		$baoguo['totalWuliuWeight'] += $goods['trueNumber']*$goods['wuliuWeight'];
+		$baoguo['totalPrice'] += $goods['trueNumber']*$goods['price'];
+		return $baoguo;
+	}
+
 	private function goodsInsertBaoguo($item){
 		if(count($this->baoguoArr)==0){
 			$baoguo = [
@@ -177,7 +198,6 @@ class Zhongyou {
             $arr[$key] = $row ['totalWeight'];
         }
         array_multisort($arr, SORT_DESC, $this->baoguoArr);
-
         $length = count($this->baoguoArr);
 
 		$lastBaoguo = end($this->baoguoArr);
@@ -212,7 +232,9 @@ class Zhongyou {
 	        	$config = tpCache('kuaidi');
 	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$config['inprice1'];
 	        }else{
-	        	$this->baoguoArr[$key]['kuaidi'] = '中邮';
+	        	if($this->baoguoArr[$key]['kuaidi'] == ''){
+	        		$this->baoguoArr[$key]['kuaidi'] = '中邮';
+	        	}	        	
 	        	if($this->baoguoArr[$key]['baoyou']==0){
 	        		$this->baoguoArr[$key]['yunfei'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['price'];
 	        	}else{
@@ -252,7 +274,8 @@ class Zhongyou {
             	$to['type'] = $value['typeID'];
             	$value['number'] = $number;
             	$value['trueNumber'] = $number;
-                array_push($to['goods'],$value);	                
+                //array_push($to['goods'],$value);
+                $to = $this->goodsInsertTo($to,$value);
                 $from = $this->deleteBaoguoGoods($from,$value,$number);
                 if ($to['totalWeight']>=1) {
                 	break;
@@ -301,7 +324,7 @@ class Zhongyou {
                         'yunfei'=>0,
                         'inprice'=>0,
                         'extend'=>0,
-                        'kuaidi'=>'中邮',
+                        'kuaidi'=>$value['wuliu'],
                         'status'=>1,
                         'baoyou'=>1,
                         'goods'=>array($goods),

@@ -86,7 +86,7 @@ class Base extends Controller {
             $list[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $list[$key]['weight'] = $goods['weight'];            
             $list[$key]['price'] = $goods['price'];            
-            $list[$key]['singleNumber'] = $goods['number'];             
+            $list[$key]['singleNumber'] = $goods['number'];
             if ($goods['wuliu']!='') { //套餐类的先处理掉
                 for ($i=0; $i < $value['number']; $i++) { 
                     $brandName = getBrandName($goods['typeID'],$kid);

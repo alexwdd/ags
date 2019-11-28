@@ -83,6 +83,7 @@ class Base extends Controller {
             $cart[$key]['wuliuWeight'] = $goods['wuliuWeight'];            
             $cart[$key]['weight'] = $goods['weight'];            
             $cart[$key]['price'] = $goods['price'];
+            $cart[$key]['wuliu'] = $goods['wuliu'];
             if($goods['wuliu']!=''){
                 $cart[$key]['baoyou'] = 1;
             }else{
