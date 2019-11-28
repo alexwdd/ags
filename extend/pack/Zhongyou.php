@@ -236,15 +236,15 @@ class Zhongyou {
 	        		$this->baoguoArr[$key]['kuaidi'] = '中邮';
 	        	}	        	
 	        	if($this->baoguoArr[$key]['baoyou']==0){
-	        		$this->baoguoArr[$key]['yunfei'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['price'];
+	        		$this->baoguoArr[$key]['yunfei'] = fix_number_precision($this->baoguoArr[$key]['totalWuliuWeight']*$danjia['price'],2);
 	        	}else{
 	        		$this->baoguoArr[$key]['yunfei'] = 0;
 	        	}	        	
-	        	$this->baoguoArr[$key]['inprice'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['inprice'];
+	        	$this->baoguoArr[$key]['inprice'] = fix_number_precision($this->baoguoArr[$key]['totalWuliuWeight']*$danjia['inprice'],2);
 	        }
 	        
 	        if ($this->inExtendArea()) {
-	        	$this->baoguoArr[$key]['extend'] = $this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'];
+	        	$this->baoguoArr[$key]['extend'] = fix_number_precision($this->baoguoArr[$key]['totalWuliuWeight']*$danjia['otherPrice'],2);
 	        }
 
 	        $this->baoguoArr[$key]['sign']=0;
