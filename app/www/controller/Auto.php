@@ -16,6 +16,7 @@ class Auto extends Base
 
 		$map['kdNo'] = '';
 		//$map['status'] = 1;
+		$map['disable'] = 0;
 		$map['kuaidi'] = array('neq','');
 		$map['type'] = array('not in',[15,16,17]);
 		$list = db("OrderBaoguo")->where($map)->select();
@@ -34,6 +35,7 @@ class Auto extends Base
 		$map['type'] = array('not in',[15,16,17]);
 		$map['eimg'] = array('eq','');
 		//$map['status'] = 1;
+		$map['disable'] = 0;
 		$list = db("OrderBaoguo")->where($map)->select();
 		foreach ($list as $key => $value) {
 			$eimg = $this->saveAuePng($value['kdNo']);	
@@ -56,6 +58,7 @@ class Auto extends Base
 		$map['type'] = array('not in',[15,16,17]);
 		//$map['status'] = 1;
 		$map['snStatus'] = 0;
+		$map['disable'] = 0;
 		$list = db("OrderBaoguo")->where($map)->select();		
 		$token = $this->getAueToken();
 		foreach ($list as $key => $value) {
