@@ -68,7 +68,8 @@
 
         <div class="loadding" style="display: none;"><i class="mui-spinner"></i></div>
 
-        <div class="kuaidi" style="display: none;">	        
+        <div class="kuaidi" style="display: none;">
+            {eq name="flag" value="0"}
             <li data-type='zh'>
                 <div class="kInfo">
                     <div class="name">澳邮中环</div>
@@ -77,8 +78,9 @@
                 <div class="radio"></div>
             </li>
             <div class="kdResult" id="zhBaoguo" style="display: none;"></div>
+            {/eq}
 
-            <li data-type='zy'>
+            <li data-type='zy' >
                 <div class="kInfo">
                     <div class="name">澳邮中邮</div>
                     <div class="intr" id="zyIntr">&nbsp;</div>
@@ -126,7 +128,8 @@ mui.ready(function(){
                     $("#kuaidi").val('');
                     $(".kuaidi").hide();
                     $(".kdResult").html('').hide();
-                    $(".kBtn").removeClass("active");        
+                    $(".kBtn").removeClass("active");     
+                    window.location.reload();   
                 },'json')
         	}                
         });

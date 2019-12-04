@@ -10,6 +10,7 @@
 <style type="text/css">
 .hAddress{padding: 10px 0; background:#fcf8e3; color:#8a6d3b; margin-top: 15px;}
 .hAddress p{font-size: 18px; padding: 5px 10px}
+.disable{color: #999;}
 </style>
 </head>
 <body>
@@ -72,7 +73,7 @@
         <div class="cartTitle">快递选择</div>
         <div class="kuaidi">
             <li data-type="zy">澳邮中邮</li>
-            <li data-type="zh">澳邮中环</li>
+            <li data-type="zh" {eq name="flag" value="1"}class="disable"{/eq}>澳邮中环</li>
 
             <div style="float: right; color: #f00; line-height: 40px">{:config('site.weibo')}</div>
         </div>
@@ -118,6 +119,7 @@ $(function(){
                     $("#total").html(goodsMoney);
                     $(".kdResult").html('');
 
+                    window.location.reload();
                 },'json')
             },function(){});
     });
@@ -176,6 +178,9 @@ $(function(){
 
     //计算物流
     $(".kuaidi li").click(function(){
+        if($(this).hasClass("disable")){
+            return false;
+        }
         $(".kuaidi li").removeClass("active");
         $(this).addClass('active');
         var type = $(this).attr("data-type");

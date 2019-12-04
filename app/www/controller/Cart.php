@@ -3,18 +3,21 @@ namespace app\www\controller;
 use think\Request;
 
 class Cart extends User
-{    
-
+{
     //我的单人模式
     public function index(){        
         $map['memberID'] = $this->user['id'];
         $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
         $total = 0;
         $weight = 0;
+        $flag = 0;
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
             if ($this->user['group']==2 || $this->user['vip']==1) {
                 $goods['price'] = $goods['price1'];
+            }
+            if($goods['typeID']==9){
+                $flag = 1;
             }
             if ($value['server']!='') {
                 $serverID = explode(",",$value['server']);
@@ -38,6 +41,7 @@ class Cart extends User
 
         $wuliu = db("Wuliu")->where('show',1)->select();
         $this->assign('wuliu',$wuliu); 
+        $this->assign('flag',$flag); 
         return view();
     }
 
