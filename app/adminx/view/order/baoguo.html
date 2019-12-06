@@ -236,6 +236,7 @@
 						        	<div style="float: right">			
 						        	<button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal snBtn">上传身份证</button>
 						        	<button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal createBtn">生成运单</button>
+						        	<button type="button" data-id="{$f.id}" class="layui-btn layui-btn-normal pngBtn">生成面单</button>
 						        	<button type="button" data-url="{:url("Order/wuliu","id=".$f['id'])}" class="layui-btn wuliuBtn">运单信息</button>
 								    </div>
 								    {/eq}
@@ -285,6 +286,25 @@ $(function(){
 			var load = layer.load(0,{shade: [0.7, '#000000']});
 			data = {id:id};
 			$.post("{:url('order/create')}",data,function(res){
+				layer.close(load);
+				if (res.code==1){
+					layer.alert(res.msg,function(){
+						window.location.reload();
+					});
+				}else{
+					layer.alert(res.msg);
+				}
+			},"json")
+		})
+	})
+
+	$(".pngBtn").click(function(){
+		var id = $(this).attr("data-id");
+		layer.confirm("确定要生成面单吗？",function(){
+			layer.closeAll();
+			var load = layer.load(0,{shade: [0.7, '#000000']});
+			data = {id:id};
+			$.post("{:url('order/createPng')}",data,function(res){
 				layer.close(load);
 				if (res.code==1){
 					layer.alert(res.msg,function(){

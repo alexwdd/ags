@@ -272,7 +272,7 @@ class Base extends Controller {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$token));
         $res = curl_exec($ch);
-        if ($res=='') {
+        if ($res=='' || $res=='{"Message":"Authentication failed, invalid token."}'){
             return '';
         }else{
             $path = config('UPLOAD_PATH').'order/'.date("Ymd").'/'.$orderNo.'.png';

@@ -249,6 +249,29 @@ class Order extends Admin {
 		}
 	}
 
+	//创建面单
+	public function createPng(){
+		if (request()->isPost()) {
+			$id = input("post.id");
+			if ($id=="" || !is_numeric($id)) {
+				$this->error("参数错误");
+			}
+			$map['id']=$id;
+			$map['kdNo'] = array('neq','');
+			$list = db("OrderBaoguo")->where($map)->find();
+			if (!$list) {
+				$this->error("运单号不存在");
+			}
+			$res = $this->saveAuePng($list['kdNo']);
+			if ($res!='') {
+				//db("OrderBaoguo")->where($map)->setField('kdNo',$res['msg']);
+				$this->success("操作成功");
+			}else{
+				$this->error('生成失败');
+			}
+		}
+	}
+
 	public function uploadPhoto(){
 		if (request()->isPost()){
 			$id = input("post.id");
