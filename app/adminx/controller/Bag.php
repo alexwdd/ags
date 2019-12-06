@@ -9,7 +9,7 @@ class Bag extends Admin {
 			$result = model('OrderBaoguo')->getList();			
 			echo $this->return_json($result);
     	}else{
-    		$this->assign('type',config('baoguoType'));
+    		$this->assign('type',config('BAOGUO_ZH'));
 	    	return view();
     	}
 	}
