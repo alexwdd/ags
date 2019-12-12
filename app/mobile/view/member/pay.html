@@ -3,44 +3,45 @@
 
 <header class="mui-bar mui-bar-nav">
     <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-    <h1 class="mui-title">在线充值</h1>
+    <h1 class="mui-title">成为会员</h1>
 </header>
 
 
 <div class="mui-content">
-    <div class="price" style="text-align: center; padding: 20px 0">
+    <h1 style="padding: 15px; font-size: 30px; font-weight: bold;">成为会员请联系客服</h1>
+    <!-- <div class="price" style="text-align: center; padding: 20px 0">
         <li>
             <h2>{$money}</h2>
             <span>充值金额<br/>订单号：{$order_no} <span class="copyBtn" data-clipboard-text="{$order_no}">复制</span></span>
             {gt name="config.give" value="0"}<div><span>充值立送50元</span></div>{/gt}
         </li>
     </div>
-<form id="myForm" class="mui-input-group" style="padding-bottom:15px">
-
-    <div style="padding: 10px;border-bottom: 1px #ddd solid">
-    	<p>{:config('site.chongzhi')}</p>
-
-        <button id="moneyBtn" class="mui-btn mui-btn-block" type="button">选择支付方式</button>
-        <input type="hidden" name="payType" id="payType" value="2" checkType="required" checkMsg="请选择支付方式">
-	</div>
-
-    <div id="cardBox" style="padding: 10px;border-bottom: 1px #ddd solid;display: none;">
-        <button id="cardBtn" class="mui-btn mui-btn-block" type="button">选择收款账户</button>
-
-        <div id="result" class="cardInfo"></div>
-
-        <input type="hidden" name="cardID" id="cardID" value="">
-
-        <div class="jietu" onclick="uploadImage('image','{:url('upload/image')}');"><img id="image_src" src="{:RES}/image/pay.png" /></div>
-
-        <input type="hidden" name="image" id="image" value="">
-    </div>    
-
-    <p style="margin-top: 10px">
-        <button type="button" id="submitBtn" action="{:url('member/pay')}" class="mui-btn mui-btn-block my-btn">保存</button>
-    </p>    
-    <input type="hidden" name="order_no" value="{$order_no}">        
-</form>
+    <form id="myForm" class="mui-input-group" style="padding-bottom:15px">
+    
+        <div style="padding: 10px;border-bottom: 1px #ddd solid">
+            <p>{:config('site.chongzhi')}</p>
+    
+            <button id="moneyBtn" class="mui-btn mui-btn-block" type="button">选择支付方式</button>
+            <input type="hidden" name="payType" id="payType" value="2" checkType="required" checkMsg="请选择支付方式">
+        </div>
+    
+        <div id="cardBox" style="padding: 10px;border-bottom: 1px #ddd solid;display: none;">
+            <button id="cardBtn" class="mui-btn mui-btn-block" type="button">选择收款账户</button>
+    
+            <div id="result" class="cardInfo"></div>
+    
+            <input type="hidden" name="cardID" id="cardID" value="">
+    
+            <div class="jietu" onclick="uploadImage('image','{:url('upload/image')}');"><img id="image_src" src="{:RES}/image/pay.png" /></div>
+    
+            <input type="hidden" name="image" id="image" value="">
+        </div>    
+    
+        <p style="margin-top: 10px">
+            <button type="button" id="submitBtn" action="{:url('member/pay')}" class="mui-btn mui-btn-block my-btn">保存</button>
+        </p>    
+        <input type="hidden" name="order_no" value="{$order_no}">        
+    </form> -->
 </div>
 <input type="file" id="uploadfile"/> 
 <script src="{:RES}/js/clipboard.min.js"></script>
