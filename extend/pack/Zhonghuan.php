@@ -16,7 +16,7 @@ class Zhonghuan {
 	$cart中的trueNumber是实际单品数量，比如商品A单品数量是3个，如果购物车中有2个，单品数量总数是6，这里的trueNumber不是数据库中单个商品的trueNumber！！！
 	包裹的status属性如果是1就是该包裹不再跟别的包裹2次混编
 	*/
-	public function __construct($cart,$province) {
+	public function __construct($cart,$province,$user) {
 		foreach ($cart as $key => $value) {
 			unset($cart[$key]['memberID']);
 		}
