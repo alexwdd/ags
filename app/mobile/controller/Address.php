@@ -11,7 +11,7 @@ class Address extends User
             $map['name|mobile'] = $keyword;
         }
         $map['memberID'] = $this->user['id'];
-        $list = db('Address')->where($map)->select();
+        $list = db('Address')->where($map)->order('id desc')->select();
         $this->assign('list',$list);
         $this->assign('kid',input('param.kid'));
         $this->assign('sid',input('param.sid'));
