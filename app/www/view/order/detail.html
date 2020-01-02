@@ -176,7 +176,7 @@
 					   			
 					   			{notempty name="$f.kdNo"}
 					   			
-								<?php if(in_array($f['type'],[12,13,14])){ ?>
+								<?php if(in_array($f['type'],[15,16,17])){ ?>
 								<a href="{:config('site.url'.$f['type'])}" target="_blank" class="layui-badge layui-bg-green">物流查询</a>
 								<?php }else{ ?>
 		                        <a href="javascript:void(0)" onclick="openModel ('{:url('order/wuliu','kd='.$f['kdNo'])}','物流查询','1000px','80%')" class="layui-badge layui-bg-green">物流查询</a>
