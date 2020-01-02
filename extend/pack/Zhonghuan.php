@@ -203,7 +203,6 @@ class Zhonghuan {
 
 		$lastBaoguo = end($this->baoguoArr);
 		//最后一个包裹重量小于1公斤，从其他包裹中匀一部分商品，总重够1公斤就可以了
-
 		if ($lastBaoguo['totalWeight'] < 1 && $lastBaoguo['baoyou']==0) {
 			for ($i=0; $i < ($length-1); $i++) {
 				if($this->baoguoArr[$i]['status']==0){
@@ -214,7 +213,6 @@ class Zhonghuan {
 				}				
 			}
 		}
-		
  		
  		foreach ($this->baoguoArr as $key => $value) {
  			if ($this->baoguoArr[$key]['totalWuliuWeight']<1) {
@@ -263,17 +261,17 @@ class Zhonghuan {
 	}
 
 	//从包裹中移动商品到目标包裹，目标包裹满足1公斤即可
-	private function moveGoods($from,$to){
+	private function moveGoods($from,$to){		
 		foreach ($from['goods'] as $key => $value) {
-			$maxNumber = ceil((1-$to['totalWeight'])/$value['weight']);//最多几个就凑够1公斤了	
+			$maxNumber = ceil((1-$to['totalWeight'])/$value['weight']);//最多几个就凑够1公斤了
 			$number = $this->canInsert($to,$value,false);
-			if ($number>0 && $maxNumber>0) {
+			if ($number>0 && $maxNumber>0) {				
             	$number = $number>$value['trueNumber'] ? $value['trueNumber'] : $number;
             	$number = $number>$maxNumber ? $maxNumber : $number;  
-            	$to['totalNumber'] += $number;
+            	/*$to['totalNumber'] += $number;
             	$to['totalWeight'] += $number*$value['weight'];
             	$to['totalWuliuWeight'] += $number*$value['wuliuWeight'];
-            	$to['totalPrice'] += $number*$value['price'];
+            	$to['totalPrice'] += $number*$value['price'];*/
             	$to['type'] = $value['typeID'];
             	$value['number'] = $number;
             	$value['trueNumber'] = $number;

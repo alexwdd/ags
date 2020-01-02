@@ -8,14 +8,14 @@
 <div class="mui-content">
     <div class="payPrice">
         <li>
-            <h2>${$list.money}</h2>            
-        </li>        
+            <h2>${$list.money}</h2>
+        </li>
     </div>
 
 	<form id="myForm" style="background:none">
     <div>
-        <select name="cardID" id="cardID" checkType="required" checkMsg="请选择收款账户">
-            <option value="">选择收款账户</option>
+        <select name="cardID" id="cardID" checkType="required" checkMsg="请选择收款账户" style="text-align: center; text-align-last: center;">
+            <option value="">==选择收款账户==</option>
             {volist name="card" id="vo"}
             <option value="{$vo.id}">{$vo.name}</option>
             {/volist}
@@ -26,7 +26,7 @@
     
 	<div class="payOk">
 		<div class="fd">
-			<p>支付时请备注单号 <strong style="color:#000">{$list.order_no}</strong><span class="copyBtn" data-clipboard-text="{$list.order_no}">复制</span></p>
+			<p style="color: #39c4da">支付时请备注单号 <strong style="color:#000">{$list.order_no}</strong><span class="copyBtn mui-btn" data-clipboard-text="{$list.order_no}" style="padding:2px 12px;">复制</span></p>
 			<p>下单时间<span>{$list.createTime|date="Y-m-d H:i:s",###}</span></p>
 		</div>
 	</div>

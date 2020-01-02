@@ -267,10 +267,10 @@ class Zhongyou {
 			if ($number>0 && $maxNumber>0) {
             	$number = $number>$value['trueNumber'] ? $value['trueNumber'] : $number;
             	$number = $number>$maxNumber ? $maxNumber : $number;  
-            	$to['totalNumber'] += $number;
+            	/*$to['totalNumber'] += $number;
             	$to['totalWeight'] += $number*$value['weight'];
             	$to['totalWuliuWeight'] += $number*$value['wuliuWeight'];
-            	$to['totalPrice'] += $number*$value['price'];
+            	$to['totalPrice'] += $number*$value['price'];*/
             	$to['type'] = $value['typeID'];
             	$value['number'] = $number;
             	$value['trueNumber'] = $number;

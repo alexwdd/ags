@@ -19,6 +19,20 @@ class Pay extends Home
         return view();
     }
 
+    public function bank()
+    {
+        //获取订单信息  
+        $id = input('param.id');
+        if ($id=='') {die;}
+        $map['id'] = $id;
+        $list = db('Order')->where($map)->find();
+        if (!$list) {
+            $this->error('订单不存在，或已支付');
+        }
+        $this->assign('list',$list);
+        return view();
+    }
+
     public function vip()
     {
         //获取订单信息  

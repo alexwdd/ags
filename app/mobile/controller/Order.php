@@ -328,7 +328,7 @@ class Order extends User
             $map['id'] = $id;
             $res = db("Order")->where($map)->update($data);
             if ($res) {
-                $this->success("操作成功，等待管理员审核",url('order/index'));
+                $this->success("操作成功，等待管理员审核",url('pay/bank','id='.$id));
             }else{
                 $this->error('操作失败');
             }
