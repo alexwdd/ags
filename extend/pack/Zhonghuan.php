@@ -532,7 +532,7 @@ class Zhonghuan {
 	        }elseif($number==2){	  
 	        	return 12;	        
 	        }elseif($number==3){	   
-	        	return 13.5;	        
+	        	return 17;	        
 	        }
 	    }elseif($goodsType==3){//小罐奶粉
 	    	if ($number==1) {	
