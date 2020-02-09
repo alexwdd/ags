@@ -464,11 +464,11 @@ class Cart extends User
         $hongjiu = 0;
         $chengben = 0;//商品总成本
         foreach ($list as $key => $value) {
-            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();
+            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();            
             $goodsInprice = db("Goods")->where('id',$value['goodsID'])->value("inprice");
             $chengben += $goodsInprice * $value['goodsNumber'];
             if ($goods) {
-                if ($goods['empty']==1) {
+                if ($goods['empty']==1) {             
                     $stock = db("Goods")->where('id',$goods['goodsID'])->value("stock");
                     if ($stock < $value['goodsNumber']) {
                         $this->error('商品【'.$goods['name'].'】库存不足，当前库存为'.$stock);
