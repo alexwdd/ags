@@ -527,9 +527,9 @@ class Zhongyou {
 	private function getNaifen($goodsType,$number){
 		if ($goodsType==1 || $goodsType==2) {//大罐奶粉
 	        if ($number==1) {	
-	        	return 6;	              	
+	        	return 8;	              	
 	        }elseif($number==2){	  
-	        	return 12;	        
+	        	return 14.5;	        
 	        }elseif($number==3){	   
 	        	return 19.3;	        
 	        }
