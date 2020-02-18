@@ -354,6 +354,7 @@ class Base extends Controller {
             db("OrderBaoguo")->where('id',$order['id'])->update($update);
             return ['code'=>1,'msg'=>$result['Message']];
         }else{
+            db("OrderBaoguo")->where('id',$order['id'])->setInc("requestNumber");
             return ['code'=>0,'msg'=>$result['Errors'][0]['Message']];
         }
     }

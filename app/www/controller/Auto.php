@@ -19,6 +19,7 @@ class Auto extends Base
 		$map['disable'] = 0;
 		$map['kuaidi'] = array('neq','');
 		$map['type'] = array('not in',[15,16,17]);
+		$map['requestNumber'] = array('lt',5);
 		$list = db("OrderBaoguo")->where($map)->select();
 		foreach ($list as $key => $value) {
 			$this->createSingleOrder($value);
