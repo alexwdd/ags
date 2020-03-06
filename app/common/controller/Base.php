@@ -25,6 +25,13 @@ class Base extends Controller {
             db("OrderBaoguo")->where('orderID',$value['id'])->delete();
             db("OrderPerson")->where('orderID',$value['id'])->delete();
             db("OrderDetail")->where('orderID',$value['id'])->delete();
+
+            $action['msg'] = "删除订单，订单号【".$value['order_no']."】";
+            $action['type'] = 1;
+            $action['user'] = '系统自动';
+            $action['createTime'] = time();
+
+            db("UserAction")->insert($action);
         }
 
         $config = tpCache('basic');

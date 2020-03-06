@@ -224,6 +224,13 @@ class Order extends User
             db('OrderBaoguo')->where('orderID',$id)->delete();
             db('OrderPerson')->where('orderID',$id)->delete();
             db('OrderDetail')->where('orderID',$id)->delete();
+
+            $action['msg'] = "删除订单，订单号【".$list['order_no']."】";
+            $action['type'] = 1;
+            $action['user'] = '客户【'.$this->user['id'].'】';
+            $action['createTime'] = time();
+
+            db("UserAction")->insert($action);
         }
         $this->redirect($_SERVER['HTTP_REFERER']);
     }

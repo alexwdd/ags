@@ -1,0 +1,15 @@
+<layout name='layout' />
+
+<div class="layui-col-md12">
+	<div class="layui-row grid-demo">
+		<div class="layui-col-md12">
+	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('userAction/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-60"></table>
+
+	        <div class="fsDatagridCols">
+				<p field="createTime" title="时间" width="180"/>	
+				<p field="user" title="管理员" width="120"/>	
+				<p field="msg" title="操作" width="40%"/>			
+			</div>
+	    </div>
+	</div>
+</div>
