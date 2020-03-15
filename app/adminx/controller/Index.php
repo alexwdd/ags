@@ -129,14 +129,13 @@ class Index extends Admin {
         }
 
         $obj = db('OrderDetail');        
-        $total = $obj->where($map)->group('goodsID')->count();
+        $total = $obj->where($map)->group('itemID')->count();
 
         $pages = ceil($total/$pageSize);
         $pageNum = input('post.page',1);
         $firstRow = $pageSize*($pageNum-1);
 
-        $list = $obj->field('goodsID,name,trueNumber,sum(number) as num')->where($map)->group('goodsID')->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
-
+        $list = $obj->field('goodsID,itemID,name,trueNumber,sum(number) as num')->where($map)->group('itemID')->order($field.' '.$order)->limit($firstRow.','.$pageSize)->select();
         $data = array(
                 'code'=>0,
                 'count'=>$total,
