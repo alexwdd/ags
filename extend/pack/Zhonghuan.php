@@ -528,11 +528,11 @@ class Zhonghuan {
 	private function getNaifen($goodsType,$number){
 		if ($goodsType==1 || $goodsType==2) {//大罐奶粉
 	        if ($number==1) {	
-	        	return 6;	              	
+	        	return 6.3;	              	
 	        }elseif($number==2){	  
-	        	return 12;	        
+	        	return 12.6;	        
 	        }elseif($number==3){	   
-	        	return 16.5;	        
+	        	return 17.2;	        
 	        }
 	    }elseif($goodsType==3){//小罐奶粉
 	    	if ($number==1) {	
