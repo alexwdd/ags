@@ -10,15 +10,15 @@ class Common extends Base
     }
 
     public function getToken(){
-        /*if (cache('AccessToken')) {
+        if (cache('AccessToken')) {
             return cache('AccessToken');
-        }else{*/
+        }else{
             $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.config('weixin.appID').'&secret='.config('weixin.appsecret');
             $result = $this->https_post($url);
             $result = json_decode($result,true);
             cache('AccessToken',$result['access_token'],1200);
             return cache('AccessToken');
-        //}
+        }
     }
 
     //获得jsTicket
