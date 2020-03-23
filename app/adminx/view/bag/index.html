@@ -67,18 +67,33 @@
 		<script>
 		layui.fsButton.toPrint = function(elem,data,datagrid){
 			var postData='';
+			var print=[];
 			$.each(data,function(x,y){
 				if (x==0){
 					postData+=y.id;
 				}else{
 					postData+=','+y.id;
-				}				
+				}
+				if (y.print==1){
+					print.push(y.kdNo);
+				}			
 			})
-		    if(postData){
-		    	window.open('{:url('order/mprint')}?ids='+postData,'_blank');
-		    }else{
-		    	alert("请选择数据");
-		    }
+			if(print.length>0){		
+				layer.confirm(print.join(',')+'运单已经打印过了', {
+					time: 0 //不自动关闭
+					,btn: ['继续打印', '取消']
+					,yes: function(index){
+						layer.close(index);
+						window.open('{:url('order/mprint')}?ids='+postData,'_blank');
+					}
+				});
+			}else{
+				if(postData){
+			    	window.open('{:url('order/mprint')}?ids='+postData,'_blank');
+			    }else{
+			    	alert("请选择数据");
+			    }
+			}
 		}
 	    </script>
 
