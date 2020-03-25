@@ -213,7 +213,7 @@ class Store extends Home
 
         //获取套餐价格
         if ($specid!='' && is_numeric($specid)) {
-            $thisSpec = db("GoodsIndex")->where("id",$specid)->find();
+            $thisSpec = db("GoodsIndex")->where(['id'=>$specid,'show'=>1])->find();
             $this->assign('thisSpec',$thisSpec);
         }
 
@@ -247,6 +247,7 @@ class Store extends Home
         unset($map);
         $map['goodsID'] = $list['id'];
         $map['base'] = 0;
+        $map['show'] = 1;
         $spec = db("GoodsIndex")->where($map)->select();
         $this->assign('spec',$spec);
         $this->assign('specid',$specid);
