@@ -508,7 +508,12 @@ class Goods extends Admin
 
     public function export1(){
         $map['base']=0;
-        $list = db('GoodsIndex')->where($map)->order('id desc')->select();
+        $list = db('GoodsIndex a')
+                ->where($map)
+                ->field('a.*,b.price as goodsPrice,b.wuliuWeight as goodsWuliuWeight')
+                ->join('pm_goods b','b.id=a.goodsID')
+                ->order('id desc')
+                ->select();
         $objPHPExcel = new \PHPExcel();    
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', '编号')
@@ -520,7 +525,9 @@ class Goods extends Admin
             ->setCellValue('G1', '价格')
             ->setCellValue('H1', '会员价')
             ->setCellValue('I1', '单品数量')   
-            ->setCellValue('J1', '快递');
+            ->setCellValue('J1', '快递')
+            ->setCellValue('K1', '单品价格')
+            ->setCellValue('L1', '单品物流重量');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
@@ -533,7 +540,9 @@ class Goods extends Admin
                 ->setCellValue('G'.$num, $v['price'])
                 ->setCellValue('H'.$num, $v['price1'])
                 ->setCellValue('I'.$num, $v['number'])
-                ->setCellValue('J'.$num, $v['wuliu']);
+                ->setCellValue('J'.$num, $v['wuliu'])
+                ->setCellValue('K'.$num, $v['goodsPrice'])
+                ->setCellValue('L'.$num, $v['goodsWuliuWeight']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('套餐');
