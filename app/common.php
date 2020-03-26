@@ -42,8 +42,8 @@ function getGoodsEmpty($goods){
     if ($goods['empty']==0) {
         return 0;
     }else{
-        $stock = db("Goods")->where('id',$goods['goodsID'])->value("stock");
-        if ($stock<=0) {
+        $stock = db("Goods")->field("stock,stock1")->where('id',$goods['goodsID'])->find();
+        if ($stock['stock']<=0 && $stock['stock1']<=0) {
             return 1;
         }else{
             return 0;

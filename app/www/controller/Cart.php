@@ -469,9 +469,9 @@ class Cart extends User
             $chengben += $goodsInprice * $value['goodsNumber'];
             if ($goods) {
                 if ($goods['empty']==1) {             
-                    $stock = db("Goods")->where('id',$goods['goodsID'])->value("stock");
-                    if ($stock < $value['goodsNumber']) {
-                        $this->error('商品【'.$goods['name'].'】库存不足，当前库存为'.$stock);
+                    $stock = db("Goods")->field("stock,stock1")->where('id',$goods['goodsID'])->find();
+                    if ($stock['stock'] < $value['goodsNumber'] && $stock['stock1'] < $value['goodsNumber']) {
+                        $this->error('商品【'.$goods['name'].'】库存不足');
                     }
                 }
             }else{
