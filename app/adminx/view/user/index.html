@@ -27,12 +27,34 @@
 				<p field="username" title="用户名" width="150"/>
 				<p field="group" title="用户组" width="150" dict="group"/>
 				<p field="name" title="姓名" width="150"/>
-				<p field="phone" title="手机" width="200"/>
 				<p field="status" title="状态" width="100" dict="status"/>
+				<p title="权限" width="100" templet="#manageTpl"/>
+				<p title="库存" width="100" templet="#stockTpl"/>
+				<p field="phone" title="手机" width="150"/>				
 				<p field="createTime" title="添加日期" width="180"/>
 				<p field="updateTime" title="更新日期" width="180"/>
 				<p fixed="right" align="center" toolbar="#barDemo" title="操作" width="150"/>
 			</div>
+
+			<script type="text/html" id="manageTpl">
+	            {{# if(d.manage == 1){ }}
+	            仅收银
+	            {{# }else if(d.manage ==2){ }}
+	            仅后台
+	            {{# }else if(d.manage ==3){ }}
+	            收银+后台
+	            {{# } }}    
+	        </script>
+
+	        <script type="text/html" id="stockTpl">
+	            {{# if(d.stock == 1){ }}
+	            门店
+	            {{# }else if(d.stock ==2){ }}
+	            网站
+	            {{# }else if(d.stock ==3){ }}
+	            门店+网站
+	            {{# } }}    
+	        </script>
 
 			<script type="text/html" id="barDemo">
  				<a class="layui-btn layui-btn-xs" lay-event="top" topUrl="{:url("User/edit")}?id={{d.id}}" topWidth="80%" topHeight="80%" topTitle="编辑">编辑</a>

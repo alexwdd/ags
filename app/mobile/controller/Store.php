@@ -30,6 +30,7 @@ class Store extends Home
                 $list[$key]['picname'] = getThumb($value['picname'],280,280);
                 $list[$key]['url'] = getGoodsUrl($value);
                 $list[$key]['empty'] = getGoodsEmpty($value);
+                $list[$key]['rmb'] = number_format($value['price']*$this->getRate(),2);
             }
             $this->assign('list',$list);  
             $res = $this->fetch('ajax2');
@@ -62,6 +63,7 @@ class Store extends Home
                 $list[$key]['picname'] = getThumb($value["picname"],350,350);
                 $list[$key]['url'] = getGoodsUrl($value);
                 $list[$key]['empty'] = getGoodsEmpty($value);
+                $list[$key]['rmb'] = number_format($value['price']*$this->getRate(),2);
             }
             echo json_encode($list);
         }else{
@@ -108,6 +110,7 @@ class Store extends Home
                         $goods[$k]['url'] = getGoodsUrl($v);
                         $goods[$k]['empty'] = getGoodsEmpty($v);
                         $goods[$k]['picname'] = getThumb($v['picname'],280,280);
+                        $goods[$k]['rmb'] = number_format($v['price']*$this->getRate(),2);
                     }
                     array_push($list, ['cate'=>$value,'goods'=>$goods]);
                 }
@@ -120,6 +123,7 @@ class Store extends Home
                     $goods[$key]['picname'] = getThumb($value['picname'],280,280);
                     $goods[$key]['url'] = getGoodsUrl($value);
                     $goods[$key]['empty'] = getGoodsEmpty($value);
+                    $goods[$key]['rmb'] = number_format($value['price']*$this->getRate(),2);
                 }
                 array_push($list, ['cate'=>$thisCate,'goods'=>$goods]);                
             }  
@@ -144,6 +148,7 @@ class Store extends Home
                 $list[$key]['picname'] = getThumb($value['picname'],280,280);
                 $list[$key]['url'] = getGoodsUrl($value);
                 $list[$key]['empty'] = getGoodsEmpty($value);
+                $list[$key]['rmb'] = number_format($value['price']*$this->getRate(),2);
             }
             $this->assign('list',$list);
             echo $this->fetch();

@@ -34,6 +34,19 @@ class Shouyin extends Admin {
 		}
 	}
 
+	public function today(){
+
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y')); 
+        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+        $map['createTime'] = array('between',array($beginToday,$endToday));
+
+        $obj = db('ShouyinOrderDetail');   
+        $list = $obj->field('goodsID,name,sum(number) as num')->where($map)->group('goodsID')->order('num desc')->select();
+
+        $this->assign("list",$list);
+		return view();
+	}
+
 	
 	#删除
 	public function del() {

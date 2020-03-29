@@ -39,9 +39,7 @@
         <div class="intr">{$list.intr}</div>
 
         <div class="priceBox">
-            {eq name="user.id" value="0"}
-                <li><a href="{:url('login/index')}" class="mui-btn">登录后查看价格</a></li> 
-            {else/}
+
             {empty name="thisSpec"}
                 <li>价格：<span class="money" id="goods_price">${$list.price}</span></li>
                 <li>会员价：<span class="money" id="goods_price1">${$list.price1}</span></li>
@@ -51,8 +49,7 @@
                 <li>会员价：<span class="money" id="goods_price1">${$thisSpec.price1}</span></li>
                 <input type="hidden" id="goodsNumber" value="{$thisSpec.number}">
             {/empty}
-            {/eq}
-
+        
             {gt name="list.max" value="0"}
             <li>每日限购 {$list.max} 件</li>
             {/gt}
@@ -60,7 +57,8 @@
             <li>重量 {$list.weight}kg</li>  
             <!-- <li>销量 {$list.sellNumber} 件</li>  -->         
         </div>   
-
+        
+        {gt name="user.id" value="0"}
         <!--选择数量-->
         <div class="plus">
             <span class="btn" onclick="changeNum(-1);">-</span>
@@ -69,6 +67,7 @@
             </span>
             <span class="btn" onclick="changeNum(1);">+</span>
         </div>
+        {/gt}
 
         {notempty name="spec"}
         <div class="serverBox">

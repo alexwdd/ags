@@ -28,6 +28,10 @@ class Api extends Home
             $map['status'] = 1;
             $user = db("User")->where($map)->find();
             if ($user) {
+                if($user['manage']==2){
+                    returnJson(0,'没有权限');
+                }
+
                 $request= Request::instance();
                 $data = array(
                     'uid' => $user['id'],
@@ -47,6 +51,7 @@ class Api extends Home
                 if ($r) {
                     $userinfo['username'] = $user['username'];
                     $userinfo['userid'] = $user['id'];
+                    $userinfo['stock'] = $user['stock'];
 
                     $user['token'] = $token;
                     $this->startShouyin($user);

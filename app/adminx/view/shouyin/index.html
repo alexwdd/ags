@@ -20,9 +20,17 @@
 
 			<button class="layui-btn layui-btn-danger" function="submit" method="post" url="{:url("Shouyin/del")}" isMutiDml="1" isConfirm="1" confirmMsg="是否确定删除选中的数据？" inputs="id:">
 			  <i class="layui-icon">&#xe640;</i>删除
-			</button>			
-		</div>
+			</button>
 
+			<button type="button" class="layui-btn layui-btn-warm " id="printBtn">当天销量</button>
+		</div>
+		<script>
+		$(function(){
+			$("#printBtn").click(function(){
+				window.open('{:url('shouyin/today')}','_blank');
+			})
+		})
+	    </script>
 
 		<div class="layui-col-md12">
 	        <table id="fsDatagrid" lay-filter="fsDatagrid" class="fsDatagrid" isLoad="1" url="{:url('Shouyin/index')}" isPage="1" sortType="1" pageSize="20" defaultForm="query_form" height="full-60"></table>

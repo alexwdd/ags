@@ -47,16 +47,7 @@
                         {/notempty}
 
                         <div class="priceBox">
-                            {eq name="user.id" value="0"}
-                            <li>
-                                <span>价格</span>
-                                <p>登录后查看</p>
-                            </li>
-                            <li>
-                                <span>会员价</span>
-                                <p>登录后查看</p>
-                            </li> 
-                            {else/}
+                            
                             {empty name="thisSpec"}
                             <li>
                                 <span>价格</span>
@@ -77,8 +68,7 @@
                                 <p class="money" id="goods_price1">${$thisSpec.price1}</p>
                             </li>
                             <input type="hidden" id="goodsNumber" value="{$thisSpec.number}">
-                            {/empty}
-                            {/eq}
+                            {/empty}                   
                             
                             {gt name="list.max" value="0"}
                             <li>

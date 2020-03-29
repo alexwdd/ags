@@ -86,11 +86,14 @@
                         <a href="javascript:void(0)" onclick="openModel('{$vo.url}','商品详情','1100px','80%')">
                         <h1>{$vo.name}</h1>
                         <p class="layui-elip">{$vo.say}</p>   
-                        {gt name="user.id" value="0"}
+                        
                         <div class="price">
                             <p><span>${$vo.price}</span>/会员<span>${$vo.price1}</span></p>
+                            <p>约￥{$vo.rmb}</p>
                         </div>
                         </a>
+
+                        {gt name="user.id" value="0"}
                         <div class="setNumber {eq name="vo.empty" value="0"}canBuy{/eq}" data-id="{$vo.goodsID}" data-type="{$vo.typeID}" spec-id="{$vo.id}">
                             <span class="set" data-action="dec">-</span>
                             <div class="cartIcon">                          

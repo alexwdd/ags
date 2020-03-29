@@ -11,6 +11,8 @@ class User extends Validate
         'password' => 'require|length:6,12',
         'oldpwd' => 'require',
         'group'  => 'require',
+        'manage'  => 'require',
+        'stock'  => 'require',
     ];
 
     protected $message  =   [
@@ -20,13 +22,15 @@ class User extends Validate
         'password.length'       => '密码应为6-12位',
         'oldpwd.require'       => '请输入原始密码',
         'group.require'       => '用户组不能为空',
+        'manage.require'       => '权限不能为空',
+        'stock.require'       => '库存管理不能为空',
     ];
 
     protected $scene = [
-        'add' => ['username','password', 'group'],
+        'add' => ['username','password', 'group','manage','stock'],
         'login' =>  ['password'],
         'password' =>  ['password','oldpwd'],
-        'edit' => ['group']
+        'edit' => ['group','manage','stock']
     ];
 
 }

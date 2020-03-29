@@ -32,6 +32,7 @@ class Store extends Home
                 foreach ($goods as $k => $v) {
                     $goods[$k]['url'] = getGoodsUrl($v);
                     $goods[$k]['empty'] = getGoodsEmpty($v);
+                    $goods[$k]['rmb'] = number_format($v['price']*$this->getRate(),2);
                 }
                 $cate[$key]['goods'] = $goods;
             }
@@ -43,6 +44,7 @@ class Store extends Home
             foreach ($goods as $key => $value) {
                 $goods[$key]['url'] = getGoodsUrl($value);
                 $goods[$key]['empty'] = getGoodsEmpty($value);
+                $goods[$key]['rmb'] = number_format($value['price']*$this->getRate(),2);
             }
             $this->assign('goods',$goods); 
         }
@@ -101,6 +103,7 @@ class Store extends Home
         $list = db('GoodsIndex')->where($map)->order('sort asc,id desc')->paginate(24,false,['query'=>request()->param()])->each(function($item, $key){
             $item['url'] = getGoodsUrl($item);
             $item['empty'] = getGoodsEmpty($item);
+            $item['rmb'] = number_format($item['price']*$this->getRate(),2);
             return $item;
         });
         $page = $list->render();
@@ -123,6 +126,7 @@ class Store extends Home
         $list = db('GoodsIndex')->where($map)->order('sort asc,id desc')->paginate(24,false,['query'=>request()->param()])->each(function($item, $key){
             $item['url'] = getGoodsUrl($item);
             $item['empty'] = getGoodsEmpty($item);
+            $item['rmb'] = number_format($item['price']*$this->getRate(),2);
             return $item;
         });
         $page = $list->render();

@@ -30,6 +30,28 @@
 	</div>
 
 	<div class="layui-form-item layui-form-text">
+		<label class="layui-form-label">权限</label>
+		<div class="layui-input-inline">
+			<select name="manage" lay-verify="required">
+				<option value="">请选择</option>
+				<option value="1">仅收银</option>
+				<option value="2">仅后台</option>
+				<option value="3">收银+后台</option>
+	      	</select>
+		</div>
+
+		<label class="layui-form-label">库存管理</label>
+		<div class="layui-input-inline">
+			<select name="stock" lay-verify="required">
+				<option value="">请选择</option>
+				<option value="1">门店</option>
+				<option value="2">网站</option>
+				<option value="3">门店+网站</option>
+	      	</select>
+		</div>
+	</div>
+
+	<div class="layui-form-item layui-form-text">
 		<label class="layui-form-label">用户组</label>
 		<div class="layui-input-inline">			
 			<select name="group" lay-verify="required" lay-verType="tips" class="fsSelect fsDict" dict="group" addNull="1">

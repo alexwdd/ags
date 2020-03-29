@@ -43,6 +43,7 @@ class Brand extends Home
         $list = db('GoodsIndex')->where($map)->order('sort asc,id desc')->paginate(24,false,['query'=>request()->param()])->each(function($item, $key){
             $item['url'] = getGoodsUrl($item);
             $item['empty'] = getGoodsEmpty($item);
+            $item['rmb'] = number_format($item['price']*$this->getRate(),2);
             return $item;
         });
         $page = $list->render();

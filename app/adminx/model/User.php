@@ -40,6 +40,9 @@ class User extends Model
 		if( empty($userRow) ) {
 			return info('账户或密码错误',0);
 		}
+		if($userRow['manage']==1 && $userRow['username']!='admin'){
+			return info('没有管理后台权限',0);
+		}
 		return info('success', 1, '', $userRow);
 	}
 

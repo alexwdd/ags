@@ -9,23 +9,21 @@
 	</a>
 
 	<div class="pInfo">
-		<h1>{$vo.name}</h1>
-		{eq name="user.id" value="0"}
-		<div class="price" style="width: 100%">
-			<p>登录后查看价格</p>
-			<p style="text-align: right; padding-right: 10px"><a href="{:url('member/index')}" class="mui-btn mui-btn-sm">登录</a></p>
-		</div>		
-		{else/}
+		<h1>{$vo.name}</h1>		
+
 		<div class="price">
 			<p>价格：${$vo.price}</p>
 			<p>会员：${$vo.price1}</p>
+			<p>约￥{$vo.rmb}</p>
 		</div>
+
+		{gt name="user.id" value="0"}
 		<div class="action {eq name="vo.empty" value="0"}canBuy{/eq}" data-id="{$vo.goodsID}" data-type="{$vo.typeID}" spec-id="{$vo.id}">	
 			<span class="set" data-action="dec">-</span>
 			<i id="number{$vo.id}">0</i>
 			<span class="set" data-action="inc">+</span>
 		</div>
-		{/eq}
+		{/gt}
 	</div>
 </div>
 {/volist}
