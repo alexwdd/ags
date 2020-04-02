@@ -470,7 +470,7 @@ class Cart extends User
             if ($goods) {
                 if ($goods['empty']==1) {             
                     $stock = db("Goods")->field("stock,stock1")->where('id',$goods['goodsID'])->find();
-                    if ($stock['stock'] < $value['goodsNumber'] && $stock['stock1'] < $value['goodsNumber']) {
+                    if (($stock['stock']+$stock['stock1']) < $value['goodsNumber']) {
                         $this->error('商品【'.$goods['name'].'】库存不足');
                     }
                 }
