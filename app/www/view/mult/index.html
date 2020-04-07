@@ -205,7 +205,7 @@
         </el-pagination>
     </el-dialog>
 
-    <el-dialog title="添加收件人" :visible.sync="addressAddDig">
+    <el-dialog title="添加收件人" width="80%" :visible.sync="addressAddDig">
         
         <form class="layui-form" method="post">
             <div class="layui-form-item">
@@ -244,6 +244,16 @@
                 <label class="layui-form-label">详细地址</label>
                 <div class="layui-input-block">
                     <input type="text" name="address" lay-verify="required" placeholder="必填" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">智能填写</label>
+                <div class="layui-input-inline" style="width: 600px;">
+                    <input type="text" id="text" placeholder="快速录入格式:收件人，电话，地址自动提取（或空格间隔）" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-input-inline">
+                    <button type="button" @click="strToAddress" class="layui-btn layui-btn-primary">提取</button>
                 </div>
             </div>
 
@@ -778,6 +788,29 @@ vm = new Vue({
                     return false;
                 });
             });
+        },
+        strToAddress(){
+            layui.use('form', function(){
+                var form = layui.form; 
+                var text = $("#text").val();
+                if(text==''){
+                    layer.alert("请输入需要转换的文字");
+                    return false;
+                }
+                $.post('{:url('address/textToAddress')}',{text:text},function(res){
+                    if(res.code==1){
+                        $("#name").val(res.body.name);
+                        $("#mobile").val(res.body.mobile);
+                        $("#provid").val(res.body.province_name);
+                        $("#cityid").append("<option name='"+res.body.city_name+"'>"+res.body.city_name+"</option>").val(res.body.city_name);
+                        $("#areaid").append("<option name='"+res.body.county_name+"'>"+res.body.county_name+"</option>").val(res.body.county_name);
+                        $("#address").val(res.body.detail);
+                        form.render();
+                    }else{
+                        layer.alert(res.desc);
+                    }
+                },'json');
+            })            
         },
         handleCurrentChange1(v){
             this.page = v;
