@@ -17,7 +17,7 @@ return [
     'aue'=>['MemberId'=>'2818','Password'=>'AGSags28182818'],
 
     //omi支付
-    'omipay' => ['mchID'=>'501039','key'=>'547e766b244a4e7eb24fee84a1e28fd2'],
+    'omipay' => ['mchID'=>'0042192497','key'=>'4138fdd18af64406a3a434db77b58327'],
 
     //财务类型
     'moneyType' => array(         

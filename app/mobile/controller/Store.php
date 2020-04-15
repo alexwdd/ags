@@ -207,7 +207,7 @@ class Store extends Home
                 $list['empty'] = 0;
             }
         }
-
+        $list['rmb'] = number_format($list['price']*$this->getRate(),2);
         $this->assign('image',$image);
         $this->assign('list',$list);
 

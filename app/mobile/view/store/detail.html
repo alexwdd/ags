@@ -41,14 +41,16 @@
         <div class="priceBox">
 
             {empty name="thisSpec"}
-                <li>价格：<span class="money" id="goods_price">${$list.price}</span></li>
+                <li><i style="width: 1em; display: inline-block;">&nbsp;</i>价格：<span class="money" id="goods_price">${$list.price}</span></li>
                 <li>会员价：<span class="money" id="goods_price1">${$list.price1}</span></li>
                 <input type="hidden" id="goodsNumber" value="{$list.number}">
             {else/}
-                <li>价格：<span class="money" id="goods_price">${$thisSpec.price}</span></li>
+                <li><i style="width: 1em; display: inline-block;">&nbsp;</i>价格：<span class="money" id="goods_price">${$thisSpec.price}</span></li>
                 <li>会员价：<span class="money" id="goods_price1">${$thisSpec.price1}</span></li>
                 <input type="hidden" id="goodsNumber" value="{$thisSpec.number}">
             {/empty}
+
+            <li><i style="width: 2em; display: inline-block;">&nbsp;</i>约：￥{$list.rmb}</li>
         
             {gt name="list.max" value="0"}
             <li>每日限购 {$list.max} 件</li>

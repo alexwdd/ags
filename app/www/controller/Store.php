@@ -229,6 +229,7 @@ class Store extends Home
             }
         }
 
+        $list['rmb'] = number_format($list['price']*$this->getRate(),2);
         $this->assign('image',$image);
         $this->assign('list',$list);
 
