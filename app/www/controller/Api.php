@@ -52,6 +52,7 @@ class Api extends Home
                     $userinfo['username'] = $user['username'];
                     $userinfo['userid'] = $user['id'];
                     $userinfo['stock'] = $user['stock'];
+                    $userinfo['pifa'] = $user['pifa'];
 
                     $user['token'] = $token;
                     $this->startShouyin($user);
@@ -246,7 +247,7 @@ class Api extends Home
     {
         $this->checkToken();
         $map['show'] = 1;
-        $list = db("GoodsIndex")->field('id,name,en,keyword,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where($map)->select();
+        $list = db("GoodsIndex")->field('id,name,en,keyword,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,pifaPrice,gst')->where($map)->select();
         foreach ($list as $key => $value) {
             $list[$key]['number'] = 1;
             $list[$key]['danjia'] = 0;
@@ -343,7 +344,7 @@ class Api extends Home
                     $ids = db("ShouyinOrderDetail")->field('itemID,number')->where("orderID",$value['id'])->select();
                     $goods = [];
                     foreach ($ids as $k => $val) {
-                        $res = db("GoodsIndex")->field('id,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find();
+                        $res = db("GoodsIndex")->field('id,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,pifaPrice,gst')->where('id',$val['itemID'])->find();
                         if ($res) {
                             $res['number'] = $val['number'];
                             $res['money'] = 0;
@@ -394,7 +395,7 @@ class Api extends Home
                         $goods['wuliuWeight'] = 0;           
                         $goods['itemType'] = 2; //商品
                     }else{
-                        $goods = db("GoodsIndex")->field('id,en,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,gst')->where('id',$val['itemID'])->find(); 
+                        $goods = db("GoodsIndex")->field('id,en,name,goodsID,number as goodsNumber,short,wuliuWeight,price,price1,pifaPrice,gst')->where('id',$val['itemID'])->find(); 
                         $goods['price'] = $val['price'];
                         $goods['inprice'] = db("Goods")->where('id',$val['goodsID'])->value('inprice');
                         $goods['number'] = $val['number'];
@@ -593,7 +594,11 @@ class Api extends Home
                 $goods = $jsonData['goods'];
                 $detail = [];
                 foreach ($goods as $key => $value) {
-                    $price = $jsonData['vip']==1?$value['price1']:$value['price'];
+                    if($this->user['pifa']==1){
+                        $price = $value['pifaPrice'];
+                    }else{
+                        $price = $jsonData['vip']==1?$value['price1']:$value['price'];
+                    }                    
                     $money = $price*$value['number'];
                     $chengben = $value['inprice']*$value['goodsNumber']*$value['number'];
                     $lirun = $money-$chengben;

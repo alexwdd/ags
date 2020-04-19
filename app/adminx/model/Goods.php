@@ -195,6 +195,7 @@ class Goods extends Admin
         $spec_cid1 = input("post.spec_cid1/a");
         $spec_price = input("post.spec_price/a");
         $spec_price1 = input("post.spec_price1/a");
+        $spec_pifaPrice = input("post.spec_pifaPrice/a");
         $spec_number = input("post.spec_number/a");
         $spec_wuliu = input("post.spec_wuliu/a");
         $spec_tag = input("post.spec_tag/a");
@@ -221,6 +222,7 @@ class Goods extends Admin
             'say' => $data['say'],
             'price' => $data['price'],
             'price1' => $data['price1'],
+            'pifaPrice' => $data['pifaPrice'],
             'number' => $data['number'],
             'keyword' => $data['keyword'],
             'gst' => $data['gst'],
@@ -251,6 +253,7 @@ class Goods extends Admin
                 $temp['short'] = $spec_short[$i];
                 $temp['price'] = $spec_price[$i];
                 $temp['price1'] = $spec_price1[$i];
+                $temp['pifaPrice'] = $spec_pifaPrice[$i];
                 $temp['number'] = $spec_number[$i];
                 $temp['wuliu'] = $spec_wuliu[$i];
                 $temp['show'] = $spec_show[$i];
@@ -312,6 +315,7 @@ class Goods extends Admin
         $spec_short = input("post.spec_short/a");
         $spec_price = input("post.spec_price/a");
         $spec_price1 = input("post.spec_price1/a");
+        $spec_pifaPrice = input("post.spec_pifaPrice/a");
         $spec_number = input("post.spec_number/a");
         $spec_wuliu = input("post.spec_wuliu/a");
         $spec_tag = input("post.spec_tag/a");
@@ -335,6 +339,7 @@ class Goods extends Admin
             'say' => $data['say'],
             'price' => $data['price'],
             'price1' => $data['price1'],
+            'pifaPrice' => $data['pifaPrice'],
             'number' => $data['number'],
             'keyword' => $data['keyword'],
             'gst' => $data['gst'],
@@ -365,6 +370,7 @@ class Goods extends Admin
                 $temp['short'] = $spec_short[$i];
                 $temp['price'] = $spec_price[$i];
                 $temp['price1'] = $spec_price1[$i];
+                $temp['pifaPrice'] = $spec_pifaPrice[$i];
                 $temp['number'] = $spec_number[$i];
                 $temp['wuliu'] = $spec_wuliu[$i];
                 $temp['show'] = $spec_show[$i];

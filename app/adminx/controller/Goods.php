@@ -264,6 +264,7 @@ class Goods extends Admin
                     $data['say'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
                     $data['wuliu'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
                     $data['en'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
+                    $data['pifaPrice'] = trim($sheet->getCellByColumnAndRow(25, $i)->getValue());
                     $obj->where('id',$goodsID)->update($data);
 
                     unset($map);
@@ -326,6 +327,7 @@ class Goods extends Admin
                     $data['say'] = trim($sheet->getCellByColumnAndRow(22, $i)->getValue());
                     $data['wuliu'] = trim($sheet->getCellByColumnAndRow(23, $i)->getValue());
                     $data['en'] = trim($sheet->getCellByColumnAndRow(24, $i)->getValue());
+                    $data['pifaPrice'] = trim($sheet->getCellByColumnAndRow(25, $i)->getValue());
                     $data['sort'] = 50;
                     $data['updateTime'] = time();
                     $data['createTime'] = time();
@@ -376,9 +378,10 @@ class Goods extends Admin
             ->setCellValue('W1', '特色描述')
             ->setCellValue('X1', '快递')
             ->setCellValue('Y1', '英文')
-            ->setCellValue('Z1', '网站库存')
-            ->setCellValue('AA1', '店铺库存')
-            ->setCellValue('AB1', '状态');
+            ->setCellValue('Z1', '批发价')
+            ->setCellValue('AA1', '网站库存')
+            ->setCellValue('AB1', '店铺库存')
+            ->setCellValue('AC1', '状态');
         foreach($list as $k => $v){
             $num=$k+2;
             if($v['empty']==0){
@@ -416,9 +419,10 @@ class Goods extends Admin
                 ->setCellValue('W'.$num, $v['say'])
                 ->setCellValue('X'.$num, $v['wuliu'])
                 ->setCellValue('Y'.$num, $v['en'])
-                ->setCellValue('Z'.$num, $v['stock'])
-                ->setCellValue('AA'.$num, $v['stock1'])
-                ->setCellValue('AB'.$num, $status);
+                ->setCellValue('Z'.$num, $v['pifaPrice'])
+                ->setCellValue('AA'.$num, $v['stock'])
+                ->setCellValue('AB'.$num, $v['stock1'])
+                ->setCellValue('AC'.$num, $status);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('商品');
@@ -487,8 +491,9 @@ class Goods extends Admin
                     }
                     $data['price'] = trim($sheet->getCellByColumnAndRow(6, $i)->getValue());
                     $data['price1'] = trim($sheet->getCellByColumnAndRow(7, $i)->getValue());
-                    $data['number'] = trim($sheet->getCellByColumnAndRow(8, $i)->getValue());
-                    $data['wuliu'] = trim($sheet->getCellByColumnAndRow(9, $i)->getValue());
+                    $data['pifaPrice'] = trim($sheet->getCellByColumnAndRow(8, $i)->getValue());
+                    $data['number'] = trim($sheet->getCellByColumnAndRow(9, $i)->getValue());
+                    $data['wuliu'] = trim($sheet->getCellByColumnAndRow(10, $i)->getValue());
 
                     $obj->where('id',$goodsID)->update($data);
 
@@ -524,10 +529,11 @@ class Goods extends Admin
             ->setCellValue('F1', '分类2(数字)')
             ->setCellValue('G1', '价格')
             ->setCellValue('H1', '会员价')
-            ->setCellValue('I1', '单品数量')   
-            ->setCellValue('J1', '快递')
-            ->setCellValue('K1', '单品价格')
-            ->setCellValue('L1', '单品物流重量');
+            ->setCellValue('I1', '批发价')
+            ->setCellValue('J1', '单品数量')   
+            ->setCellValue('K1', '快递')
+            ->setCellValue('L1', '单品价格')
+            ->setCellValue('M1', '单品物流重量');
         foreach($list as $k => $v){
             $num=$k+2;
             $objPHPExcel->setActiveSheetIndex(0)
@@ -539,10 +545,11 @@ class Goods extends Admin
                 ->setCellValue('F'.$num, $v['cid1'])
                 ->setCellValue('G'.$num, $v['price'])
                 ->setCellValue('H'.$num, $v['price1'])
-                ->setCellValue('I'.$num, $v['number'])
-                ->setCellValue('J'.$num, $v['wuliu'])
-                ->setCellValue('K'.$num, $v['goodsPrice'])
-                ->setCellValue('L'.$num, $v['goodsWuliuWeight']);
+                ->setCellValue('I'.$num, $v['pifaPrice'])
+                ->setCellValue('J'.$num, $v['number'])
+                ->setCellValue('K'.$num, $v['wuliu'])
+                ->setCellValue('L'.$num, $v['goodsPrice'])
+                ->setCellValue('M'.$num, $v['goodsWuliuWeight']);
         }
 
         $objPHPExcel->getActiveSheet()->setTitle('套餐');

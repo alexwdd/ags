@@ -43,6 +43,12 @@
 				<option value="3">门店+网站</option>
 	      	</select>
 		</div>
+
+		<label class="layui-form-label">批发价</label>
+		<div class="layui-input-inline">
+			<input type="radio" name="pifa" value="1" title="开启" {php}if($list['pifa']=='1')echo 'checked';{/php}>
+			<input type="radio" name="pifa" value="0" title="关闭" {php}if($list['pifa']=='0')echo 'checked';{/php}>
+		</div>
 	</div>
 
 	<div class="layui-form-item layui-form-text">
