@@ -120,6 +120,9 @@ function diffBetweenTwoDays ($second1, $second2){
 
 //获取中邮快递ID
 function getBrandID($order){
+    if ($order['kuaidi']=='经济奶粉线') {
+        return 22;
+    }
     if ($order['type']==1 || $order['type']==2 || $order['type']==3) {
         return 1;
     }

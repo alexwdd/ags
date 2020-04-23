@@ -141,5 +141,7 @@ return [
         array("id"=>18,"name"=>"x15包邮"),
         array("id"=>19,"name"=>"x20包邮"),
         array("id"=>20,"name"=>"买一赠一"),
+        array("id"=>21,"name"=>"x3奶粉经济线"),
+        array("id"=>22,"name"=>"x6奶粉经济线"),
     ),
 ];

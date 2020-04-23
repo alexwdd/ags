@@ -222,8 +222,11 @@ class Zhongyou {
 			$this->baoguoArr[$key]['totalWuliuWeight'] = number_format($wuliuWeight/10,1);
 			
 			$danjia = getDanjia($value['type'],'zy',$this->user);
+
 	        if (in_array($value['type'],[1,2,3])){//奶粉类走澳邮
-	        	$this->baoguoArr[$key]['kuaidi'] = '澳邮';
+	        	if($this->baoguoArr[$key]['kuaidi'] != '经济奶粉线'){
+	        		$this->baoguoArr[$key]['kuaidi'] = '澳邮';
+	        	}	        	
 	        	if($this->baoguoArr[$key]['baoyou']==0){
 	        		$this->baoguoArr[$key]['yunfei'] = $this->getNaifen($value['type'],$value['totalNumber']);
 	        	}else{
