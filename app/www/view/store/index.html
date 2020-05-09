@@ -94,8 +94,10 @@
                     <p class="layui-elip">{$vo.say}</p>                   
                     
                     <div class="price">
-                        <p><span>${$vo.price}</span>/会员<span>${$vo.price1}</span></p>
-                        <p>约￥{$vo.rmb}</p>  
+                        <p><span>{$vo.unit}{$vo.price}</span>/会员<span>{$vo.unit}{$vo.price1}</span></p>
+                        {eq name="vo.cur" value="au"}
+                        <p>约￥{$vo.rmb}</p>
+                        {/eq}
                     </div>  
                     </a>
 
@@ -137,9 +139,11 @@
                     <p class="layui-elip">{$vo.say}</p>
                     
                     <div class="price">
-                        <p>价格：<span>${$vo.price}</span></p>
-                        <p>会员价：<span>${$vo.price1}</span></p>
-                        <p>约￥{$vo.rmb}</p>  
+                        <p>价格：<span>{$vo.unit}{$vo.price}</span></p>
+                        <p>会员价：<span>{$vo.unit}{$vo.price1}</span></p>
+                        {eq name="vo.cur" value="au"}
+                        <p>约￥{$vo.rmb}</p>
+                        {/eq}
                     </div>
                     </a>
 

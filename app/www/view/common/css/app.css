@@ -187,7 +187,11 @@
 .numberAction span.set:hover{background:#39c4da;color: #fff;border:1px #39c4da solid; }
 .payBox{position: fixed; width: 100%; height: 80px; bottom: 0; left: 0; background: rgba(0,0,0,0.8); color: #fff; text-align: right;}
 .payBox .box{ clear: both; line-height: 80px; padding-right: 20px; }
-.payBox .box span.money{font-size:24px; padding-right: 50px; padding-left: 10px}
+.payBox .box li{float: right; margin-left:30px}
+.payBox .box li label{float: left;}
+.payBox .box li .moneyList{float: left;}
+.payBox .box li .moneyList span{display: block; line-height: 20px;}
+.payBox .box li .moneyList span.money{font-size:20px; line-height: 24px}
 .kuaidi{clear: both; overflow: hidden; margin-top: 10px;}
 .kuaidi li{float: left; width: 150px; border: 1px #ddd solid; text-align: center; font-size: 18px; text-align: center; height: 40px; margin-right: 15px; line-height: 40px; cursor: pointer;}
 .kuaidi li.active{background: #39c4da; color: #fff; border-color:#39c4da}

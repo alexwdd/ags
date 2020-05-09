@@ -96,8 +96,12 @@
             <div class="layui-card-body">
                 <div class="list">
                     <li>
-                        <label>商品金额</label>
-                        <p class="money">${$money.total|number_format=###,2}</p>
+                        <label>应付澳元</label>
+                        <p class="money">${$money.totalAu|number_format=###,2}</p>
+                    </li>
+                    <li>
+                        <label>应付人民币</label>
+                        <p class="money">￥{$money.totalRmb|number_format=###,2}</p>
                     </li>
                     {eq name="kid" value="0"}
                     <li>

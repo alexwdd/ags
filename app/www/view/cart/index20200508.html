@@ -43,11 +43,7 @@
                 <div class="info">
                     <div class="base">
                         <li class="auto"><h1 style="font-size: 16px; color: #000">{notempty name="vo.goods.wuliu"}【{$vo.goods.wuliu}】{/notempty}{$vo.goods.name}{notempty name="vo.extends"}[{$vo.extends}]{/notempty}</h1></li>
-                        {eq name="vo.goods.cur" value="rmb"}
-                        <li style="width: 80px; padding-top: 10px">￥{$vo.goods.price}</li>
-                        {else/}
                         <li style="width: 80px; padding-top: 10px">${$vo.goods.price}</li>
-                        {/eq}
                         <li style="width: 90px; padding-top: 10px">{$vo.goods.weight}kg</li>
                         <li style="width: 120px">
                             <div class="numberAction" data-id="{$vo.id}" data-price="{$vo.goods.price}">
@@ -56,11 +52,7 @@
                                 <span class="set" data-action="inc">+</span>
                             </div>
                         </li>
-                        {eq name="vo.goods.cur" value="rmb"}
-                        <li style="width: 80px; padding-top: 10px"><b>￥<span id="xiaoji{$vo.id}">{$vo.money}</span></b></li>
-                        {else/}
                         <li style="width: 80px; padding-top: 10px"><b>$<span id="xiaoji{$vo.id}">{$vo.money}</span></b></li>
-                        {/eq}
                         <li style="width: 60px; padding-top: 10px"><a href="javascript:void(0)" class="delBtn" data-id="{$vo.id}"><i class="layui-icon layui-icon-delete"></i></a></li>
                     </div>
                     {volist name="vo.server" id="s"}
@@ -100,16 +92,9 @@
 {notempty name="list"}
 <div class="payBox">
     <div class="box">
-        <li><button class="layui-btn layui-btn-lg layui-btn-danger" id="doJiesuan">去结算</button></li>
-        <li>
-            <label>合计金额：</label>
-            <div class="moneyList" style="padding-top: 16px">
-                 <span id="totalAu" class="money">${$heji.totalAu}</span>
-                 <span id="totalRmb" class="money">￥{$heji.totalRmb}</span>
-            </div>
-        </li>
-        <li>邮费总计：<span id="youfei">0</span></li>
-        <li><button class="layui-btn layui-btn-lg" id="doClear">清空</button></li>
+    <button class="layui-btn layui-btn-lg" id="doClear" style="margin-right: 30px">清空</button>
+    商品总计：<span id="goodsMoney">{$heji.total}</span> &nbsp;&nbsp;&nbsp;&nbsp;邮费总计：<span id="youfei">0</span> &nbsp;&nbsp;&nbsp;&nbsp;合计金额<span class="money" id="total">${$heji.total}</span>
+    <button class="layui-btn layui-btn-lg layui-btn-danger" id="doJiesuan">去结算</button>
     </div>
 </div>
 <input type="hidden" id="kuaidi" value="">
@@ -123,6 +108,17 @@ $(function(){
             btn: ['确认','放弃'] //按钮
             }, function(){                    
                 $.get('{:url("cart/delcart")}?id='+id,function(res){
+                    $(o).parent().parent().parent().parent().remove();
+                    $("#goodsMoney").html(res.total);
+                    youfei = parseFloat($("#youfei").html());
+                    $("#total").html("$"+(parseFloat(res.total)+youfei).toFixed(2)); 
+                    layer.closeAll();
+
+                    goodsMoney = parseFloat($("#goodsMoney").html());
+                    $("#youfei").html('0');
+                    $("#total").html(goodsMoney);
+                    $(".kdResult").html('');
+
                     window.location.reload();
                 },'json')
             },function(){});
@@ -168,11 +164,15 @@ $(function(){
 
         if (v != oldNum){
             $.get("{:url('cart/setCartNum')}?number="+v+"&cartID="+cartID+"&temp="+new Date().getTime(),function(res){
-                $("#totalAu").html("$"+parseFloat(res.totalAu).toFixed(2)); 
-                $("#totalRmb").html("￥"+parseFloat(res.totalRmb).toFixed(2)); 
+                $("#goodsMoney").html(res.total); 
+                youfei = parseFloat($("#youfei").html());
+                $("#total").html("$"+(parseFloat(res.total)+youfei).toFixed(2)); 
             },'json'); 
         }
+
+        goodsMoney = parseFloat($("#goodsMoney").html());
         $("#youfei").html('0');
+        $("#total").html("$"+goodsMoney);
         $(".kdResult").html('');
     });
 
@@ -204,8 +204,11 @@ $(function(){
                 _html += '</div>';
                 $(".kdResult").html(_html);
                 $(window).scrollTop($(window).height());
-                $("#kuaidi").val(type);
+                kuaidi = $("#kuaidi").val(type);
+
+                goodsMoney = parseFloat($("#goodsMoney").html());
                 $("#youfei").html(data.totalPrice);
+                $("#total").html("$"+(goodsMoney+parseFloat(data.totalPrice)).toFixed(2));
             }else{
                 layer.alert(res.msg);
             }

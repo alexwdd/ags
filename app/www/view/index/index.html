@@ -76,8 +76,10 @@ function getCookie(cname) {
 					<h1>{$vo.name}</h1>
 					<p class="layui-elip">{$vo.say}</p>					
 					<div class="price">
-						<p><span>${$vo.price}</span>/会员<span>${$vo.price1}</span></p>
+						<p><span>{$vo.unit}{$vo.price}</span>/会员<span>{$vo.unit}{$vo.price1}</span></p>
+						{eq name="vo.cur" value="au"}
 						<p>约￥{$vo.rmb}</p>
+						{/eq}
 					</div>
 					</a>
 					{gt name="user.id" value="0"}

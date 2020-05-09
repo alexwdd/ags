@@ -24,6 +24,13 @@ class Index extends Home
 			foreach ($goods as $k => $val) {
 				$goods[$k]['url'] = getGoodsUrl($val);
 				$goods[$k]['empty'] = getGoodsEmpty($val);
+
+				if($v['cur']=='rmb'){
+                    $goods[$k]['unit'] = "￥";
+                }else{
+                    $goods[$k]['unit'] = "$";
+                }
+                    
 				$goods[$k]['rmb'] = number_format($val['price']*$this->getRate(),2);
 			}
 			$indexCate[$key]['goods'] = $goods;

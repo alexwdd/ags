@@ -8,8 +8,6 @@ class Cart extends User
     public function index(){        
         $map['memberID'] = $this->user['id'];
         $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
-        $total = 0;
-        $weight = 0;
         $flag = 0;
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 

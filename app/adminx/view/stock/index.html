@@ -52,10 +52,10 @@ body{background: #f1f1f1}
 	</div>
 </div>
 <script type="text/html" id="btnTpl">
-	<button type="button" class="layui-btn layui-btn-xs btn" data-inprice="{{d.inprice}}" data-price="{{d.price}}" data-price1="{{d.price1}}" data-show="{{d.show}}" data-empty="{{d.empty}}" data-end="{{d.endDate}}" data-id="{{d.id}}" data-type="1">添加</button>
+	<button type="button" class="layui-btn layui-btn-xs btn" data-inprice="{{d.inprice}}" data-price="{{d.price}}" data-price1="{{d.price1}}" data-pifaPrice="{{d.pifaPrice}}" data-show="{{d.show}}" data-empty="{{d.empty}}" data-end="{{d.endDate}}" data-id="{{d.id}}" data-type="1">添加</button>
 </script>
 <script type="text/html" id="btnTpl1">
-	<button type="button" class="layui-btn layui-btn-xs btn" data-inprice="{{d.inprice}}" data-price="{{d.price}}" data-price1="{{d.price1}}" data-show="{{d.show}}" data-empty="{{d.empty}}" data-end="{{d.endDate}}" data-id="{{d.id}}" data-type="2">添加</button>
+	<button type="button" class="layui-btn layui-btn-xs btn" data-inprice="{{d.inprice}}" data-price="{{d.price}}" data-price1="{{d.price1}}" data-pifaPrice="{{d.pifaPrice}}" data-show="{{d.show}}" data-empty="{{d.empty}}" data-end="{{d.endDate}}" data-id="{{d.id}}" data-type="2">添加</button>
 </script>
 <script>
 layui.use(['table','form'], function(){
@@ -96,6 +96,7 @@ layui.use(['table','form'], function(){
   			{field:'inprice', width:100, title: '进价'},
   			{field:'price', width:100, title: '价格'},
   			{field:'price1', width:100, title: '会员价'},
+  			{field:'pifaPrice', width:100, title: '批发价'},
 	      	{field:'stock', width:120, edit: 'text',sort: true, title: '网站库存'},
 	      	{width:65, title: '入库', templet: '#btnTpl',},
 	      	{field:'stock1', width:120, edit: 'text',sort: true, title: '店铺库存'},
@@ -136,6 +137,7 @@ layui.use(['table','form'], function(){
 		var inprice = $(this).attr("data-inprice");
 		var price = $(this).attr("data-price");
 		var price1 = $(this).attr("data-price1");
+		var pifaPrice = $(this).attr("data-pifaPrice");
 		var type = $(this).attr("data-type");
 		var show = $(this).attr("data-show");
 		var empty = $(this).attr("data-empty");
@@ -156,7 +158,7 @@ layui.use(['table','form'], function(){
 		}
 		layer.open({
 			type: 1,
-			area: ['380px', '480px'],
+			area: ['380px', '530px'],
 			content: `
 				<form id="myform" class="layui-form" style="padding:10px;">
 				<div class="layui-form-item">	  
@@ -175,6 +177,12 @@ layui.use(['table','form'], function(){
 					<label class="layui-form-label">会员价</label>  
 					<div class="layui-input-inline">
 				    <input type="number" step="0.01" id="price1" name="price1" lay-verType="tips" value="`+price1+`" lay-verify="required" placeholder="会员价" autocomplete="off" class="layui-input"/>
+				    </div>
+				</div>	
+				<div class="layui-form-item">	
+					<label class="layui-form-label">批发价</label>  
+					<div class="layui-input-inline">
+				    <input type="number" step="0.01" id="pifaPrice" name="pifaPrice" lay-verType="tips" value="`+pifaPrice+`" lay-verify="required" placeholder="批发价" autocomplete="off" class="layui-input"/>
 				    </div>
 				</div>	
 				<div class="layui-form-item">
@@ -227,6 +235,7 @@ layui.use(['table','form'], function(){
 			price:$("#price").val(),
 			price1:$("#price1").val(),
 			inprice:$("#inprice").val(),
+			pifaPrice:$("#pifaPrice").val(),
 			type:$("#type").val(),
 			endDate:$("#endDate").val(),
 			number:$("#number").val(),

@@ -51,29 +51,32 @@
                             {empty name="thisSpec"}
                             <li>
                                 <span>价格</span>
-                                <p class="money" id="goods_price">${$list.price}</p>
+                                <p class="money" id="goods_price">{$list.unit}{$list.price}</p>
                             </li>
                             <li>
                                 <span>会员价</span>
-                                <p class="money" id="goods_price1">${$list.price1}</p>
+                                <p class="money" id="goods_price1">{$list.unit}{$list.price1}</p>
                             </li>
                             <input type="hidden" id="goodsNumber" value="{$list.number}">
                             {else/}
                             <li>
                                 <span>价格</span>
-                                <p class="money" id="goods_price">${$thisSpec.price}</p>
+                                <p class="money" id="goods_price">{$list.unit}{$thisSpec.price}</p>
                             </li>
                             <li>
                                 <span>会员价</span>
-                                <p class="money" id="goods_price1">${$thisSpec.price1}</p>
+                                <p class="money" id="goods_price1">{$list.unit}{$thisSpec.price1}</p>
                             </li>
                             <input type="hidden" id="goodsNumber" value="{$thisSpec.number}">
                             {/empty}                   
                             
+                            {eq name="$list.cur" value="au"}
                             <li>
                                 <span>人民币</span>
                                 <p>约￥{$list.rmb}</p>  
                             </li>
+                            {/eq}
+
                             {gt name="list.max" value="0"}
                             <li>
                                 <span>每日限购</span>
@@ -95,7 +98,7 @@
                             <div class="choic-sel">               
                                 {volist name="spec" id="vo"}     
                                 <span onclick="switch_spec(this);" data-id="{$vo.id}" data-price="{$vo.price}" data-price1="{$vo.price1}" data-number="{$vo.number}" {eq name="vo.id" value="$specid"}class="red"{/eq}>
-                                {notempty name="vo.wuliu"}【{$vo.wuliu}】包邮 {/notempty}{$vo.name} {gt name="user.id" value="0"} 价格：${$vo.price} 会员价：${$vo.price1}{/gt}
+                                {notempty name="vo.wuliu"}【{$vo.wuliu}】包邮 {/notempty}{$vo.name} {gt name="user.id" value="0"} 价格：{$list.unit}{$vo.price} 会员价：{$list.unit}{$vo.price1}{/gt}
                                 </span>        
                                 {/volist} 
                             </div>   
@@ -239,8 +242,8 @@ $(function(){
         $("#serverMoney").val(serverMoney.toFixed(2));
         goods_price = parseFloat($("#price").val());
         goods_price1 = parseFloat($("#price1").val());
-        $("#goods_price").html("$"+(goods_price+serverMoney).toFixed(2));
-        $("#goods_price1").html("$"+(goods_price1+serverMoney).toFixed(2));
+        $("#goods_price").html("{$list.unit}"+(goods_price+serverMoney).toFixed(2));
+        $("#goods_price1").html("{$list.unit}"+(goods_price1+serverMoney).toFixed(2));
     });
 })
 
@@ -306,8 +309,8 @@ function switch_spec(spec) {
     if ($(spec).hasClass('red')){
         $(spec).removeClass('red');
         $("#spec_id").val(old);
-        $("#goods_price").html('$'+(oldPrice+serverMoney).toFixed(2));
-        $("#goods_price1").html('$'+(oldPrice1+serverMoney).toFixed(2));
+        $("#goods_price").html('{$list.unit}'+(oldPrice+serverMoney).toFixed(2));
+        $("#goods_price1").html('{$list.unit}'+(oldPrice1+serverMoney).toFixed(2));
         $("#price").val(oldPrice);
         $("#price1").val(oldPrice1);
         $("#goodsNumber").val(oldNumber);
@@ -316,8 +319,8 @@ function switch_spec(spec) {
         price = parseFloat($(spec).attr("data-price"));
         price1 = parseFloat($(spec).attr("data-price1"));
         $("#spec_id").val($(spec).attr("data-id"));
-        $("#goods_price").html('$'+(price+serverMoney).toFixed(2));
-        $("#goods_price1").html('$'+(price1+serverMoney).toFixed(2));
+        $("#goods_price").html('{$list.unit}'+(price+serverMoney).toFixed(2));
+        $("#goods_price1").html('{$list.unit}'+(price1+serverMoney).toFixed(2));
         $("#price").val(price);
         $("#price1").val(price1);
         $("#goodsNumber").val($(spec).attr("data-number"));

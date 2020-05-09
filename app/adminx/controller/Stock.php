@@ -83,9 +83,10 @@ class Stock extends Admin {
             $id = input('post.id');
             $type = input('post.type');
             $number = input('post.number');
-            $price1 = input('post.price1');
+            $price1 = input('post.price1');            
             $price = input('post.price');
             $inprice = input('post.inprice');
+            $pifaPrice = input('post.pifaPrice');
             $show = input('post.show');
             $empty = input('post.empty');
             $endDate = input('post.endDate');
@@ -93,6 +94,7 @@ class Stock extends Admin {
 
             $data['price'] = $price;
             $data['price1'] = $price1;
+            $data['pifaPrice'] = $pifaPrice;
             $data['inprice'] = $inprice;
             $data['show'] = $show;
             $data['empty'] = $empty;
@@ -111,6 +113,7 @@ class Stock extends Admin {
             $map['base'] = 1;
             $update['price'] = $price;
             $update['price1'] = $price1;
+            $update['pifaPrice'] = $pifaPrice;
             db('GoodsIndex')->where($map)->update($update);
 
             unset($map);

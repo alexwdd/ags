@@ -1,3 +1,7 @@
-user表增加pifa
-goods表增肌pifaPrice
-goodsIndex表增加pifaPrice
+update.php 批量更新商品结算属性
+
+goods表 增加cur
+goodsIndex表 增加cur
+
+
+

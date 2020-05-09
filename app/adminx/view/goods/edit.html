@@ -157,6 +157,16 @@
 					<div class="layui-input-inline">
 						<input type="text" name="pifaPrice" value="{$list.pifaPrice}" lay-verify="required" autocomplete="off" class="layui-input" />
 					</div>
+
+					<label class="layui-form-label">重量</label>
+					<div class="layui-input-inline">
+						<input type="text" name="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
+
+					<label class="layui-form-label">物流重量</label>
+					<div class="layui-input-inline">
+						<input type="text" name="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
+					</div>
 				</div>
 
 				<div class="layui-form-item">					
@@ -170,15 +180,14 @@
 						<input type="text" name="price1" value="{$list.price1}" lay-verify="required" autocomplete="off" class="layui-input" />
 					</div>
 
-					<label class="layui-form-label">重量</label>
+					<label class="layui-form-label">结算币种</label>
 					<div class="layui-input-inline">
-						<input type="text" name="weight" value="{$list.weight}" lay-verify="required" autocomplete="off" class="layui-input" />
-					</div>
-
-					<label class="layui-form-label">物流重量</label>
-					<div class="layui-input-inline">
-						<input type="text" name="wuliuWeight" value="{$list.wuliuWeight}" lay-verify="required" autocomplete="off" class="layui-input" />
-					</div>
+						<select name="cur" id="cur" lay-verify="required" default="{$list.cur|default='au'}">
+							<option value="">请选择</option>
+							<option value="rmb">人民币</option>
+							<option value="au">澳元</option>
+						</select>
+					</div>					
 				</div>				
 
 				<div class="layui-form-item">

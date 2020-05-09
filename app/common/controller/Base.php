@@ -45,7 +45,8 @@ class Base extends Controller {
     public function getCartNumber($user){
         $map['memberID'] = $user['id']; 
         $list = db("Cart")->where($map)->select();
-        $total = 0;
+        $totalAu = 0;
+        $totalRmb = 0;
         $server = 0;
         $weight = 0;
         foreach ($list as $key => $value) {
@@ -65,12 +66,16 @@ class Base extends Controller {
             //贴心服务需要计算商品个数，所以要乘套餐里边商品的数量
             $goodsMoney = $goods['price'] * $value['number'];
             $serverMoney = $serverMoney * $value['goodsNumber'];
-            $total += $goodsMoney + $serverMoney;
+            if($goods['cur']=='au'){
+                $totalAu += $goodsMoney + $serverMoney;
+            }else{
+                $totalRmb += $goodsMoney + $serverMoney;
+            }            
             $server += $serverMoney;
             $weight += $value['goodsNumber'] * $goods['weight'];       
             $number = count($list);
         }
-        return array('number'=>$number,'total'=>$total,'serverMoney'=>$server,'weight'=>number_format($weight,2)); 
+        return array('number'=>$number,'totalAu'=>$totalAu,'totalRmb'=>$totalRmb,'serverMoney'=>$server,'weight'=>number_format($weight,2)); 
     }
 
     /*
