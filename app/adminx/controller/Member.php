@@ -11,6 +11,7 @@ class Member extends Admin {
 			foreach ($result['data']['list'] as $key => $value) {
 				$fina = $this->getUserMoney($value['id']);
 				$result['data']['list'][$key]['money'] = $fina['money'];
+				$result['data']['list'][$key]['rmb'] = $fina['rmb'];
 			}	
 			echo $this->return_json($result);
     	}else{

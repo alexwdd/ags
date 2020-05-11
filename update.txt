@@ -2,6 +2,6 @@ update.php 批量更新商品结算属性
 
 goods表 增加cur
 goodsIndex表 增加cur
-
+order表 增加cur
 
 

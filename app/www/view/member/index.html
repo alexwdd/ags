@@ -104,7 +104,7 @@
                             {/eq}
                         </td>
                         <td>
-                            <p class="money text-center">${$vo.total}</p>
+                            <p class="money text-center">{$vo.unit}{$vo.total}</p>
                             {eq name="vo.payStatus" value="0"}<p class="text-center"><a href="{:url('order/payType','order_no='.$vo['order_no'])}" class="layui-btn layui-btn-danger layui-btn-xs">去支付</a></p>
                             {/eq} 
                         </td>                      

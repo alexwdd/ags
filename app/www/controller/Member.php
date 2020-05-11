@@ -15,6 +15,12 @@ class Member extends User
             //$list[$key]['goods'] = $goods;
             $person = db("OrderPerson")->field('id,name,mobile')->where("orderID",$value["id"])->select();
             $list[$key]['person'] = $person;
+
+            if($value['cur']=='au'){
+                $list[$key]['unit'] = '$';
+            }else{
+                $list[$key]['unit'] = '￥';
+            }
             
             unset($where);
             $where['orderID'] = $value["id"];

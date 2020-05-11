@@ -19,9 +19,14 @@ class Pay extends Admin {
 	        $data['money'] = input('post.money');
 	        $msg = input('post.msg');
 	        $account = input('post.account');
+	        $type = input('post.type');
 
 	        if ($msg=='') {
-	        	$msg = '管理员为您账户充值 $'.$data['money'].'。';
+	        	if($type==1){
+	        		$msg = '管理员为您账户充值澳币 $'.$data['money'].'。';
+	        	}else{
+	        		$msg = '管理员为您账户充值人民币 $'.$data['money'].'。';
+	        	}
 	        }	
 
 			$user = db('Member');
@@ -37,7 +42,7 @@ class Pay extends Admin {
 	        $data['doID'] = $this->admin['id'];
 	        $data['doUser'] = $this->admin['name'];
 	        $data['admin'] = 1;
-	        $data['type'] = 1;
+	        $data['type'] = $type;
 	        $data['oldMoney'] = $fina['money'];
 	        $data['newMoney'] = $fina['money']+$data['money'];
 	        $data['msg'] = $msg;

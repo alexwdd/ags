@@ -21,9 +21,12 @@ return [
 
     //财务类型
     'moneyType' => array(         
-        1 => array('name'=>'充值'),
-        2 => array('name'=>'消费'),
-        3 => array('name'=>'退款')
+        1 => array('name'=>'澳币充值'),
+        2 => array('name'=>'澳币消费'),
+        3 => array('name'=>'澳币退款'),
+        4 => array('name'=>'人民币充值'),
+        5 => array('name'=>'人民币消费'),
+        6 => array('name'=>'人民币退款'),
     ),
 
     //用户类型

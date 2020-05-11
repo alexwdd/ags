@@ -48,12 +48,15 @@ class Base extends Controller {
         $totalAu = 0;
         $totalRmb = 0;
         $server = 0;
+        $auServer = 0;
+        $rmbServer = 0;
         $weight = 0;
         foreach ($list as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
             if ($user['group']==2 || $user['vip']==1) {
                 $goods['price'] = $goods['price1'];
             }
+
             if ($value['server']!='') {
                 $serverID = explode(",",$value['server']);
                 unset($map);
@@ -68,22 +71,25 @@ class Base extends Controller {
             $serverMoney = $serverMoney * $value['goodsNumber'];
             if($goods['cur']=='au'){
                 $totalAu += $goodsMoney + $serverMoney;
+                $auServer += $serverMoney;
             }else{
-                $totalRmb += $goodsMoney + $serverMoney;
+                $rmb = number_format($serverMoney*$this->getRate(),2);
+                $totalRmb += $goodsMoney + $rmb;
+                $rmbServer += $rmb;
             }            
             $server += $serverMoney;
             $weight += $value['goodsNumber'] * $goods['weight'];       
             $number = count($list);
         }
-        return array('number'=>$number,'totalAu'=>$totalAu,'totalRmb'=>$totalRmb,'serverMoney'=>$server,'weight'=>number_format($weight,2)); 
+        return array('number'=>$number,'totalAu'=>$totalAu,'totalRmb'=>$totalRmb,'serverMoney'=>$server,'auServer'=>$auServer,'rmbServer'=>$rmbServer,'weight'=>number_format($weight,2)); 
     }
 
     /*
     type : zh中环 zy中邮
     */
-    public function getYunfeiJson($user,$type,$province=null){
-        $map['memberID'] = $user['id']; 
-        $cart = db("Cart")->where($map)->order('typeID asc,number desc')->select();
+    public function getYunfeiJson($user,$type,$cart,$province=null){
+        /*$map['memberID'] = $user['id']; 
+        $cart = db("Cart")->where($map)->order('typeID asc,number desc')->select();*/
         foreach ($cart as $key => $value) {
             $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find(); 
             if ($user['group']==2 || $user['vip']==1) {
@@ -198,6 +204,9 @@ class Base extends Controller {
         $inMoney = 0;
         $outMoney = 0;      
         $tuiMoney = 0;      
+        $inRmbMoney = 0;      
+        $outRmbMoney = 0;      
+        $tuiRmbMoney = 0;      
         foreach ($list as $key => $value) {
             if ($value['type']==1) {
                 $inMoney += $value['money'];
@@ -208,11 +217,22 @@ class Base extends Controller {
             if ($value['type']==3) {
                 $tuiMoney += $value['money'];
             }   
+            if ($value['type']==4) {
+                $inRmbMoney += $value['money'];
+            }
+            if ($value['type']==5) {
+                $outRmbMoney += $value['money'];
+            } 
+            if ($value['type']==6) {
+                $tuiRmbMoney += $value['money'];
+            }   
         }
 
         $money = bcsub(bcadd($inMoney , $tuiMoney,2) , $outMoney,2);
+        $rmb = bcsub(bcadd($inRmbMoney , $tuiRmbMoney,2) , $outRmbMoney,2);
         return array(       
             'money' =>$money,
+            'rmb' =>$rmb,
             'inMoney'=>$inMoney,
             'tuiMoney'=>$tuiMoney,
             'outMoney'=>$outMoney,

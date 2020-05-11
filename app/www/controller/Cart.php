@@ -230,7 +230,8 @@ class Cart extends User
         if ($kid=='') {
             $this->error("请选择快递");
         }
-        $result = $this->getYunfeiJson($this->user,$kid,$address['province']);            
+        $result = $this->getYunfeiJson($this->user,$kid,$list,$address['province']); 
+      
         $result = json_decode($result,true);
         if ($result['code']==0) {
             $this->error($result['msg']);
@@ -460,11 +461,23 @@ class Cart extends User
         }
 
         $hongjiu = 0;
-        $chengben = 0;//商品总成本
+        $auChengben = 0;//商品总成本
+        $rmbChengben = 0;//商品总成本
+        $auCart = [];
+        $rmbCart = [];
         foreach ($list as $key => $value) {
-            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();            
+            $goods = db('GoodsIndex')->where('id='.$value['itemID'])->find();   
+
+            if($goods['cur']=='au'){
+                $auChengben += $goodsInprice * $value['goodsNumber'];
+                array_push($auCart,$value);
+            }else{
+                $rmbChengben += $goodsInprice * $value['goodsNumber'];
+                array_push($rmbCart,$value);
+            }
+
             $goodsInprice = db("Goods")->where('id',$value['goodsID'])->value("inprice");
-            $chengben += $goodsInprice * $value['goodsNumber'];
+            
             if ($goods) {
                 if ($goods['empty']==1) {             
                     $stock = db("Goods")->field("stock,stock1")->where('id',$goods['goodsID'])->find();
@@ -487,68 +500,114 @@ class Cart extends User
         //创建订单
         $data = input('post.');
 
-        $cart = $this->getCartNumber($this->user);
-        $totalPrice = $cart['total'];
-        $serverMoney = $cart['serverMoney'];
-
         if($data['kid']==''){
             $this->error('请选择快递');
         }
         
-        $result = $this->getYunfeiJson($this->user,$data['kid'],$data['province']);
-        $result = json_decode($result,true);    
-        if ($result['code']==0) {
-            $this->error($result['msg']);
-        }
-        $baoguo = $result['data'];
+        //澳元包裹
+        if(count($auCart)>0){
+            $result = $this->getYunfeiJson($this->user,$data['kid'],$auCart,$data['province']);
+            $result = json_decode($result,true);    
+            if ($result['code']==0) {
+                $this->error($result['msg']);
+            }
+            $auBaoguo = $result['data'];
 
-        if(count($baoguo['baoguo'])<1){
-            $this->error("包裹错误");
+            if(count($auBaoguo['baoguo'])<1){
+                $this->error("包裹错误");
+            }
+
+            $flag = 0;
+            foreach ($auBaoguo['baoguo'] as $key => $value) {
+                if($value['serverIds']){  
+                    $ids = explode(",", $value['serverIds']);
+                    if (in_array(2,$ids)) {
+                        $flag = 1;
+                        break;
+                    }
+                }else{
+                    $auBaoguo['baoguo'][$key]['serverIds'] = '';
+                }            
+            }
+            if ($flag==1 && $data['sign']=='') {
+                $this->error("请输入签名");
+            }
         }
+
+        //人民币包裹
+        if(count($rmbCart)>0){
+            $result = $this->getYunfeiJson($this->user,$data['kid'],$rmbCart,$data['province']);
+            $result = json_decode($result,true);    
+            if ($result['code']==0) {
+                $this->error($result['msg']);
+            }
+            $rmbBaoguo = $result['data'];
+
+            if(count($rmbBaoguo['baoguo'])<1){
+                $this->error("包裹错误");
+            }
+
+            $flag = 0;
+            foreach ($rmbBaoguo['baoguo'] as $key => $value) {
+                if($value['serverIds']){  
+                    $ids = explode(",", $value['serverIds']);
+                    if (in_array(2,$ids)) {
+                        $flag = 1;
+                        break;
+                    }
+                }else{
+                    $rmbBaoguo['baoguo'][$key]['serverIds'] = '';
+                }            
+            }
+            if ($flag==1 && $data['sign']=='') {
+                $this->error("请输入签名");
+            }
+        }
+
+        $cart = $this->getCartNumber($this->user);
+
+        $orderNo = [];
+        if(count($auCart)>0){
+            $totalPrice = $cart['totalAu'];
+            $serverMoney = $cart['auServer'];
+            $order_no = $this->saveOrder('au',$auBaoguo,$data,$totalPrice,$serverMoney,$auChengben);
+            array_push($orderNo,$order_no);
+        }
+        
+        if(count($rmbCart)>0){
+            $totalPrice = $cart['totalRmb'];
+            $serverMoney = $cart['rmbServer'];
+            $order_no = $this->saveOrder('rmb',$rmbBaoguo,$data,$totalPrice,$serverMoney,$rmbChengben);
+            array_push($orderNo,$order_no);
+        }
+        
+        unset($map);
+        $map['memberID'] = $this->user['id'];
+        db("Cart")->where($map)->delete();
+
+        if (isMobile()) {
+            $url = url('mobile/order/payType','order_no='.$orderNo[0]);
+        }else{
+            $url = url('Order/payType','order_no='.$orderNo[0]);
+        }
+        $this->success('操作成功',$url);
+     
+    }
+
+    public function saveOrder($cur,$baoguo,$data,$totalPrice,$serverMoney,$chengben){
         $totalYunfei = $baoguo['totalPrice']+$baoguo['totalExtend'];
         $totalInprice = $baoguo['totalInprice'];
-        
-        
-        $flag = 0;
-        foreach ($baoguo['baoguo'] as $key => $value) {
-            if($value['serverIds']){  
-                $ids = explode(",", $value['serverIds']);
-                if (in_array(2,$ids)) {
-                    $flag = 1;
-                    break;
-                }
-            }else{
-                $baoguo['baoguo'][$key]['serverIds'] = '';
-            }            
-        }
-        if ($flag==1 && $data['sign']=='') {
-            $this->error("请输入签名");
-        }
-
         $sender = explode(",", $data['sender']);
         $money = $totalPrice+$totalYunfei;
-        /*if ($this->user['money']>=$money) {
-            $payType = 2;
-            $wallet = $money;
-            $payStatus = 2;
-        }else{
-            $payType = input('post.payType');
-            if (!in_array($payType,[3,4])) {
-                $payType = 3;
-            }
-            $money = $money - $this->user['money'];
-            $wallet = $this->user['money'];
-            $payStatus = 0;
-        }*/
-        $realMoney = $totalPrice+$totalYunfei;
-        $zhekou = config('site.discount');
+        $zhekou = config('site.discount');        
         if($zhekou > 0){
-            $total = $realMoney * config('site.discount')/10;
+            $total = $money * config('site.discount')/10;
         }else{
-            $total = $realMoney;
+            $total = $money;
         }
 
         $order_no = $this->getOrderNo();
+        $data['cur'] = $cur;
         $data['sender'] = $sender[0];
         $data['senderMobile'] = $sender[1];
         $data['memberID'] = $this->user['id'];
@@ -566,15 +625,17 @@ class Cart extends User
         $data['wuliuInprice'] = $totalInprice;
         $data['payType'] = 0;
         $data['payStatus'] = 0;
-        $res = model('Order')->add($data);
+        $orderModel = new \app\common\model\Order();
+        $res = $orderModel->add($data);        
         if (!$res['code']==1) {
             $this->error($res['msg']);
         }
         $orderID = $res['msg'];
 
         $data['orderID'] = $orderID;        
-        $data['status'] = $payStatus;        
-        $res = model('OrderPerson')->add($data);
+        $data['status'] = 0;   
+        $personModel = new \app\common\model\OrderPerson();     
+        $res = $personModel->add($data);
         $personID = $res['msg'];
         foreach ($baoguo['baoguo'] as $key => $value) {
             //保存详单
@@ -630,62 +691,19 @@ class Cart extends User
                         'del'=>0,
                         'createTime'=>time()
                     ];
-
-                    db('OrderDetail')->insert($gData);      
-                    /*if ($payStatus==1) {  
-                        db("Goods")->where('id',$val['goodsID'])->setDec("stock",$val['trueNumber']);
-                    }*/
+                    db('OrderDetail')->insert($gData);
                 }
             }
             unset($detail);
         }
-        unset($map);
-        $map['memberID'] = $this->user['id'];
-        db("Cart")->where($map)->delete();
-
-        //保存支付记录
-        /*if ($wallet>0) {
-            $fdata = array(
-                'type' => 2,
-                'money' => $wallet,
-                'memberID' => $this->user['id'],
-                'mobile' => $this->user['mobile'],
-                'doID' => $this->user['id'],
-                'doUser' => $this->user['mobile'],
-                'oldMoney'=>$this->user['money'],
-                'newMoney'=>$this->user['money']-$wallet,
-                'admin' => 2,
-                'msg' => '购买商品，账户余额支付$'.$wallet.'，订单号：'.$data['order_no'],
-                'showTime' => time(),
-                'createTime' => time()
-            );
-            db('Finance')->insert($fdata);
-            $this->setUserGroup($this->user);//更改会员身份
-        }
-        if ($payType==2) {
-            if (isMobile()) {
-                $url = url('mobile/order/index');
-            }else{
-                $url = url('member/index');
-            }
-            $this->success('支付成功，等待商家发货',$url);
-        }else{*/
-            if (isMobile()) {
-                //if ($payType==3) {
-                    $url = url('mobile/order/payType','order_no='.$order_no);
-                /*}else{
-                    $url = url('mobile/order/cardpay','order_no='.$order_no);
-                } */               
-            }else{
-                $url = url('Order/payType','order_no='.$order_no);
-            }
-            $this->success('操作成功',$url);
-        //}       
+        return $order_no;
     }
 
     public function getYunfei(){
         $type = input("param.type");
-        echo $this->getYunfeiJson($this->user,$type);
+        $map['memberID'] = $this->user['id'];
+        $list = db("Cart")->where($map)->order('typeID asc,number desc')->select();
+        echo $this->getYunfeiJson($this->user,$type,$list);
     } 
 
     public function getYunfeiAll(){

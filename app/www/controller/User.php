@@ -25,6 +25,7 @@ class User extends Home
         }else{
             $money = $this->getUserMoney($user['id']);
             $user['money'] = $money['money'];
+            $user['rmb'] = $money['rmb'];
             $this->user = $user;
             $this->assign('user',$this->user);
         }
