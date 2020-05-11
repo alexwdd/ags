@@ -14,7 +14,7 @@ class Index extends Home
     	$map['fid'] = 0;
     	$map['model'] = 2;
     	$map['comm'] = 1;
-    	$indexCate = db("Category")->field('id,path,name')->where($map)->select();
+    	$indexCate = db("Category")->field('id,path,name')->where($map)->order('sort asc')->select();
     	foreach ($indexCate as $key => $value) {
     		unset($map);
 			$map['comm'] = 1;
