@@ -34,23 +34,47 @@
 
             <li>
                 <label>订单金额</label>
-                <p style="font-weight: bold;">{$list.total}</p>
+                <p style="font-weight: bold;">{$list.unit}{$list.total}</p>
             </li> 
 
             <li>
-                <label>账户余额</label>
+                <label>结算方式</label>
+                <p>{$list.jiesuan}</p>
+            </li> 
+
+            <li>
+                <label>澳币余额</label>
                 <p>{$user.money}</p>
+            </li> 
+
+            <li>
+                <label>人民币余额</label>
+                <p>{$user.rmb}</p>
             </li> 
 
             <li>
                 <label>支付方式</label>
                 <p>
+                    {eq name="list.cur" value="au"}
+
                     {egt name="user.money" value="$list['total']"}
                     <span class="pay" data-id="2">余额支付<i></i></span>
                     {else/}
                     <span class="pay" data-id="3">OMI支付<i></i></span>
                     <span class="pay" data-id="4">银行卡支付<i></i></span>
                     {/egt}
+
+                    {else/}
+                    
+                    {egt name="user.rmb" value="$list['total']"}
+                    <span class="pay" data-id="2">余额支付<i></i></span>
+                    {else/}
+                    <span class="pay" data-id="5">支付宝支付<i></i></span>
+                    <span class="pay" data-id="6">微信支付<i></i></span>
+                    {/egt}
+                    
+                    {/eq}
+                    
                 </p>
             </li>            
         </div>

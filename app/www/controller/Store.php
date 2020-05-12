@@ -265,6 +265,11 @@ class Store extends Home
             unset($map);
             $map['id'] = array('in',$serID);
             $server = db("Server")->where($map)->order('sort asc')->select();
+            if($list['cur']=='rmb'){
+                foreach ($server as $key => $value) {
+                    $server[$key]['price'] = number_format($this->getRate()*$value['price'],2);
+                }
+            }
             $this->assign('server',$server);
         }
 

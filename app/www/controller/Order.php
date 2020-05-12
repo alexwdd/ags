@@ -320,11 +320,22 @@ class Order extends User
             }
 
             if ($list['payType']==3) {
-            $this->redirect(url('order/pay','order_no='.$order_no));
+                $this->redirect(url('order/pay','order_no='.$order_no));
             }elseif($list['payType']==4) {
                 $this->redirect(url('order/cardpay','order_no='.$order_no));
+            }elseif($list['payType']==5) {
+                $this->redirect(url('order/alipay','order_no='.$order_no));
+            }elseif($list['payType']==6) {
+                $this->redirect(url('order/weixin','order_no='.$order_no));
             }
-         
+            
+            if($list['cur']=='au'){
+                $list['unit'] = '$';
+                $list['jiesuan'] = '澳币';
+            }else{
+                $list['unit'] = '$';
+                $list['jiesuan'] = '人民币';
+            }
             $this->assign('list',$list);
             return view();
         }else{  
@@ -337,7 +348,7 @@ class Order extends User
             $order_no = input('post.order_no');
             $payType = input('post.payType');
 
-            if (!in_array($payType,[2,3,4])) {
+            if (!in_array($payType,[2,3,4,5,6])) {
                 $this->error("支付方式错误");
             }
 
@@ -354,41 +365,64 @@ class Order extends User
                 $this->error("该订单已支付完成，不要重复支付。");
             }
 
-            if ($list['payType']==3) {
-                $this->redirect(url('order/pay','order_no='.$order_no));die;
-            }elseif($list['payType']==4) {
-                $this->redirect(url('order/cardpay','order_no='.$order_no));die;
-            }      
+            if($list['cur']=='au'){
+                if ($list['payType']==3) {
+                    $this->redirect(url('order/pay','order_no='.$order_no));die;
+                }elseif($list['payType']==4) {
+                    $this->redirect(url('order/cardpay','order_no='.$order_no));die;
+                }
+            }else{
+                if ($list['payType']==5) {
+                    $this->redirect(url('order/alipay','order_no='.$order_no));die;
+                }elseif($list['payType']==6) {
+                    $this->redirect(url('order/weixin','order_no='.$order_no));die;
+                }
+            }   
 
             if ($list) {
-                if ($this->user['money']>=$list['total']) {
+                if ($this->user['money']>=$list['total'] && $list['cur']=='au') {
                     $data['payType'] = 2;
                     $data['wallet'] = $list['total'];
                     $data['payStatus'] = 2;
-                }else{
-                    if (!in_array($payType,[3,4])) {
-                        $data['payType'] = 3;
+                }elseif($this->user['rmb']>=$list['total'] && $list['cur']=='rmb'){
+                    $data['payType'] = 2;
+                    $data['wallet'] = $list['total'];
+                    $data['payStatus'] = 2;
+                }else{                    
+                    $data['payType'] = $payType;
+                    
+                    if($list['cur']=='au'){
+                        $data['money'] = $list['total'] - $this->user['money'];
+                        $data['wallet'] = $this->user['money']; 
                     }else{
-                        $data['payType'] = $payType;
-                    }
-                    $data['money'] = $list['total'] - $this->user['money'];
-                    $data['wallet'] = $this->user['money'];  
+                        $data['money'] = $list['total'] - $this->user['rmb'];
+                        $data['wallet'] = $this->user['rmb']; 
+                    }                     
                 }         
 
                 if ($data['wallet']>0) {
+                    if($list['cur']=='au'){
+                        $type==2;
+                        $msg = '购买商品，账户澳币余额支付$'.$data['wallet'].'，订单号：'.$list['order_no'];
+                        $field='money';
+                    }else{
+                        $type==5;
+                        $msg = '购买商品，账户人民币余额支付￥'.$data['wallet'].'，订单号：'.$list['order_no'];
+                        $field='rmb';
+                    }
                     $finance = model('Finance');
                     $finance->startTrans();
                     $fdata = array(
-                        'type' => 2,
+                        'type' => $type,
                         'money' => $data['wallet'],
                         'memberID' => $this->user['id'],
                         'mobile' => $this->user['mobile'],
                         'doID' => $this->user['id'],
                         'doUser' => $this->user['mobile'],
-                        'oldMoney'=>$this->user['money'],
-                        'newMoney'=>$this->user['money']-$data['wallet'],
+                        'oldMoney'=>$this->user[$field],
+                        'newMoney'=>$this->user[$field]-$data['wallet'],
                         'admin' => 2,
-                        'msg' => '购买商品，账户余额支付$'.$data['wallet'].'，订单号：'.$list['order_no'],
+                        'msg' => $msg,
                         'showTime' => time(),
                         'createTime' => time()
                     );
@@ -401,7 +435,7 @@ class Order extends User
                         if ($result) {  
                             $orderModel->commit();
                             $finance->commit();  
-                            file_put_contents("pay".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."订单" .$list['order_no']. "，总金额".$list['total']."，用户余额".$this->user['money']."，扣余额".$data['wallet']."，应付".$data['money']."\r\n", FILE_APPEND);
+                            //file_put_contents("pay".date("Y-m-d",time()).".txt", date ( "Y-m-d H:i:s" ) . "  "."订单" .$list['order_no']. "，总金额".$list['total']."，用户余额".$this->user['money']."，扣余额".$data['wallet']."，应付".$data['money']."\r\n", FILE_APPEND);
                         }else{
                             $orderModel->rollBack();    
                             $finance->rollBack();  
@@ -445,8 +479,12 @@ class Order extends User
                     }else{
                         if ($payType==3) {
                             $url = url('order/pay','order_no='.$order_no);
-                        }else{
+                        }elseif($payType==4){
                             $url = url('order/cardpay','order_no='.$order_no);
+                        }elseif($payType==5){
+                            $url = url('order/alipay','order_no='.$order_no);
+                        }elseif($payType==6){
+                            $url = url('order/weixin','order_no='.$order_no);
                         } 
                     }
                     $this->success('',$url);
@@ -487,6 +525,58 @@ class Order extends User
         }else{  
             $this->error("没有该订单");
         }        
+    }
+
+    public function alipay(){        
+        $order_no = input('param.order_no');
+        $map['order_no'] = $order_no;
+        
+        $map['memberID'] = $this->user['id'];
+        $list = db('Order')->where($map)->find();
+        if ($list) {
+            
+            $this->assign('list',$list);
+            return view();
+        }else{  
+            $this->error("没有该订单");
+        }
+    }
+
+    public function weixin(){
+        $order_no = input('param.order_no');
+        $map['order_no'] = $order_no;
+        
+        $map['memberID'] = $this->user['id'];
+        $list = db('Order')->where($map)->find();
+        if ($list) {
+            //缓存订单状态
+            if (cache($this->user['id'].'_'.$order_no.'_'.'pay')) {
+                $url = cache($this->user['id'].'_'.$order_no.'_'.'pay');
+            }else{
+                //缓存订单状态
+                $config = tpCache('weixin');
+                require_once EXTEND_PATH.'weixinpay/WxPayPubHelper.class.php';
+                
+                $unifiedOrder = new \UnifiedOrder_pub($config['APP_ID'],$config['MCH_ID'],$config['MCH_KEY'],$config['APP_SECRET']);     
+                $unifiedOrder->setParameter("device_info",'WEB');//PC网页或公众号内支付请传"WEB"
+                $unifiedOrder->setParameter("body",'在线支付');//商品描述
+                //自定义订单号，此处仅作举例
+                $unifiedOrder->setParameter("out_trade_no",$order_no);//商户订单号 
+                //$unifiedOrder->setParameter("out_trade_no",$list['order_no']);//商户订单号 
+                $unifiedOrder->setParameter("total_fee",'1');//总金额
+                $unifiedOrder->setParameter("notify_url",'http://'.$_SERVER['HTTP_HOST'].'/wxpay/notice.php');
+                $unifiedOrder->setParameter("trade_type","NATIVE");//交易类型
+                $unifiedOrder->setParameter("product_id","1"); //trade_type=NATIVE，此参数必传。
+                $result = $unifiedOrder->getResult(); 
+                $url = $result['code_url'];
+                cache($this->user['id'].'_'.$order_no.'_'.'pay',$url);
+            }        
+            $this->assign('url',$url);
+            $this->assign('list',$list);
+            return view();
+        }else{  
+            $this->error("没有该订单");
+        }
     }
 
     public function checkpay(){

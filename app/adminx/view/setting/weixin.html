@@ -1,0 +1,47 @@
+<layout name='layout' />
+
+<form class="layui-form">
+	<div class="layui-tab">
+		<ul class="layui-tab-title">
+			{foreach name="group_list" item="vo" key="k"}
+         		<a href="{:url('Setting/index',array('inc_type'=>$k))}"><li {if condition="$k eq 'weixin'"}class="layui-this"{/if}>{$vo}</li></a>
+         	{/foreach}
+		</ul>
+	</div>
+
+	<div class="layui-form-item">
+        <label class="layui-form-label">APP_ID</label>
+        <div class="layui-input-block">
+            <input type="text" name="APP_ID" value="{$config.APP_ID}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">APP_SECRET</label>
+        <div class="layui-input-block">
+            <input type="text" name="APP_SECRET" value="{$config.APP_SECRET}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付秘钥</label>
+        <div class="layui-input-block">
+            <input type="text" name="MCH_KEY" value="{$config.MCH_KEY}" class="layui-input">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">商户号</label>
+        <div class="layui-input-block">
+            <input type="text" name="MCH_ID" value="{$config.MCH_ID}" class="layui-input">
+        </div>
+    </div>
+
+	<hr>
+
+	<div class="layui-form-item">
+		<label class="layui-form-label"></label>
+     	<button class="layui-btn" lay-submit="" lay-filter="edit" url="{:url('Setting/insert')}"><i class="layui-icon">&#xe642;</i>保存</button>
+    </div>
+	<input type="hidden" name="inc_type" value="{$inc_type}">
+</form>

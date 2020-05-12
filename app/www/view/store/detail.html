@@ -144,7 +144,7 @@
                             <div class="bd">巧克力、软糖、胶囊类等易融化的产品，由于运输过程中温度变化导致的变形、粘连等不在理赔范围，所有液体膏体易碎品需加固打包泡泡纸或气柱，物流公司才能理赔。</div>
                             <div class="fd">
                                 {volist name="server" id="vo"}
-                                <li class="serLi" data-id="{$vo.id}" data-price="{$vo.price}">{$vo.name} ${$vo.price}</li>
+                                <li class="serLi" data-id="{$vo.id}" data-price="{$vo.price}">{$vo.name} {$list.unit}{$vo.price}</li>
                                 {/volist}
                             </div>
                         </div>
